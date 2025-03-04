@@ -1,32 +1,13 @@
-import { useMemo, LegacyRef, ComponentType, ComponentPropsWithRef } from "react";
-import { CustomComponentType, Providers } from "./type";
+import { CustomComponentType, Provider } from "./type";
 import { createElement } from "react";
 
-type RenderElementType = {
-  type: Providers["types"];
-  props: Providers["props"];
-  ref?: LegacyRef<Providers["types"]> | null;
-  key: string | null;
+type GetProvider<T> = {
+  provider: CustomComponentType<T>;
+  props?: T;
+  children?: Provider<any>[];
 };
 
-const renderChildren = (
-  child?: Providers
-): RenderElementType | RenderElementType[] =>
-  child?.children?.length === 0
-    ? createElement(child.types)
-    : createElement(
-        child?.types ?? "",
-        child?.props,
-        child?.children?.map((item) => renderChildren?.(item))
-      );
-
-type GetProvider<T extends CustomComponentType<T>> = {
-  provider: T;
-  props: CustomComponentType<T>;
-  children?: Providers[];
-};
-
-export const getProvider = <T extends CustomComponentType<T>>({
+export const getProvider = <T>({
   provider,
   props,
   children,
@@ -59,14 +40,20 @@ export const getProvider = <T extends CustomComponentType<T>>({
  * };
  * ``
  */
-export const useProviders = (props: Providers) => {
-  const entryPoint = useMemo(() => {
-    const children = props?.children?.map?.(renderChildren) ?? [];
+const renderChildrenRecursively = (child?: Provider, index?: number): any => {
+  if (!child) return null;
 
-    return props?.children?.length === 0
-      ? createElement(props.types, props.props)
-      : createElement(props.types, props.props, ...children);
-  }, [props]);
+  const childrenElements = child.children?.map((item, idx) => renderChildrenRecursively(item, idx)) ?? [];
 
-  return entryPoint;
+  return createElement<any>(
+    child.types,
+    { ...(child.props ?? {}), key: index },
+    ...childrenElements
+  );
+};
+
+export const useProviders = (props: Provider<any>) => {
+  const children = props?.children?.map?.((child, index) => renderChildrenRecursively(child, index)) ?? [];
+
+  return createElement<any>(props.types, props.props, ...children);
 };

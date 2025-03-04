@@ -1,5 +1,5 @@
 import Container from "@/components/layouts/Container";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 
 export const AuthLayout = () => {
   return (
@@ -7,8 +7,8 @@ export const AuthLayout = () => {
       noGutter
       fullWidth
       fullHeight
-      display="flex"
-      className="overflow-hidden dark:bg-slate-950 bg-[#F7F9FE]"
+      // display="flex"
+      className="overflow-hidden bg-background"
     >
       <Outlet />
     </Container>

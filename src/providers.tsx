@@ -1,18 +1,14 @@
 import { Suspense } from "react";
-import { routes } from "@/routes";
+import { AppRoutes } from "@/routes";
 import * as Sentry from "@sentry/react";
 import Loading from "@/components/ui/Spinner";
 import { Toaster } from "./components/ui/toaster";
 import { getProvider } from "./hooks/useProviders";
+import { QueryClient } from "@tanstack/react-query";
 import { ErrorFallback } from "./components/layouts/Error";
+import { BrowserRouter } from "react-router";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { QueryClient } from "@tanstack/react-query";
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-} from "react-router-dom";
 
 const RenderLoader = () => {
   return (
@@ -22,17 +18,13 @@ const RenderLoader = () => {
   );
 };
 
-const router = createBrowserRouter(createRoutesFromElements(routes));
 const persister = createSyncStoragePersister({
   storage: window.localStorage,
 });
 
 export const RouterProviderObject = getProvider({
-  provider: RouterProvider,
-  props: {
-    router,
-    future: { v7_relativeSplatPath: true },
-  },
+  provider: BrowserRouter,
+  props: { children: <AppRoutes /> },
 });
 
 export const QueryClientProvider = getProvider({
@@ -54,7 +46,6 @@ export const SuspenseFallback = getProvider({
 
 export const ToasterProvider = getProvider({
   provider: Toaster,
-  props: {},
 });
 
 export const SentryErrorBoundary = getProvider({

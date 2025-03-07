@@ -1,5 +1,7 @@
+import Container from "@/components/layouts/Container"
+
 export const DashboardPage = () => {
   return (
-    <>here</>
+    <Container>here</Container>
   )
 }

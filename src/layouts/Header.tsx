@@ -8,13 +8,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 export const Header = () => {
   const isMobile = useIsMobile();
   const user = useUser();
-
+  
   return (
-    <header className="py-3 px-5 flex items-center justify-between shadow-md w-full">
+    <header className="py-3 px-5 flex items-center justify-between border- w-full">
       <SidebarTrigger />
 
       <div className="flex items-center">
-        <div className="h-10 w-10 bg-gray-100 rounded-full cursor-pointer grid place-items-center mr-4">
+        <div className="h-10 w-10 bg-muted-foreground rounded-full cursor-pointer grid place-items-center mr-4">
           <FaRegBell className="text-black" />
         </div>
 
@@ -22,10 +22,10 @@ export const Header = () => {
 
         <div className="flex items-center gap-2 pl-4">
           <div className=" flex cursor-pointer gap-2 items-center">
-            {!isMobile ? null : (
+            {isMobile ? null : (
               <div>
-                <p className="text-sm text-primary text-center">{`${user?.first_name} ${user?.last_name}`}</p>
-                <p className="text-xs text-center">{user?.role}</p>
+                <p className="text-sm text-primary">{`${user?.first_name} ${user?.last_name}`}</p>
+                <p className="text-xs">{user?.role}</p>
               </div>
             )}
           </div>

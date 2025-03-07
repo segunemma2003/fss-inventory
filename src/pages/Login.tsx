@@ -7,23 +7,54 @@ import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { ArrowRight, Lock, Mail } from "lucide-react";
 import { Forger } from "@/lib/forge";
+import { Link } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import { postRequest } from "@/lib/axiosInstance";
+import { useToastHandlers } from "@/hooks/useToaster";
+import { ApiResponse, ApiResponseError } from "@/types";
+import { getLoginInfo, getLoginToken, getLoginUser } from "@/demo";
+import { useSetToken, useSetUser } from "@/store/authSlice";
 
-type LoginFormValues = {
+type FormValue = {
   email: string;
   password: string;
 };
 
 export const Login = () => {
-  const { ForgeForm } = useForge<LoginFormValues>({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+  const setUser = useSetUser();
+  const setToken = useSetToken();
+  const handler = useToastHandlers();
+
+  const { ForgeForm } = useForge<FormValue>({
+    defaultValues: getLoginInfo(),
+    // {
+    //   email: "",
+    //   password: "",
+    // },
   });
 
-  const handleSubmit = (values: LoginFormValues) => {
-    console.log(values);
-  };
+  const { mutate, isPending } = useMutation<
+    ApiResponse<any>,
+    ApiResponseError,
+    FormValue
+  >({
+    mutationFn: async (payload) => postRequest("/dp", payload),
+    onMutate(variables) {
+      console.log(variables);
+      return { email: variables.email }
+    },
+    onSuccess(data) {
+      handler.success("Registration", data.data.message);
+    },
+    onError(error) {
+      const { token } = getLoginToken();
+      const user = getLoginUser();
+
+      setUser(user);
+      setToken(token);
+      // handler.error("Registration", error);
+    },
+  });
 
   const handleGoogleAuth = () => {
     // Implement Google OAuth logic here
@@ -33,15 +64,16 @@ export const Login = () => {
     <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-sm">
         <div className="flex items-center gap-2 mx-auto w-fit">
-          <img src="/vite.svg" alt="Logo" className="h-8 w-8" />
-          <h2 className="text-xl font-semibold text-gray-900">
-            FOOD STUFF STORE
-          </h2>
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets/877fbded3c1141a18415be7a6b510b08/a1b8d17c054ef5d488ceefa5dd92f6dac50b4fdb1ceb3d816f63c57dcff44ae5?placeholderIfAbsent=true"
+            alt="Company Logo"
+            className="object-contain aspect-[3.6] w-[216px]"
+          />
         </div>
 
         <div className="mt-8 text-center mb-5">
           <h2 className="text-2xl font-bold text-primary">Welcome Back</h2>
-          <p className="mt-2 text-sm text-gray-600 md:w-80 mx-auto">
+          <p className="mt-2 text-sm text-gray-600 md:w-80 mx-auto font-urbanist font-semibold">
             Hello there, welcome back! Let's get you signed in and kick off from
             where you left off.
           </p>
@@ -59,7 +91,7 @@ export const Login = () => {
           </Button>
         </div>
 
-        <ForgeForm onSubmit={handleSubmit} className="mt-10">
+        <ForgeForm onSubmit={mutate} className="mt-10">
           <div className="space-y-4">
             <Forger
               component={TextInput}
@@ -89,23 +121,17 @@ export const Login = () => {
                 Forgot Password?
               </a>
             </div>
-            <div className="text-sm text-red-500 hover:text-red-600">
-              3 attempts
-            </div>
           </div>
 
-          <Button
-            type="submit"
-            className="w-full bg-red-500 hover:bg-red-600 mt-10"
-          >
+          <Button type="submit" isLoading={isPending} className="w-full mt-10">
             Login
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           <div className="text-center text-xs mt-2">
             <span className="text-gray-500">Don't have a profile, </span>
-            <a href="/register" className="text-red-500 hover:text-red-600">
+            <Link to="/" className="text-red-500 hover:text-red-600">
               Sign me up!
-            </a>
+            </Link>
           </div>
 
           <div className="relative my-5">

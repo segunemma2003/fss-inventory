@@ -6,7 +6,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { ReactNode, useState } from "react";
 
 export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  label?: string | JSX.Element;
+  label?: string | ReactNode;
   containerClass?: string;
   error?: string;
   startAdornment?: ReactNode;
@@ -17,7 +17,7 @@ export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export type TextAreaProps = React.InputHTMLAttributes<HTMLTextAreaElement> & {
-  label?: string | JSX.Element;
+  label?: string | ReactNode;
   containerClass?: string;
   error?: string;
   startAdornment?: ReactNode;
@@ -45,7 +45,7 @@ export const TextInput = (props: TextInputProps) => {
           )}
           <Input
             {...props}
-            className="w-full py-2.5 px-3 text-sm text-gray-900 border-0 focus:outline-none focus:ring-0 placeholder:text-gray-400"
+            className="w-full py-2.5 px-3 text-sm rounded-l-none text-gray-900 border-0 focus:outline-none focus:ring-0 placeholder:text-gray-400"
           />
           {props.endAdornment && (
             <span className="pr-3">{props.endAdornment}</span>

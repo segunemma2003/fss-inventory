@@ -1,16 +1,16 @@
 // import { getEnvironment } from "@/lib/utils";
 // import NotFoundSVG from "../../assets/404.gif";
-import { isRouteErrorResponse, useRouteError } from "react-router-dom";
+// import { isRouteErrorResponse, useRouteError } from "react-router";
 
 export function ErrorFallback() {
-  const error = useRouteError();
+  // const error = useRouteError();
 
-  if (!isRouteErrorResponse(error))
-    return (
-      <div className="container mx-auto h-screen grid xl:grid-cols-2 gap-8 justify-center">
-        <span>Unknown error occurred</span>
-      </div>
-    );
+  // if (!isRouteErrorResponse(error))
+  //   return (
+  //     <div className="container mx-auto h-screen grid xl:grid-cols-2 gap-8 justify-center">
+  //       <span>Unknown error occurred</span>
+  //     </div>
+  //   );
 
   return (
     <div className="container mx-auto h-screen grid xl:grid-cols-2 gap-8 justify-center">
@@ -27,7 +27,7 @@ export function ErrorFallback() {
           Oh no, there's an issue with the app.
           {/* {getEnvironment("DEVELOPMENT") && <pre>{error.message}</pre>} */}
           <i className="text-red-400 px-3">
-            {error.statusText || error.data.message}
+            {/* {error.statusText || error.data.message} */}
           </i>
         </p>
         <a

@@ -2,6 +2,9 @@ import { TextInput } from "@/components/layouts/FormInputs/TextInput";
 import { useForge } from "@/lib/forge/useForge";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
+import { FeatureSection } from "./layoout/FeatureSection";
+import { useNavigate } from "react-router";
+import { Mail, User } from "lucide-react";
 
 type RegisterFormValues = {
   fullName: string;
@@ -9,6 +12,7 @@ type RegisterFormValues = {
 };
 
 export const Register = () => {
+  const navigate = useNavigate()
   const { ForgeForm } = useForge<RegisterFormValues>({
     defaultValues: {
       fullName: "",
@@ -25,17 +29,23 @@ export const Register = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-0">
+      <div className="w-full max-w-xl lg:px-8">
         <div className="flex items-center gap-2">
-          <img src="/vite.svg" alt="Logo" className="h-8 w-8" />
-          <h2 className="text-xl font-semibold text-gray-900">FOOD STUFF STORE</h2>
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets/877fbded3c1141a18415be7a6b510b08/a1b8d17c054ef5d488ceefa5dd92f6dac50b4fdb1ceb3d816f63c57dcff44ae5?placeholderIfAbsent=true"
+            alt="Company Logo"
+            className="object-contain aspect-[3.6] w-[216px]"
+          />
         </div>
 
         <div className="mt-8">
-          <h2 className="text-2xl font-bold text-gray-900">Let's Get You Started</h2>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Let's Get You Started
+          </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Welcome to your inventory system, your ultimate solution to elevating your sales management.
+            Welcome to your inventory system, your ultimate solution to
+            elevating your sales management.
           </p>
         </div>
 
@@ -47,6 +57,7 @@ export const Register = () => {
               placeholder="Enter your full name"
               autoComplete="name"
               required
+              startAdornment={<User className="h-5 w-5 mr-2" />}
             />
             <TextInput
               name="email"
@@ -55,11 +66,16 @@ export const Register = () => {
               type="email"
               autoComplete="email"
               required
+              startAdornment={<Mail className="h-5 w-5 mr-2" />}
             />
           </div>
 
           <div>
-            <Button type="submit" className="w-full bg-red-500 hover:bg-red-600">
+            <Button
+              // type="submit"
+              onClick={() => navigate('/business-registration')}
+              className="w-full "
+            >
               Create Account
             </Button>
           </div>
@@ -91,6 +107,9 @@ export const Register = () => {
             </a>
           </div>
         </ForgeForm>
+      </div>
+      <div className="flex-1">
+        <FeatureSection />
       </div>
     </div>
   );

@@ -6,7 +6,12 @@ import { NotFound } from "@/layouts/NotFound";
 import { PublicRoute } from "./PublicRoute";
 import { Login } from "@/pages/Login";
 import { Register } from "@/pages/Register";
-import ForgotPassword from '@/pages/ForgotPassword';
+import ForgotPassword from "@/pages/ForgotPassword";
+import { RegisterOne } from "@/pages/Register/RegisterOne";
+import { RegisterTwo } from "@/pages/Register/RegisterTwo";
+import { Verification } from "@/pages/Verification";
+import TermsCondition from "@/pages/TermsCondition";
+import WelcomeOnBoard from "@/pages/WelcomeOnBoard";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { Routes, Route } from "react-router";
 
@@ -14,7 +19,16 @@ export const AppRoutes = () => {
   const publicRoutes = [
     { path: "/", element: <Register /> },
     { path: "/login", element: <Login /> },
+    { path: "/business-registration", element: <RegisterOne /> },
+    { path: "/personal-registration", element: <RegisterTwo /> },
     { path: "/forgot-password", element: <ForgotPassword /> },
+    { path: "/verification", element: <Verification /> },
+    { path: "/terms-conditions", element: <TermsCondition /> },
+    { path: "/welcome", element: <WelcomeOnBoard /> },
+  ];
+
+  const privateRoutes = [
+    { path: "/dashboard/", element: <DashboardPage /> },
   ];
 
   return (
@@ -27,23 +41,17 @@ export const AppRoutes = () => {
         </Route>
       </Route>
 
-      {/* <Route
-    path="/dashboard"
-    errorElement={<ErrorFallback />}
-    element={<Dashboard />}
-  >
-    {[{ path: "/dashboard/home", element: <DashboardPage /> }].map(
-      (item, index) => (
-        <Route
-          key={index}
-          path={item.path}
-          element={
-            <ProtectedRoute key={index}>{item.element}</ProtectedRoute>
-          }
-        />
-      )
-    )}
-  </Route> */}
+      <Route
+        path="/dashboard"
+        errorElement={<ErrorFallback />}
+        element={<Dashboard />}
+      >
+        <Route element={<ProtectedRoute />}>
+          {privateRoutes.map((item, index) => (
+            <Route key={index} {...item} />
+          ))}
+        </Route>
+      </Route>
     </Routes>
   );
 };

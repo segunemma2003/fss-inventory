@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MdDashboard } from "react-icons/md";
-import { RxHamburgerMenu } from "react-icons/rx";
-import Img from "../assets/react.svg";
-import { MdLogout } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -13,59 +10,110 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-
-import { ComponentClass, ComponentProps, FunctionComponent } from "react";
+import { BsCardChecklist } from "react-icons/bs";
 import { ConfirmAlert } from "@/components/layouts/ConfirmAlert";
 import { IconType } from "react-icons/lib";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ChevronUp, User2 } from "lucide-react";
-
-type sideBarProps = {
-  isSidebarCollapsed: boolean;
-  showSidebarSm?: boolean;
-};
+import { MdOutlineAnalytics } from "react-icons/md";
+import { TfiReceipt } from "react-icons/tfi";
+import { MdOutlineReceiptLong } from "react-icons/md";
+import { HiOutlineCog8Tooth } from "react-icons/hi2";
+import { TbUserSquare } from "react-icons/tb";
+import { FaRegEdit } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
+import { RiLogoutCircleLine } from "react-icons/ri";
 
 type NavigationItem = {
   icon: IconType;
   title: string;
   to: string;
   active: boolean;
-  isImage?: boolean;
+  badge?: number;
 };
 
-export const SideBar = ({}: sideBarProps) => {
+export const SideBar = () => {
   const location = useLocation();
 
   const navigation: NavigationItem[] = [
     {
       icon: MdDashboard,
       title: "Dashboard",
-      to: "/dashboard/home",
-      active: location.pathname === "/dashboard/home",
+      to: "/dashboard/",
+      active: location.pathname === "/dashboard/",
     },
-    // {
-    //   icon: MdDashboard,
-    //   title: "",
-    //   to: "",
-    //   active: location.pathname === "/dashboard/home",
-    // },
+    {
+      icon: BsCardChecklist,
+      title: "Product Inventory",
+      to: "/dashboard/product-inventory",
+      active: location.pathname === "/dashboard/product-inventory",
+    },
+    {
+      icon: MdOutlineAnalytics,
+      title: "Sales Performance",
+      to: "/dashboard/sales-performance",
+      active: location.pathname === "/dashboard/sales-performance",
+    },
+    {
+      icon: TfiReceipt,
+      title: "Sales Analytics",
+      to: "/dashboard/sales-analytics",
+      active: location.pathname === "/dashboard/sales-analytics",
+    },
+    {
+      icon: MdOutlineReceiptLong,
+      title: "Customer Order",
+      to: "/dashboard/customer-order",
+      active: location.pathname === "/dashboard/customer-order",
+    },
+    {
+      icon: HiOutlineCog8Tooth,
+      title: "Settings",
+      to: "/dashboard/settings",
+      active: location.pathname === "/dashboard/settings",
+    },
+  ];
+
+  const userManageNavigation: NavigationItem[] = [
+    {
+      icon: TbUserSquare,
+      title: "User Profile",
+      to: "/dashboard/user-profile",
+      active: location.pathname === "/dashboard/user-profile",
+    },
+    {
+      icon: FaRegEdit,
+      title: "My Task",
+      badge: 3,
+      to: "/dashboard/user-task",
+      active: location.pathname === "/dashboard/user-task",
+    },
   ];
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader />
-      <SidebarContent>
+    <Sidebar className="" variant="sidebar">
+      <SidebarHeader className="py-8">
+        <img
+          src="https://cdn.builder.io/api/v1/image/assets/877fbded3c1141a18415be7a6b510b08/a1b8d17c054ef5d488ceefa5dd92f6dac50b4fdb1ceb3d816f63c57dcff44ae5?placeholderIfAbsent=true"
+          alt="Company Logo"
+          className="object-contain aspect-[3.6] w-40 mx-auto"
+        />
+      </SidebarHeader>
+
+      <SidebarContent className="mt-8 px-2.5">
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-3">
               {navigation.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.to}>
+                  <SidebarMenuButton asChild isActive={item.active}>
+                    <a
+                      href={item.to}
+                      className="data-[active=true]:!bg-primary"
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </a>
@@ -76,37 +124,40 @@ export const SideBar = ({}: sideBarProps) => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup />
-        <SidebarGroup />
+        <SidebarGroup className="">
+          <SidebarGroupLabel>User Management</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-3">
+              {userManageNavigation.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={item.active}>
+                    <a href={item.to}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                  {item.badge && (
+                    <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                  )}
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
-      
+
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  <User2 /> Username
-                  <ChevronUp className="ml-auto" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                className="w-[--radix-popper-anchor-width]"
-              >
-                <DropdownMenuItem>
-                  <span>Account</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Billing</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Sign out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <ConfirmAlert
+          title="Are you sure you want to sign out?"
+          text="You will be signed out of your account and will not be able to access it again."
+          logout
+          icon={RiLogoutCircleLine}
+          trigger={
+            <Button variant={"outline"} className="rounded-full w-full">
+             <RiLogoutCircleLine className="mr-5" /> Sign Out
+            </Button>
+          }
+        />
       </SidebarFooter>
     </Sidebar>
   );

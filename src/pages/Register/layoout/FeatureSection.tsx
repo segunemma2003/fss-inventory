@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { FeatureTag } from "./FeatureTag";
 
 export function FeatureSection() {
@@ -14,7 +14,7 @@ export function FeatureSection() {
   return (
     <section className="overflow-hidde">
       <div className="flex overflow-hidden flex-col w-full max-md:max-w-full">
-        <div className="flex max-w-full text-4xl tracking-tighter leading-10 text-neutral-900 px-5 mb-10">
+        <div className="flex max-w-full text-4xl tracking-tighter leading-10 text-accent-foreground px-5 mt-16 mb-10">
           <h2 className="grow shrink w-[615px] max-md:max-w-full font-urbanist font-medium">
             Inventory Management, Made Easy
             <br />
@@ -29,17 +29,19 @@ export function FeatureSection() {
           </Button> */}
         </div>
 
-        <div className="relative pt-0.5 w-full h-[70dvh] text-base text-muted max-md:px-5 max-md:pb-24 max-md:max-w-full">
+        <div className="relative pt-0.5 w-full h-[78dvh] text-base text-muted max-md:px-5 max-md:pb-24 max-md:max-w-full">
           <img
             src="https://cdn.builder.io/api/v1/image/assets/877fbded3c1141a18415be7a6b510b08/63a5d0c4099f2618eee8a6440abe1e510254ee9672ea2825bf27721d84fa4a41?placeholderIfAbsent=true"
             alt="Background"
             className="object-cover h-full w-full static"
           />
 
-          <div className="flex absolute flex-wrap gap-x-3 bg-linear-to-b pl-5 from-white h-60 to-white/20 py-2 items-center mb-0 w-full max-md:mb-2.5 max-md:max-w-full">
+          <div className="absolute top-0 bg-linear-to-b pl-5 from-accent h-44 to-accent/20 py-2 items-center mb-0 w-full max-md:mb-2.5 max-md:max-w-full">
+            <div className="flex absolute top-0 flex-wrap gap-3 pt-3">
             {features.map((feature, index) => (
               <FeatureTag key={index} text={feature} />
             ))}
+            </div>
           </div>
         </div>
       </div>

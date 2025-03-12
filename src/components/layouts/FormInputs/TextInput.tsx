@@ -2,8 +2,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { Eye, EyeOff } from "lucide-react";
-import { ReactNode, useState } from "react";
+import { Eye, EyeOff, LoaderCircleIcon, SearchIcon } from "lucide-react";
+import { ReactNode, useId, useState } from "react";
 
 export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string | ReactNode;
@@ -39,20 +39,20 @@ export const TextInput = (props: TextInputProps) => {
         {props.label}
       </Label> */}
       <div className="relative">
-        <div className="flex items-center bg-white rounded-lg border border-gray-300 focus-within:ring-1">
+        <div className="flex items-center bg-whit rounded-lg border border-gray-300 focus-within:ring-1">
           {props.startAdornment && (
-            <span className="pl-3">{props.startAdornment}</span>
+            <span className="pl-3 text-muted-foreground">{props.startAdornment}</span>
           )}
           <Input
             {...props}
-            className="w-full py-2.5 px-3 text-sm rounded-l-none text-gray-900 border-0 focus:outline-none focus:ring-0 placeholder:text-gray-400"
+            className="w-full py-2.5 px-3 text-sm rounded-l-none bg-transparent focus-visible:ring-offset-0 focus:right-0 focus-visible:outline-none focus-visible:ring-0 text-muted-foreground border-0 focus:outline-none focus:ring-0 placeholder:text-gray-400"
           />
           {props.endAdornment && (
             <span className="pr-3">{props.endAdornment}</span>
           )}
         </div>
         {props.error && (
-          <span className="absolute text-xs text-red-500 mt-1">
+          <span className="block text-xs text-red-500 mt-1">
             {props.error}
           </span>
         )}
@@ -99,13 +99,13 @@ export function TextPassword(props: TextInputProps) {
         <div className="relative">
           <div className="flex items-center rounded-lg border border-gray-300 focus-within:ring-1">
             {props.startAdornment && (
-              <span className="pl-3">{props.startAdornment}</span>
+              <span className="pl-3 text-muted-foreground">{props.startAdornment}</span>
             )}
 
             <Input
               {...props}
               id={props.name}
-              className="w-full py-2.5 px-3 text-sm text-gray-900 border-0 focus:outline-none focus:ring-0 placeholder:text-gray-400"
+              className="w-full py-2.5 px-3 text-sm bg-transparent focus-visible:ring-offset-0 focus:right-0 focus-visible:outline-none focus-visible:ring-0 text-gray-900 border-0 focus:outline-none focus:ring-0 placeholder:text-gray-400"
               placeholder="Password"
               type={isVisible ? "text" : "password"}
             />
@@ -136,6 +136,39 @@ export function TextPassword(props: TextInputProps) {
         {props.helperText}
       </p>
       <span className="text-xs text-red-500 mt-1">{props.error}</span>
+    </div>
+  );
+}
+
+export default function TextSearch(
+  props: TextInputProps & { isLoading?: boolean }
+) {
+  const id = useId();
+
+  return (
+    <div className="*:not-first:mt-2">
+      {props.label && <Label htmlFor={id}>{props.label}</Label>}
+      <div className="relative">
+        <Input
+          id={id}
+          className="peer ps-9 pe-9 w-96"
+          placeholder="Search..."
+          type="search"
+          {...props}
+        />
+        <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+          {props.isLoading ? (
+            <LoaderCircleIcon
+              className="animate-spin"
+              size={16}
+              role="status"
+              aria-label="Loading..."
+            />
+          ) : (
+            <SearchIcon size={16} aria-hidden="true" />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

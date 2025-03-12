@@ -4,7 +4,7 @@ interface FeatureTagProps {
 
 export function FeatureTag({ text }: FeatureTagProps) {
   return (
-    <div className="overflow-hidden px-3 py-3 my-auto bg-red-600 border border-accent border-solid rounded-[100px] min-h-12 text-base text-center text-accent font-bold font-urbanist">
+    <div className="overflow-hidden px-3 py-2 my-auto bg-primary border border-primary border-solid rounded-[100px] text-xs text-center text-accent-foreground font-semibold font-urbanist">
       {text}
     </div>
   );

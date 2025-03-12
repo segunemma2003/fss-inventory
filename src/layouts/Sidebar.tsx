@@ -25,6 +25,7 @@ import { TbUserSquare } from "react-icons/tb";
 import { FaRegEdit } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { RiLogoutCircleLine } from "react-icons/ri";
+import { format } from 'date-fns';
 
 type NavigationItem = {
   icon: IconType;
@@ -47,6 +48,7 @@ export const SideBar = () => {
     {
       icon: BsCardChecklist,
       title: "Product Inventory",
+      badge: 3,
       to: "/dashboard/product-inventory",
       active: location.pathname === "/dashboard/product-inventory",
     },
@@ -112,12 +114,15 @@ export const SideBar = () => {
                   <SidebarMenuButton asChild isActive={item.active}>
                     <a
                       href={item.to}
-                      className="data-[active=true]:!bg-primary"
+                      className="data-[active=true]:!bg-primary data-[active=true]:text-white data-[active=true]:rounded-full px-4 py-2"
                     >
                       <item.icon />
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
+                  {item.badge && (
+                    <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -131,7 +136,7 @@ export const SideBar = () => {
               {userManageNavigation.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={item.active}>
-                    <a href={item.to}>
+                    <a href={item.to} className="data-[active=true]:!bg-primary data-[active=true]:text-white data-[active=true]:rounded-full px-4 py-2">
                       <item.icon />
                       <span>{item.title}</span>
                     </a>
@@ -154,10 +159,14 @@ export const SideBar = () => {
           icon={RiLogoutCircleLine}
           trigger={
             <Button variant={"outline"} className="rounded-full w-full">
-             <RiLogoutCircleLine className="mr-5" /> Sign Out
+              <RiLogoutCircleLine className="mr-5" /> Sign Out
             </Button>
           }
         />
+        <div className="py-2">
+          <h6 className="text-xs font-urbanist font-semibold">Last Login:</h6>
+          <p className="text-sm font-urbanist ">{format('12/04/2025', 'do MMMM yyyy hh:mm')}</p>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

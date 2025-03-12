@@ -24,7 +24,7 @@ export const Header = () => {
           <div className=" flex cursor-pointer gap-2 items-center">
             {isMobile ? null : (
               <div>
-                <p className="text-sm text-primary">{`${user?.first_name} ${user?.last_name}`}</p>
+                <p className="text-sm text-primary">{`${user?.full_name}`}</p>
                 <p className="text-xs">{user?.role}</p>
               </div>
             )}

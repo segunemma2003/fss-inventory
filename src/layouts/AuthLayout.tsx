@@ -5,7 +5,7 @@ import { useDarkMode } from "usehooks-ts";
 
 export const AuthLayout = () => {
   const { isDarkMode, set } = useDarkMode({
-    // defaultValue: true,
+    defaultValue: true,
     localStorageKey: "theme",
   });
 
@@ -15,7 +15,7 @@ export const AuthLayout = () => {
       fullWidth
       fullHeight
       // display="flex"
-      className="overflow-hiddn bg-background"
+      className="overflow-hidden bg-background"
     >
       <div className="absolute right-3 top-3">
         <ThemeSwitch checked={isDarkMode} setChecked={set} />

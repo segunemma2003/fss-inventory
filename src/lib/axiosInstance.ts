@@ -34,7 +34,7 @@ export const getAxiosInstance = () => {
 };
 
 export const getRequest = async (url: string) => {
-  const res = await getAxiosInstance().get(`/${url}`);
+  const res = await getAxiosInstance().get(`${url}`);
   return res;
 };
 

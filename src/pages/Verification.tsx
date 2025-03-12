@@ -6,16 +6,30 @@ import { Forger, useForge } from "@/lib/forge";
 import { ApiResponse, ApiResponseError } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import {
-  Mail,
   ArrowRight,
+  TextCursorInput,
 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import { useSetToken, useSetUser } from "@/store/authSlice";
 
-type FormValue = {};
+type FormValue = {
+  email: string;
+  otp: string;
+};
 
-export const Verification = () => {
+export const Verification = () => { 
+  const setUser = useSetUser();
+  const setToken = useSetToken();
+
   const navigate = useNavigate();
-  const { ForgeForm } = useForge({});
+  const location = useLocation();
+
+  const { ForgeForm } = useForge<FormValue>({
+    defaultValues: {
+      email: location.state?.email || "",
+      otp: "",
+    },
+  });
   const handler = useToastHandlers();
 
   const { mutate, isPending } = useMutation<
@@ -23,9 +37,14 @@ export const Verification = () => {
     ApiResponseError,
     FormValue
   >({
-    mutationFn: async (payload) => postRequest("", payload),
+    mutationFn: async (payload) => postRequest("/auth/verify-email/", payload),
     onSuccess(data) {
-      handler.success("Registration", data.data.message);
+      const { token, user } = data.data.data;
+      setUser(user);
+      setToken(token);
+
+      handler.success("Email VVerification", data.data.message);
+      navigate("/terms-conditions")
     },
     onError(error) {
       handler.error("Registration", error);
@@ -60,15 +79,14 @@ export const Verification = () => {
               containerClass="col-span-2"
               placeholder="Email Address"
               helperText="A link will be sent to this email address, click the link to verify your account."
-              startAdornment={<Mail className="h-5 w-5 mr-2 text-gray-400" />}
+              startAdornment={<TextCursorInput className="h-5 w-5 mr-2 text-gray-400" />}
             />
           </div>
 
           <div>
             <Button
-              // type="submit"
+              type="submit"
               isLoading={isPending}
-              onClick={() => navigate("/terms-conditions")}
               className="w-60"
             >
               Verify <ArrowRight className="h-5 w-5 ml-2" />

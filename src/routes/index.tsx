@@ -13,6 +13,9 @@ import { Verification } from "@/pages/Verification";
 import TermsCondition from "@/pages/TermsCondition";
 import WelcomeOnBoard from "@/pages/WelcomeOnBoard";
 import { DashboardPage } from "@/pages/DashboardPage";
+import { ProductInventory } from '@/pages/ProductInventory';
+import SalesPerformance from '@/pages/SalesPerformance';
+import SalesAnalytics from '@/pages/SalesAnalytics';
 import { Routes, Route } from "react-router";
 
 export const AppRoutes = () => {
@@ -29,6 +32,9 @@ export const AppRoutes = () => {
 
   const privateRoutes = [
     { path: "/dashboard/", element: <DashboardPage /> },
+    { path: "/dashboard/product-inventory", element: <ProductInventory /> },
+    { path: "/dashboard/sales-performance", element: <SalesPerformance /> },
+    { path: "/dashboard/sales-analytics", element: <SalesAnalytics /> },
   ];
 
   return (

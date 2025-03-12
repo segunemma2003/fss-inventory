@@ -12,7 +12,7 @@ export const Dashboard = () => {
       fullWidth
       fullHeight
       display="flex"
-      className="overflow-x-hidden overflow-y-auto"
+      className="overflow-x-hidden overflow-y-auto bg-background"
       as={SidebarProvider}
     >
         <SideBar />

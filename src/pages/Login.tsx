@@ -11,48 +11,60 @@ import { Link } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { postRequest } from "@/lib/axiosInstance";
 import { useToastHandlers } from "@/hooks/useToaster";
-import { ApiResponse, ApiResponseError } from "@/types";
-import { getLoginInfo, getLoginToken, getLoginUser } from "@/demo";
+import { ApiResponse, ApiResponseError, User } from "@/types";
+import { getLoginToken, getLoginUser } from "@/demo";
 import { useSetToken, useSetUser } from "@/store/authSlice";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useState } from "react";
 
 type FormValue = {
   email: string;
   password: string;
 };
+export interface LoginResponse {
+  access_token:  string;
+  refresh_token: string;
+  user:          User;
+}
+
+
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+});
 
 export const Login = () => {
   const setUser = useSetUser();
   const setToken = useSetToken();
   const handler = useToastHandlers();
+  const [userType, setUserType] = useState<"admin" | "sales" | "inventory">(
+    "admin"
+  );
 
   const { ForgeForm } = useForge<FormValue>({
-    defaultValues: getLoginInfo(),
-    // {
-    //   email: "",
-    //   password: "",
-    // },
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: yupResolver(schema),
   });
 
   const { mutate, isPending } = useMutation<
-    ApiResponse<any>,
+    ApiResponse<LoginResponse>,
     ApiResponseError,
     FormValue
   >({
-    mutationFn: async (payload) => postRequest("/dp", payload),
-    onMutate(variables) {
-      console.log(variables);
-      return { email: variables.email }
-    },
+    mutationFn: async (payload) => postRequest("/auth/login/", payload),
     onSuccess(data) {
-      handler.success("Registration", data.data.message);
-    },
-    onError(error) {
-      const { token } = getLoginToken();
-      const user = getLoginUser();
+      const { access_token, user } = data.data.data;
 
       setUser(user);
-      setToken(token);
-      // handler.error("Registration", error);
+      setToken(access_token);
+      handler.success("Authentication", data.data.message);
+    },
+    onError(error) {
+      handler.error("Registration", error);
     },
   });
 
@@ -73,20 +85,32 @@ export const Login = () => {
 
         <div className="mt-8 text-center mb-5">
           <h2 className="text-2xl font-bold text-primary">Welcome Back</h2>
-          <p className="mt-2 text-sm text-gray-600 md:w-80 mx-auto font-urbanist font-semibold">
+          <p className="mt-2 text-sm text-muted-foreground md:w-80 mx-auto font-urbanist font-semibold">
             Hello there, welcome back! Let's get you signed in and kick off from
             where you left off.
           </p>
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-10">
-          <Button variant="default" className="w-fit rounded-full">
+          <Button
+            variant={userType === "admin" ? "default" : "outline"}
+            onClick={() => setUserType("admin")}
+            className="w-fit rounded-full"
+          >
             Admin
           </Button>
-          <Button variant="outline" className="w-fit rounded-full">
+          <Button
+            variant={userType === "sales" ? "default" : "outline"}
+            onClick={() => setUserType("sales")}
+            className="w-fit rounded-full"
+          >
             Sales
           </Button>
-          <Button variant="outline" className="w-fit rounded-full">
+          <Button
+            variant={userType === "inventory" ? "default" : "outline"}
+            onClick={() => setUserType("inventory")}
+            className="w-fit rounded-full"
+          >
             Inventory
           </Button>
         </div>
@@ -116,7 +140,7 @@ export const Login = () => {
           </div>
 
           <div className="flex items-center justify-between mt-3">
-            <div className="text-sm">
+            <div className="text-sm text-muted-foreground">
               <a href="/forgot-password" className="">
                 Forgot Password?
               </a>
@@ -146,8 +170,9 @@ export const Login = () => {
           <div>
             <Button
               type="button"
+              variant={'outline'}
               onClick={handleGoogleAuth}
-              className="w-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-full"
+              className="w-full  rounded-full"
             >
               <FcGoogle className="mr-2 h-5 w-5" />
               Continue with Google

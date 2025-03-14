@@ -16,6 +16,9 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { ProductInventory } from '@/pages/ProductInventory';
 import SalesPerformance from '@/pages/SalesPerformance';
 import SalesAnalytics from '@/pages/SalesAnalytics';
+import { AddProduct } from '@/pages/AddProduct';
+import CustomerOrder from '@/pages/CustomerOrder';
+import { Users } from '@/pages/Users';
 import { Routes, Route } from "react-router";
 
 export const AppRoutes = () => {
@@ -32,9 +35,12 @@ export const AppRoutes = () => {
 
   const privateRoutes = [
     { path: "/dashboard/", element: <DashboardPage /> },
+    { path: "/dashboard/add-product", element: <AddProduct /> },
     { path: "/dashboard/product-inventory", element: <ProductInventory /> },
     { path: "/dashboard/sales-performance", element: <SalesPerformance /> },
     { path: "/dashboard/sales-analytics", element: <SalesAnalytics /> },
+    { path: "/dashboard/customer-order", element: <CustomerOrder /> },
+    { path: "/dashboard/user-profile", element: <Users /> },
   ];
 
   return (

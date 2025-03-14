@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MdDashboard } from "react-icons/md";
-import { useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -17,12 +17,12 @@ import {
 import { BsCardChecklist } from "react-icons/bs";
 import { ConfirmAlert } from "@/components/layouts/ConfirmAlert";
 import { IconType } from "react-icons/lib";
-import { MdOutlineAnalytics } from "react-icons/md";
+// import { MdOutlineAnalytics } from "react-icons/md";
 import { TfiReceipt } from "react-icons/tfi";
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { HiOutlineCog8Tooth } from "react-icons/hi2";
 import { TbUserSquare } from "react-icons/tb";
-import { FaRegEdit } from "react-icons/fa";
+// import { FaRegEdit } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { format } from 'date-fns';
@@ -52,12 +52,12 @@ export const SideBar = () => {
       to: "/dashboard/product-inventory",
       active: location.pathname === "/dashboard/product-inventory",
     },
-    {
-      icon: MdOutlineAnalytics,
-      title: "Sales Performance",
-      to: "/dashboard/sales-performance",
-      active: location.pathname === "/dashboard/sales-performance",
-    },
+    // {
+    //   icon: MdOutlineAnalytics,
+    //   title: "Sales Performance",
+    //   to: "/dashboard/sales-performance",
+    //   active: location.pathname === "/dashboard/sales-performance",
+    // },
     {
       icon: TfiReceipt,
       title: "Sales Analytics",
@@ -72,9 +72,9 @@ export const SideBar = () => {
     },
     {
       icon: HiOutlineCog8Tooth,
-      title: "Settings",
-      to: "/dashboard/settings",
-      active: location.pathname === "/dashboard/settings",
+      title: "Business ID",
+      to: "/dashboard/business-id",
+      active: location.pathname === "/dashboard/business-id",
     },
   ];
 
@@ -86,11 +86,10 @@ export const SideBar = () => {
       active: location.pathname === "/dashboard/user-profile",
     },
     {
-      icon: FaRegEdit,
-      title: "My Task",
-      badge: 3,
-      to: "/dashboard/user-task",
-      active: location.pathname === "/dashboard/user-task",
+      icon: HiOutlineCog8Tooth,
+      title: "Settings",
+      to: "/dashboard/settings",
+      active: location.pathname === "/dashboard/settings",
     },
   ];
 
@@ -112,13 +111,13 @@ export const SideBar = () => {
               {navigation.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={item.active}>
-                    <a
-                      href={item.to}
+                    <Link
+                      to={item.to}
                       className="data-[active=true]:!bg-primary data-[active=true]:text-white data-[active=true]:rounded-full px-4 py-2"
                     >
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                   {item.badge && (
                     <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
@@ -136,10 +135,10 @@ export const SideBar = () => {
               {userManageNavigation.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={item.active}>
-                    <a href={item.to} className="data-[active=true]:!bg-primary data-[active=true]:text-white data-[active=true]:rounded-full px-4 py-2">
+                    <Link to={item.to} className="data-[active=true]:!bg-primary data-[active=true]:text-white data-[active=true]:rounded-full px-4 py-2">
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                   {item.badge && (
                     <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>

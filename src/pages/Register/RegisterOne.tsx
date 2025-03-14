@@ -7,7 +7,6 @@ import { Forger, useForge } from "@/lib/forge";
 import { ApiResponse, ApiResponseError } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import {
-  User,
   MapPin,
   Building,
   Mail,

@@ -1,22 +1,52 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/store/authSlice";
 import { FaUser } from "react-icons/fa";
-import { FaRegBell } from "react-icons/fa6";
+// import { FaRegBell } from "react-icons/fa6";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useEffect } from "react";
+import { useDarkMode } from "usehooks-ts";
+import ThemeSwitch from "@/components/ui/theme-switch";
+import { NotificationPanel } from "./NotificationPanel";
 
 export const Header = () => {
-  const isMobile = useIsMobile();
   const user = useUser();
-  
+  const isMobile = useIsMobile();
+
+  const { isDarkMode, set } = useDarkMode({
+    defaultValue: true,
+    localStorageKey: "theme",
+  });
+
+  // Apply the dark mode class to the root element
+  const toggleDarkMode = (isDark: boolean) => {
+    const rootElement = document.documentElement;
+    if (isDark) {
+      rootElement.classList.add("dark");
+    } else {
+      rootElement.classList.remove("dark");
+    }
+  };
+
+  // Ensure dark mode class is applied on mount and toggle
+  useEffect(() => {
+    toggleDarkMode(isDarkMode);
+  }, [isDarkMode]);
+
   return (
     <header className="py-3 px-5 flex items-center justify-between border- w-full">
       <SidebarTrigger />
 
       <div className="flex items-center">
-        <div className="h-10 w-10 bg-muted-foreground rounded-full cursor-pointer grid place-items-center mr-4">
-          <FaRegBell className="text-black" />
-        </div>
+        <ThemeSwitch
+          checked={isDarkMode}
+          setChecked={(value) => {
+            set(value);
+            toggleDarkMode(value);
+          }}
+        />
+        
+        <NotificationPanel />
 
         <div className="h-6 bg-gray-400 w-0.5 rounded-lg" />
 

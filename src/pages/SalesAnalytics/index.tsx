@@ -6,8 +6,8 @@ import { getProductAnalysis } from "@/demo";
 import { formatCurrency } from "@/lib/utils";
 import { ProductData } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { Plus, SlidersHorizontal, Upload } from "lucide-react";
-import { useNavigate } from "react-router";
+import { SlidersHorizontal, Upload } from "lucide-react";
+// import { useNavigate } from "react-router";
 
 interface Props {}
 
@@ -23,7 +23,7 @@ export type ProductAnalysisData = Pick<
 
 function SalesAnalytics(props: Props) {
   const {} = props;
-  const navigate = useNavigate();
+  // const _ = useNavigate();
 
   const columns: ColumnDef<ProductAnalysisData>[] = [
     { accessorKey: "product_name", header: "Product Name" },
@@ -45,15 +45,15 @@ function SalesAnalytics(props: Props) {
         return formatted;
       },
     },
-    {
-      accessorKey: "profit_earned",
-      header: "Profit Earned",
-      cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("profit_earned"));
-        const formatted = formatCurrency(amount, "en-NG", "NGN");
-        return formatted;
-      },
-    },
+    // {
+    //   accessorKey: "profit_earned",
+    //   header: "Profit Earned",
+    //   cell: ({ row }) => {
+    //     const amount = parseFloat(row.getValue("profit_earned"));
+    //     const formatted = formatCurrency(amount, "en-NG", "NGN");
+    //     return formatted;
+    //   },
+    // },
     {
       accessorKey: "selling_price",
       header: "Selling Price",
@@ -64,26 +64,26 @@ function SalesAnalytics(props: Props) {
       },
     },
     { accessorKey: "shelf_life", header: "Shelf Life" },
-    {
-      id: "action",
-      header: "ACTION",
-      cell: ({ row }) => {
-        return (
-          <Button
-            size={"sm"}
-            variant={"outline"}
-            className="rounded-full border-primary text-primary"
-            onClick={() =>
-              navigate("/dashboard/detail", {
-                state: { id: row.original.product_id },
-              })
-            }
-          >
-            View Analysis
-          </Button>
-        );
-      },
-    },
+    // {
+    //   id: "action",
+    //   header: "ACTION",
+    //   cell: ({ row }) => {
+    //     return (
+    //       <Button
+    //         size={"sm"}
+    //         variant={"outline"}
+    //         className="rounded-full border-primary text-primary"
+    //         onClick={() =>
+    //           navigate("/dashboard/detail", {
+    //             state: { id: row.original.product_id },
+    //           })
+    //         }
+    //       >
+    //         View Analysis
+    //       </Button>
+    //     );
+    //   },
+    // },
   ];
 
   return (

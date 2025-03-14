@@ -55,7 +55,7 @@ export const Login = () => {
     ApiResponseError,
     FormValue
   >({
-    mutationFn: async (payload) => postRequest("/auth/login/", payload),
+    mutationFn: async (payload) => postRequest("/auth/login", payload),
     onSuccess(data) {
       const { access_token, user } = data.data.data;
 
@@ -64,6 +64,11 @@ export const Login = () => {
       handler.success("Authentication", data.data.message);
     },
     onError(error) {
+      const { token } = getLoginToken();
+      const user = getLoginUser();
+
+      setUser(user);
+      setToken(token)
       handler.error("Registration", error);
     },
   });

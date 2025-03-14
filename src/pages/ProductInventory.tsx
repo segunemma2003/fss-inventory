@@ -60,7 +60,7 @@ export const ProductInventory = () => {
       cell: ({ row }) => {
         return (
           <Button
-          size={'sm'}
+            size={"sm"}
             variant={"outline"}
             className="rounded-full border-primary text-primary"
             onClick={() =>
@@ -97,7 +97,10 @@ export const ProductInventory = () => {
             <Upload className="w-5 h-5 mr-3" />
             Export
           </Button>
-          <Button className="rounded-full">
+          <Button
+            onClick={() => navigate("/dashboard/add-product")}
+            className="rounded-full"
+          >
             <Plus className="w-5 h-5 mr-3" />
             Add Product
           </Button>

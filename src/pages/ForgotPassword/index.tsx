@@ -1,12 +1,12 @@
 "use client";
 import { TextInput } from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogHeader,
+//   DialogTitle,
+// } from "@/components/ui/dialog";
 import { postRequest } from "@/lib/axiosInstance";
 import { Forger, useForge } from "@/lib/forge";
 import { useMutation } from "@tanstack/react-query";
@@ -96,25 +96,25 @@ const ForgotPassword: React.FC = () => {
 
 export default ForgotPassword;
 
-const VerificationSuccessDialog = () => {
-  return (
-    <Dialog>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Check your mailbox</DialogTitle>
-        </DialogHeader>
+// const VerificationSuccessDialog = () => {
+//   return (
+//     <Dialog>
+//       <DialogContent>
+//         <DialogHeader>
+//           <DialogTitle>Check your mailbox</DialogTitle>
+//         </DialogHeader>
 
-        <div className="text-center">
-          <p className="text-sm text-neutral-500">
-            A verification link has been sent to the email address you provided.
-            Check your mail box and get signed in.
-          </p>
-        </div>
+//         <div className="text-center">
+//           <p className="text-sm text-neutral-500">
+//             A verification link has been sent to the email address you provided.
+//             Check your mail box and get signed in.
+//           </p>
+//         </div>
 
-        <Button className="w-80">
-          Continue  <ArrowRight className="h-5 w-5 ml-3" />
-        </Button>
-      </DialogContent>
-    </Dialog>
-  );
-};
+//         <Button className="w-80">
+//           Continue  <ArrowRight className="h-5 w-5 ml-3" />
+//         </Button>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// };

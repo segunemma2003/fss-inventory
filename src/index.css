@@ -1,7 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* // Remove custom-variant if not needed, as Tailwind handles dark mode with the 'dark' class
+// @custom-variant dark (&:where(.dark, .dark *)); */
 
 :root {
   --background: hsl(0 0% 100%);

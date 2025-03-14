@@ -1,4 +1,4 @@
-import React, { JSX, ReactNode, useCallback, useMemo } from "react";
+import { JSX, ReactNode,  useMemo } from "react";
 import { List } from "react-virtualized";
 import { cn as classNames } from "@/lib/utils";
 
@@ -81,7 +81,7 @@ const ListVirtualized = <T,>({
           rowCount={data.length}
           rowHeight={rowHeight}
           className={classNames("virtualized-list", className)}
-          rowRenderer={({ index, key, style }) => (
+          rowRenderer={({ index, key, style }: any) => (
             <div key={key} style={style}>
               {renderItem(data[index], index)}
             </div>

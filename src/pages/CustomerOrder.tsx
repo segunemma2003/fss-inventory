@@ -3,6 +3,7 @@ import { DataTable } from "@/components/layouts/DataTable";
 import TextSearch from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 // import { getCustomerOrders } from "@/demo";
 import { getRequest } from "@/lib/axiosInstance";
 import {
@@ -124,6 +125,29 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
   );
 };
 
+interface TotalSectionProps {
+  total: string;
+}
+
+const TotalSection: React.FC<TotalSectionProps> = ({ total }) => {
+  return (
+    <div className="mt-6 w-full whitespace-nowrap text-neutral-900 max-md:max-w-full">
+      <Separator className="w-full" />
+      <div className="flex flex-wrap gap-10 justify-between items-end mt-5 w-full max-md:max-w-full">
+        <h2 className="text-3xl leading-tight">Total</h2>
+        <div className="flex gap-0.5 items-center px-2 text-2xl">
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets/877fbded3c1141a18415be7a6b510b08/b1f671dd598c424e325393851df1117eb48e817f4419e970d4499fc118408ea9?placeholderIfAbsent=true"
+            alt="Currency icon"
+            className="object-contain shrink-0 self-stretch my-auto w-5 aspect-[1.33]"
+          />
+          <span className="self-stretch my-auto">{total}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const OrderDialog = () => {
   return (
     <Dialog>
@@ -133,6 +157,14 @@ const OrderDialog = () => {
             <h3 className="text-lg font-semibold">Order List</h3>
           </div>
         </div>
+
+        <div className="flex flex-wrap gap-5 justify-between mt-14 max-md:mt-10 max-md:max-w-full">
+          <h2 className="my-auto text-3xl leading-tight text-red-600">
+            Customer Purchase
+          </h2>
+        </div>
+
+        <TotalSection total="12,427,00" />
       </DialogContent>
     </Dialog>
   );

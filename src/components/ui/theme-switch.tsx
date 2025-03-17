@@ -10,7 +10,7 @@ type ThemeSwitchProps = {
   setChecked?: (checked: boolean) => void;
 }
 
-export default function ThemeSwitch({ checked = true, setChecked }: ThemeSwitchProps) {
+export default function ThemeSwitch({ checked = false, setChecked }: ThemeSwitchProps) {
   const id = useId();
 
   return (

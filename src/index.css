@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
-/* // Remove custom-variant if not needed, as Tailwind handles dark mode with the 'dark' class
-// @custom-variant dark (&:where(.dark, .dark *)); */
+/* // Remove custom-variant if not needed, as Tailwind handles dark mode with the 'dark' class*/
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *)); 
 
 :root {
   --background: hsl(0 0% 100%);
@@ -163,4 +163,24 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  /* ---break---*/
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  /* ---break---*/
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
 }

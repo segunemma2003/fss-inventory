@@ -171,12 +171,12 @@ export default function TextSearch(
   const id = useId();
 
   return (
-    <div className="*:not-first:mt-2">
+    <div className={cn("*:not-first:mt-2 w-96", props.containerClass)}>
       {props.label && <Label htmlFor={id}>{props.label}</Label>}
       <div className="relative">
         <Input
           id={id}
-          className="peer ps-9 pe-9 w-96"
+          className="peer ps-9 pe-9 w-full"
           placeholder="Search..."
           type="search"
           {...props}

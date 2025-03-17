@@ -19,6 +19,7 @@ import SalesAnalytics from '@/pages/SalesAnalytics';
 import { AddProduct } from '@/pages/AddProduct';
 import CustomerOrder from '@/pages/CustomerOrder';
 import { Users } from '@/pages/Users';
+import Settings from '@/pages/settings'
 import { Routes, Route } from "react-router";
 
 export const AppRoutes = () => {
@@ -41,6 +42,7 @@ export const AppRoutes = () => {
     { path: "/dashboard/sales-analytics", element: <SalesAnalytics /> },
     { path: "/dashboard/customer-order", element: <CustomerOrder /> },
     { path: "/dashboard/user-profile", element: <Users /> },
+    { path: "/dashboard/settings", element: <Settings /> },
   ];
 
   return (

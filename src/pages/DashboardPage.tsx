@@ -113,10 +113,10 @@ interface MetricCardProps {
 const MetricCard = ({ title, value, change, isPositive }: MetricCardProps) => {
   return (
     <Card className="rounded-2xl">
-      <CardContent className="py-6 px-3 ">
-        <h4 className="text-gray-600 text-sm font-urbanist mb-2">{title}</h4>
+      <CardContent className="px-3">
+        <h4 className="text-muted-foreground text-sm font-urbanist mb-2">{title}</h4>
         <div className="flex items-center gap-2">
-          <p className="text-2xl font-bold text-gray-700 font-urbanist">
+          <p className="text-2xl font-bold text-accent-foreground font-urbanist">
             {value}
           </p>
           <span

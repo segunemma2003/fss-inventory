@@ -3,7 +3,6 @@ import { DataTable, DataTableRef } from "@/components/layouts/DataTable";
 import { IndeterminateCheckbox } from "@/components/layouts/DataTable/components";
 import TextSearch from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
-import { getDemoBusinesses } from "@/demo";
 import { useToastHandlers } from "@/hooks/useToaster";
 import { deleteRequest, getRequest } from "@/lib/axiosInstance";
 import { ApiListResponse, ApiResponseError } from "@/types";
@@ -178,7 +177,7 @@ function Business(props: Props) {
 
       <DataTable
         data={
-          getBusinesses(data?.data?.results?.data ?? getDemoBusinesses()) ?? []
+          getBusinesses(data?.data?.results?.data ?? []) ?? []
         }
         columns={columns as ColumnDef<unknown>[]}
         config={{ enableMultiRowSelection: false }}

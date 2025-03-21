@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FaRegEdit } from "react-icons/fa";
 import { Personal } from "./layouts/Personal";
 import NotificationSettings from "./layouts/Notification";
+import Activity from "./layouts/Activity";
 
 export default function Settings() {
   return (
@@ -35,9 +36,7 @@ export default function Settings() {
           <NotificationSettings />
         </TabsContent>
         <TabsContent value="activity">
-          <p className="text-muted-foreground p-4 text-center text-xs">
-            Content for activity
-          </p>
+          <Activity />
         </TabsContent>
       </Tabs>
     </Container>

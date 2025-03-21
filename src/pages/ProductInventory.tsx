@@ -51,7 +51,7 @@ export const ProductInventory = () => {
   });
 
   const { data, isLoading } = useQuery<
-    ApiListResponse<ProductList>,
+    ApiListResponse<ProductList[]>,
     ApiResponseError
   >({
     queryKey: ["products"],

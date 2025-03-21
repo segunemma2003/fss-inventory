@@ -19,8 +19,8 @@ export default function Settings() {
       <Tabs defaultValue="personal" className="mt-5">
         <TabsList className="bg-transparent border w-full justify-baseline">
           <TabsTrigger className="w-fit flex-none px-10 py-1.5" value="personal">Personal</TabsTrigger>
-          <TabsTrigger className="w-fit flex-none px-10 py-1.5" value="security">Security</TabsTrigger>
-          <TabsTrigger className="w-fit flex-none px-10 py-1.5" value="alert">Alert & Notifications</TabsTrigger>
+          {/* <TabsTrigger className="w-fit flex-none px-10 py-1.5" value="security">Security</TabsTrigger>
+          <TabsTrigger className="w-fit flex-none px-10 py-1.5" value="alert">Alert & Notifications</TabsTrigger> */}
           <TabsTrigger className="w-fit flex-none px-10 py-1.5" value="activity">Activity</TabsTrigger>
         </TabsList>
         <TabsContent value="personal">

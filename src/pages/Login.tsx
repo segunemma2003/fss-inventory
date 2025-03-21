@@ -4,10 +4,10 @@ import {
 } from "@/components/layouts/FormInputs/TextInput";
 import { useForge } from "@/lib/forge/useForge";
 import { Button } from "@/components/ui/button";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import { ArrowRight, Lock, Mail } from "lucide-react";
 import { Forger } from "@/lib/forge";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { postRequest } from "@/lib/axiosInstance";
 import { useToastHandlers } from "@/hooks/useToaster";
@@ -16,7 +16,7 @@ import { ApiResponse, ApiResponseError, User } from "@/types";
 import { useSetToken, useSetUser } from "@/store/authSlice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
+// import { useState } from "react";
 
 type FormValue = {
   email: string;
@@ -36,11 +36,12 @@ const schema = yup.object().shape({
 
 export const Login = () => {
   const setUser = useSetUser();
+  const navigate = useNavigate();
   const setToken = useSetToken();
   const handler = useToastHandlers();
-  const [userType, setUserType] = useState<"admin" | "sales" | "inventory">(
-    "admin"
-  );
+  // const [userType, setUserType] = useState<"admin" | "sales" | "inventory">(
+  //   "admin"
+  // );
 
   const { ForgeForm } = useForge<FormValue>({
     defaultValues: {
@@ -57,6 +58,7 @@ export const Login = () => {
   >({
     mutationFn: async (payload) => postRequest("/auth/login/", payload),
     onSuccess(data) {
+
       const { access_token, user } = data.data.data;
 
       setUser(user);
@@ -66,13 +68,17 @@ export const Login = () => {
       }
     },
     onError(error) {
+      if(error.response?.data.message === "Please verify your email address to login") {
+        navigate('/verification')
+        return
+      }
       handler.error("Registration", error);
     },
   });
 
-  const handleGoogleAuth = () => {
-    // Implement Google OAuth logic here
-  };
+  // const handleGoogleAuth = () => {
+  //   // Implement Google OAuth logic here
+  // };
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
@@ -93,7 +99,7 @@ export const Login = () => {
           </p>
         </div>
 
-        <div className="flex items-center justify-center gap-2 mb-10">
+        {/* <div className="flex items-center justify-center gap-2 mb-10">
           <Button
             variant={userType === "admin" ? "default" : "outline"}
             onClick={() => setUserType("admin")}
@@ -115,7 +121,7 @@ export const Login = () => {
           >
             Inventory
           </Button>
-        </div>
+        </div> */}
 
         <ForgeForm onSubmit={mutate} className="mt-10">
           <div className="space-y-4">
@@ -160,16 +166,16 @@ export const Login = () => {
             </Link>
           </div>
 
-          <div className="relative my-5">
+          {/* <div className="relative my-5">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="bg-gray-50 px-2 text-gray-500">OR</span>
             </div>
-          </div>
+          </div> */}
 
-          <div>
+          {/* <div>
             <Button
               type="button"
               variant={'outline'}
@@ -179,7 +185,7 @@ export const Login = () => {
               <FcGoogle className="mr-2 h-5 w-5" />
               Continue with Google
             </Button>
-          </div>
+          </div> */}
         </ForgeForm>
       </div>
     </div>

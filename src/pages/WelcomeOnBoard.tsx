@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router";
 
 interface Props {}
 
 function WelcomeOnBoard(props: Props) {
+  const navigate = useNavigate()
   const {} = props;
 
   return (
@@ -26,7 +28,7 @@ function WelcomeOnBoard(props: Props) {
             inventory management activities.
           </p>
 
-          <Button className="w-96 mt-14">
+          <Button onClick={() => navigate('/login')} className="w-96 mt-14">
             Get Started <ArrowRight className="h-5 w-5 ml-2" />
           </Button>
         </div>

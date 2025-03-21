@@ -48,6 +48,7 @@ export const RegisterOne = () => {
       if (typeof data.data.message === "string") {
         handler.success("Registration", data.data.message);
       }
+      navigate("/dashboard")
     },
     onError(error) {
       const errorData = error.response?.data;
@@ -125,13 +126,7 @@ export const RegisterOne = () => {
                 <Building className="h-5 w-5 mr-2 text-gray-400" />
               }
             />
-            <Forger
-              component={TextInput}
-              name="business_email"
-              placeholder="Registered Business Email Address"
-              startAdornment={<Mail className="h-5 w-5 mr-2 text-gray-400" />}
-            />
-            <Forger
+             <Forger
               component={TextInput}
               name="cac_number"
               placeholder="Registered Business CAC"
@@ -139,6 +134,14 @@ export const RegisterOne = () => {
                 <FolderOpen className="h-5 w-5 mr-2 text-gray-400" />
               }
             />
+            <Forger
+              component={TextInput}
+              name="business_email"
+              containerClass="col-span-2"
+              placeholder="Registered Business Email Address"
+              startAdornment={<Mail className="h-5 w-5 mr-2 text-gray-400" />}
+            />
+           
             <Forger
               component={TextInput}
               name="no_of_employees"
@@ -169,9 +172,8 @@ export const RegisterOne = () => {
 
           <div>
             <Button
-              // type="submit"
+              type="submit"
               isLoading={isPending}
-              onClick={() => navigate("/personal-registration")}
               className="w-60"
             >
               Continue <ArrowRight className="h-5 w-5 ml-2" />

@@ -43,7 +43,7 @@ export const RegisterTwo = () => {
   });
 
   return (
-    <section className="flex min-h-screen  items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-0">
+    <section className="flex min-h-screen  items-center justify-center bg-background px-4 sm:px-6 lg:px-0">
       <div className="w-full lg:px-8 container">
         <img
           src="https://cdn.builder.io/api/v1/image/assets/877fbded3c1141a18415be7a6b510b08/a1b8d17c054ef5d488ceefa5dd92f6dac50b4fdb1ceb3d816f63c57dcff44ae5?placeholderIfAbsent=true"
@@ -117,6 +117,7 @@ export const RegisterTwo = () => {
               component={TextInput}
               name="phoneNumber"
               placeholder="Phone Number"
+              containerClass="col-span-2"
               startAdornment={<Phone className="h-5 w-5 mr-2 text-gray-400" />}
             />
             <Forger
@@ -135,6 +136,7 @@ export const RegisterTwo = () => {
               component={TextInput}
               name="password"
               placeholder="Password"
+              containerClass="col-span-2"
               startAdornment={<Lock className="h-5 w-5 mr-2 text-gray-400" />}
             />
             <Forger
@@ -149,7 +151,7 @@ export const RegisterTwo = () => {
             <Button
               // type="submit"
               isLoading={isPending}
-              onClick={() => navigate("/verification")}
+              onClick={() => navigate("/")}
               className="w-60"
             >
               Continue <ArrowRight className="h-5 w-5 ml-2" />

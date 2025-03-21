@@ -4,7 +4,7 @@ import {
 } from "@/components/layouts/FormInputs/TextInput";
 import { useForge } from "@/lib/forge/useForge";
 import { Button } from "@/components/ui/button";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import { FeatureSection } from "./layoout/FeatureSection";
 import { Link, useNavigate } from "react-router";
 import { Mail, Phone, User, Lock } from "lucide-react";
@@ -70,9 +70,9 @@ export const Register = () => {
     },
   });
 
-  const handleGoogleAuth = () => {
-    // Implement Google OAuth logic here
-  };
+  // const handleGoogleAuth = () => {
+  //   // Implement Google OAuth logic here
+  // };
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-0">
@@ -100,7 +100,6 @@ export const Register = () => {
             <Forger
               component={TextInput}
               name="full_name"
-              label="Full Name"
               placeholder="Enter your full name"
               autoComplete="name"
               required
@@ -109,7 +108,6 @@ export const Register = () => {
             <Forger
               component={TextInput}
               name="email"
-              label="Email Address"
               placeholder="Enter your email address"
               type="email"
               autoComplete="email"
@@ -143,16 +141,16 @@ export const Register = () => {
           </div>
         </ForgeForm>
 
-        <div className="relative my-5">
+        {/* <div className="relative my-5">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="bg-gray-50 px-2 text-gray-500">OR</span>
           </div>
-        </div>
+        </div> */}
 
-        <div>
+        {/* <div>
           <Button
             type="button"
             variant={"outline"}
@@ -162,7 +160,7 @@ export const Register = () => {
             <FcGoogle className="mr-2 h-5 w-5" />
             Continue with Google
           </Button>
-        </div>
+        </div> */}
 
         <div className="text-center text-sm mt-3">
           <span className="text-gray-500">Hey, I do have an account? </span>

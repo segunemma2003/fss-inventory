@@ -33,8 +33,8 @@ export const getAxiosInstance = () => {
   return axiosInstance;
 };
 
-export const getRequest = async (url: string) => {
-  const res = await getAxiosInstance().get(`${url}`);
+export const getRequest = async (url: string, config?: AxiosRequestConfig) => {
+  const res = await getAxiosInstance().get(`${url}`, config);
   return res;
 };
 

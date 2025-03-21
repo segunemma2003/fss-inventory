@@ -48,7 +48,7 @@ export const RegisterOne = () => {
       if (typeof data.data.message === "string") {
         handler.success("Registration", data.data.message);
       }
-      navigate("/dashboard")
+      navigate("/terms-conditions")
     },
     onError(error) {
       const errorData = error.response?.data;

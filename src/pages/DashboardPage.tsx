@@ -3,15 +3,14 @@ import { DataTable } from "@/components/layouts/DataTable";
 import { MapList } from "@/components/layouts/MapList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { getProducts } from "@/demo";
 import { formatCurrency, getTimeGreetings } from "@/lib/utils";
 import { useUser } from "@/store/authSlice";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { AxiosResponse } from "axios";
 import { Box } from "lucide-react";
-import { ProductAnalytics } from "./ProductInventory";
-import { ApiResponseError } from "@/types";
+import { ProductAnalytics, ProductList } from "./ProductInventory";
+import { ApiListResponse, ApiResponseError } from "@/types";
 import { getRequest } from "@/lib/axiosInstance";
 import { useNavigate } from "react-router";
 // import { FaRegEdit } from "react-icons/fa";
@@ -32,22 +31,30 @@ export const DashboardPage = () => {
     queryFn: async () => await getRequest("products/analytics/"),
   });
 
+  const { data, isLoading } = useQuery<
+  ApiListResponse<ProductList>,
+    ApiResponseError
+  >({
+    queryKey: ["analytics"],
+    queryFn: async () => await getRequest("products/", { params: { min_quantity: 20 } }),
+  });
+
   const metrics = [
     {
       title: "Total Stock Quantity",
-      value: analyticsQuery.data?.data.total_profit_generated ?? '0',
+      value: analyticsQuery.data?.data.total_stock_quantity.toString() ?? '0',
       change: "15",
       isPositive: true,
     },
     {
       title: "Total Stock Value",
-      value: formatCurrency(0, "en-NG", "NGN"),
+      value: formatCurrency(parseInt(analyticsQuery.data?.data.total_stock_value ?? "0"), "en-NG", "NGN"),
       change: "15",
       isPositive: true,
     },
     {
       title: "Profit Margin",
-      value: formatCurrency(parseInt(analyticsQuery.data?.data.total_stock_value ?? "0"), "en-NG", "NGN"),
+      value: formatCurrency(parseInt(analyticsQuery.data?.data.total_profit_generated ?? "0"), "en-NG", "NGN"),
       change: "4",
     },
     {
@@ -78,8 +85,9 @@ export const DashboardPage = () => {
         <Card>
           <CardContent>
             <DataTable
-              data={getProducts() ?? []}
+              data={data?.data.results.data as any ?? []}
               columns={columns as any}
+              options={{ isLoading }}
               header={() => (
                 <div className="font-urbanist">
                   <h5 className="text-sm font-bold">Low - Stock Product</h5>
@@ -126,7 +134,7 @@ interface MetricCardProps {
   isPositive?: boolean;
 }
 
-const MetricCard = ({ title, value, change, isPositive }: MetricCardProps) => {
+const MetricCard = ({ title, value }: MetricCardProps) => {
   return (
     <Card className="rounded-2xl">
       <CardContent className="px-3">
@@ -137,14 +145,14 @@ const MetricCard = ({ title, value, change, isPositive }: MetricCardProps) => {
           <p className="text-2xl font-bold text-accent-foreground font-urbanist">
             {value}
           </p>
-          <span
+          {/* <span
             className={`text-sm font-medium ${
               isPositive ? "text-green-500" : "text-red-500"
             }`}
           >
             {isPositive ? "+" : "-"}
             {change}%
-          </span>
+          </span> */}
         </div>
       </CardContent>
     </Card>

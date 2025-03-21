@@ -66,8 +66,8 @@ export const ProductInventory = () => {
       isPositive: true,
     },
     {
-      title: "Average  Sales Margin",
-      value: formatCurrency(0, "en-NG", "NGN"),
+      title: "Average Sales Margin",
+      value: formatCurrency(parseInt(analyticsQuery.data?.data.total_profit_generated ?? "0"), "en-NG", "NGN"),
       change: "15",
       isPositive: true,
     },

@@ -36,7 +36,7 @@ export const Verification = () => {
       if (typeof data.data.message === "string") {
         handler.success("Email VVerification", data.data.message);
       }
-      navigate("/terms-conditions");
+      navigate("/business-registration");
     },
     onError(error) {
       const errorData = error.response?.data;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { UploadIcon } from "lucide-react";
 
 export const ImageUploadOverlay: React.FC = () => {
@@ -22,7 +22,7 @@ interface ImageUploaderProps {
 
 export const ImageUploader: React.FC<ImageUploaderProps> = ({
   onImageUpload,
-  className,
+  // className,
 }) => {
   const [image, setImage] = useState<string | null>(
     "https://img.freepik.com/premium-psd/ice-cube-border-transparent-background_53876-209958.jpg"

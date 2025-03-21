@@ -23,8 +23,15 @@ import {
 import { TbCurrencyNaira } from "react-icons/tb";
 
 type FormValue = {
-  email: string;
-  password: string;
+  name: string;
+  description: string;
+  category: string;
+  cost_price: string;
+  selling_price: string;
+  quantity: string;
+  uom: string;
+  image: string;
+  expiry_date: string;
 };
 
 const FileUploadPlaceholder = () => {
@@ -57,7 +64,7 @@ const FileUploadPlaceholder = () => {
 };
 
 export function AddProduct() {
-  const { ForgeForm } = useForge<FormValue>({});
+  const { ForgeForm, reset } = useForge<FormValue>({});
   const handler = useToastHandlers();
 
   const { mutate, isPending } = useMutation<
@@ -65,9 +72,11 @@ export function AddProduct() {
     ApiResponseError,
     FormValue
   >({
-    mutationFn: async (payload) => postRequest("/auth/login", payload),
+    mutationFn: async (payload) => postRequest("/products/", payload),
     onSuccess(data) {
-      handler.success("Authentication", data.data.message);
+      if(typeof data.data.message === 'string'){
+        handler.success("Authentication", data.data.message);
+      }
     },
     onError(error) {
       handler.error("Registration", error);
@@ -83,14 +92,14 @@ export function AddProduct() {
         <div className="grid grid-cols-2 mt-5 gap-4">
           <div>
             <Forger
-              name="productImage"
+              name="image"
               component={TextFileUploader}
               element={<FileUploadPlaceholder />}
             />
           </div>
           <div className="space-y-5">
             <Forger
-              name="productName"
+              name="name"
               placeholder="Product Name"
               component={TextInput}
               startAdornment={<Package className="h-5 w-5 mr-2" />}
@@ -112,13 +121,13 @@ export function AddProduct() {
 
             <div className="grid grid-cols-2 gap-3">
               <Forger
-                name="purchasePrice"
+                name="cost_price"
                 placeholder="Purchase Price"
                 component={TextInput}
                 startAdornment={<TbCurrencyNaira className="h-5 w-5 mr-2" />}
               />
               <Forger
-                name="sellingPrice"
+                name="selling_price"
                 placeholder="Selling Price"
                 component={TextInput}
                 startAdornment={<TbCurrencyNaira className="h-5 w-5 mr-2" />}
@@ -127,7 +136,7 @@ export function AddProduct() {
 
             <div className="grid grid-cols-2 gap-3">
               <Forger
-                name="productQuantity"
+                name="quantity"
                 placeholder="Product Quantity"
                 component={TextInput}
                 startAdornment={<SquareStack className="h-5 w-5 mr-2" />}
@@ -142,13 +151,13 @@ export function AddProduct() {
 
             <div className="grid grid-cols-2 gap-3">
               <Forger
-                name="shelfLife"
+                name="uom"
                 placeholder="Shelf Life"
                 component={TextInput}
                 startAdornment={<CalendarClock className="h-5 w-5 mr-2" />}
               />
               <Forger
-                name="dateAdded"
+                name="expiry_date"
                 placeholder="Date Added"
                 type="date"
                 component={TextInput}
@@ -157,7 +166,7 @@ export function AddProduct() {
             </div>
 
             <Forger
-              name="productDescription"
+              name="description"
               placeholder="Product Description"
               component={TextArea}
               startAdornment={<Package className="h-5 w-5 mr-2" />}
@@ -165,7 +174,7 @@ export function AddProduct() {
           </div>
         </div>
         <div className="flex items-center justify-end gap-2 mt-8">
-          <Button variant={"secondary"}>Discard Changes</Button>
+          <Button variant={"secondary"} onClick={() => reset()}>Discard Changes</Button>
           <Button type="submit" isLoading={isPending}>Add Product</Button>
         </div>
       </ForgeForm>

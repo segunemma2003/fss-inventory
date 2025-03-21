@@ -37,7 +37,7 @@ export const Register = () => {
   const navigate = useNavigate();
   const handler = useToastHandlers();
 
-  const { ForgeForm } = useForge<FormValue>({
+  const { ForgeForm, setError } = useForge<FormValue>({
     defaultValues: {
       full_name: "",
       email: "",
@@ -54,10 +54,18 @@ export const Register = () => {
   >({
     mutationFn: async (payload) => postRequest("/auth/register/", payload),
     onSuccess(data, variables) {
-      handler.success("Registration", data.data.message);
+      if (typeof data.data.message === "string") {
+        handler.success("Registration", data.data.message);
+      }
       navigate("/verification", { state: { email: variables.email } });
     },
     onError(error) {
+      const errorData = error.response?.data;
+      if (typeof errorData?.message === "object") {
+        Object.entries(errorData?.message).forEach(([key, value]) =>
+          setError(key as keyof FormValue, { message: value?.[0] ?? "" })
+        );
+      }
       handler.error("Registration", error);
     },
   });

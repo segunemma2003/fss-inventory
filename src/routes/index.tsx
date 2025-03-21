@@ -20,6 +20,10 @@ import { AddProduct } from '@/pages/AddProduct';
 import CustomerOrder from '@/pages/CustomerOrder';
 import { Users } from '@/pages/Users';
 import Settings from '@/pages/settings'
+import Business from "@/pages/Business";
+import CreateBusiness from "@/pages/Business/Create";
+import BusinessDetails from "@/pages/Business/Details";
+import Roles from '@/pages/Roles';
 import { Routes, Route } from "react-router";
 
 export const AppRoutes = () => {
@@ -43,6 +47,10 @@ export const AppRoutes = () => {
     { path: "/dashboard/customer-order", element: <CustomerOrder /> },
     { path: "/dashboard/user-profile", element: <Users /> },
     { path: "/dashboard/settings", element: <Settings /> },
+    { path: "/dashboard/roles", element: <Roles /> },
+    { path: "/dashboard/business-id", element: <Business /> },
+    { path: "/dashboard/business-id/create", element: <CreateBusiness /> },
+    { path: "/dashboard/business-id/details", element: <BusinessDetails /> },
   ];
 
   return (

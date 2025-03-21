@@ -21,7 +21,7 @@ export const useToastHandlers = () => {
       return;
     }
 
-    if (error?.response?.data && error.response?.data.message) {
+    if (error?.response?.data && typeof error.response?.data.message === "string") {
       toast({
         title,
         description: error.response?.data?.message,

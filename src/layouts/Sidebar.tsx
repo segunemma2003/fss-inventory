@@ -26,6 +26,7 @@ import { TbUserSquare } from "react-icons/tb";
 import { Button } from "@/components/ui/button";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { format } from 'date-fns';
+import { UserRoundPen } from "lucide-react";
 
 type NavigationItem = {
   icon: IconType;
@@ -48,7 +49,7 @@ export const SideBar = () => {
     {
       icon: BsCardChecklist,
       title: "Product Inventory",
-      badge: 3,
+      // badge: 3,
       to: "/dashboard/product-inventory",
       active: location.pathname === "/dashboard/product-inventory",
     },
@@ -84,6 +85,12 @@ export const SideBar = () => {
       title: "User Profile",
       to: "/dashboard/user-profile",
       active: location.pathname === "/dashboard/user-profile",
+    },
+    {
+      icon: UserRoundPen as any,
+      title: "Roles",
+      to: "/dashboard/roles",
+      active: location.pathname === "/dashboard/roles",
     },
     {
       icon: HiOutlineCog8Tooth,

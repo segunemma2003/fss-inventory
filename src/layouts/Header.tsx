@@ -5,7 +5,7 @@ import { FaUser } from "react-icons/fa";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useEffect } from "react";
-import { useDarkMode, useLocalStorage } from "usehooks-ts";
+import { useLocalStorage } from "usehooks-ts";
 import ThemeSwitch from "@/components/ui/theme-switch";
 import { NotificationPanel } from "./NotificationPanel";
 
@@ -86,8 +86,8 @@ export const Header = () => {
 
       <div className="flex items-center">
         <ThemeSwitch
-          checked={!isDarkMode}
-          setChecked={(value) => {
+          checked={isDarkMode}
+          setChecked={() => {
             // set(value);
             toggleDarkMode();
           }}

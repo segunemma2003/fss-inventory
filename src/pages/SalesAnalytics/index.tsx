@@ -104,7 +104,7 @@ function SalesAnalytics(props: Props) {
       </div>
       <DataTable
         data={getProductAnalysis(8) ?? []}
-        columns={columns}
+        columns={columns as any}
         options={{
           disableSelection: true,
         }}

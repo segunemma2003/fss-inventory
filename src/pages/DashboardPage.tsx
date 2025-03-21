@@ -6,8 +6,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getProducts } from "@/demo";
 import { formatCurrency, getTimeGreetings } from "@/lib/utils";
 import { useUser } from "@/store/authSlice";
+import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
+import { AxiosResponse } from "axios";
 import { Box } from "lucide-react";
+import { ProductAnalytics } from "./ProductInventory";
+import { ApiResponseError } from "@/types";
+import { getRequest } from "@/lib/axiosInstance";
+import { useNavigate } from "react-router";
 // import { FaRegEdit } from "react-icons/fa";
 
 type ProductData = {
@@ -17,27 +23,36 @@ type ProductData = {
 };
 
 export const DashboardPage = () => {
+
+  const analyticsQuery = useQuery<
+    AxiosResponse<ProductAnalytics>,
+    ApiResponseError
+  >({
+    queryKey: ["analytics"],
+    queryFn: async () => await getRequest("products/analytics/"),
+  });
+
   const metrics = [
     {
       title: "Total Stock Quantity",
-      value: "58,231",
+      value: analyticsQuery.data?.data.total_profit_generated ?? '0',
       change: "15",
       isPositive: true,
     },
     {
       title: "Total Stock Value",
-      value: formatCurrency(21287.0, "en-NG", "NGN"),
+      value: formatCurrency(0, "en-NG", "NGN"),
       change: "15",
       isPositive: true,
     },
     {
       title: "Profit Margin",
-      value: formatCurrency(212870.0, "en-NG", "NGN"),
+      value: formatCurrency(parseInt(analyticsQuery.data?.data.total_stock_value ?? "0"), "en-NG", "NGN"),
       change: "4",
     },
     {
       title: "Total Product Sold",
-      value: "45,231",
+      value: analyticsQuery.data?.data.total_products.toString() ?? '0',
       change: "17",
       isPositive: true,
     },
@@ -58,13 +73,13 @@ export const DashboardPage = () => {
           renderItem={(item) => <MetricCard key={item.title} {...item} />}
         />
       </div>
-      <DashboardBanner />
+      {/* <DashboardBanner /> */}
       <div className="mt-8">
         <Card>
           <CardContent>
             <DataTable
               data={getProducts() ?? []}
-              columns={columns}
+              columns={columns as any}
               header={() => (
                 <div className="font-urbanist">
                   <h5 className="text-sm font-bold">Low - Stock Product</h5>
@@ -83,6 +98,7 @@ export const DashboardPage = () => {
 
 export const DashboardHeader = () => {
   const user = useUser();
+  const navigate = useNavigate()
 
   return (
     <div className="flex items-center justify-between">
@@ -90,7 +106,7 @@ export const DashboardHeader = () => {
         {getTimeGreetings()}, {user?.full_name} ( FoodStuffs Store ){" "}
       </h3>
       <div className="flex items-center gap-3 ">
-        <Button variant={"outline"} className="rounded-full">
+        <Button onClick={() => navigate('/dashboard/add-product')} variant={"outline"} className="rounded-full">
           <Box className="w-5 h-5 mr-3" />
           Add New Product
         </Button>
@@ -114,7 +130,9 @@ const MetricCard = ({ title, value, change, isPositive }: MetricCardProps) => {
   return (
     <Card className="rounded-2xl">
       <CardContent className="px-3">
-        <h4 className="text-muted-foreground text-sm font-urbanist mb-2">{title}</h4>
+        <h4 className="text-muted-foreground text-sm font-urbanist mb-2">
+          {title}
+        </h4>
         <div className="flex items-center gap-2">
           <p className="text-2xl font-bold text-accent-foreground font-urbanist">
             {value}
@@ -133,34 +151,34 @@ const MetricCard = ({ title, value, change, isPositive }: MetricCardProps) => {
   );
 };
 
-const DashboardBanner = () => {
-  return (
-    <div className="rounded-lg bg-radial from-white from-0% to-40% to-primary flex items-center p-6 pb-3.5 mt-5 gap-6 backdrop-blur-md">
-      <div className="flex-1 flex gap-4 items-center">
-        <div className="h-44 w-[28rem] rounded-xl overflow-hidden">
-          <img
-            src="https://res.cloudinary.com/dymahyzab/image/upload/v1741356646/FSS_Inventory_Frame_1_f5pe5b.png"
-            className="h-full w-full object-cover overflow-hidden rounded-xl"
-          />
-        </div>
-        <div className="space-y-4">
-          <span className="block text-sm font-bold font-urbanist text-accent">
-            Fast selling Category
-          </span>
-          <h5 className="text-2xl text-primary font-semibold font-urbanist">
-            Canned Product
-          </h5>
-          <p className="text-base text-accent font-urbanist font-semibold">
-            This category has marked an average of 10% increase in the flow of
-            sales for the day.
-          </p>
-        </div>
-      </div>
-      <div className="self-end">
-        <Button variant={"secondary"} className="px-14 rounded-xl">
-          View Inventory
-        </Button>
-      </div>
-    </div>
-  );
-};
+// const DashboardBanner = () => {
+//   return (
+//     <div className="rounded-lg bg-radial from-white from-0% to-40% to-primary flex items-center p-6 pb-3.5 mt-5 gap-6 backdrop-blur-md">
+//       <div className="flex-1 flex gap-4 items-center">
+//         <div className="h-44 w-[28rem] rounded-xl overflow-hidden">
+//           <img
+//             src="https://res.cloudinary.com/dymahyzab/image/upload/v1741356646/FSS_Inventory_Frame_1_f5pe5b.png"
+//             className="h-full w-full object-cover overflow-hidden rounded-xl"
+//           />
+//         </div>
+//         <div className="space-y-4">
+//           <span className="block text-sm font-bold font-urbanist text-accent">
+//             Fast selling Category
+//           </span>
+//           <h5 className="text-2xl text-primary font-semibold font-urbanist">
+//             Canned Product
+//           </h5>
+//           <p className="text-base text-accent font-urbanist font-semibold">
+//             This category has marked an average of 10% increase in the flow of
+//             sales for the day.
+//           </p>
+//         </div>
+//       </div>
+//       <div className="self-end">
+//         <Button variant={"secondary"} className="px-14 rounded-xl">
+//           View Inventory
+//         </Button>
+//       </div>
+//     </div>
+//   );
+// };

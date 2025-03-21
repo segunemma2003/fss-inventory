@@ -33,7 +33,9 @@ export const RegisterTwo = () => {
   >({
     mutationFn: async (payload) => postRequest("", payload),
     onSuccess(data) {
-      handler.success("Registration", data.data.message);
+      if(typeof data?.data?.message === "string") {
+        handler.success("Registration", data?.data?.message);
+      }
     },
     onError(error) {
       handler.error("Registration", error);

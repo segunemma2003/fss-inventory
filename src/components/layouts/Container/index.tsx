@@ -1,6 +1,7 @@
 import classNames from "clsx";
 import { forwardRef } from "react";
 import { ContainerProps, ContainerRef } from "./container";
+import Spinner from "@/components/ui/Spinner";
 
 const defaultElement = "section";
 
@@ -51,6 +52,16 @@ const generateFlexTemplate = (direction = "") => {
   return `flex-${direction}`;
 };
 
+const ContainerLoader = () => {
+  return (
+    <div className="absolute w-full top-1">
+      <div className="w-fit h-fit p-3 bg-accent-foreground rounded-xl mx-auto">
+        <Spinner />
+      </div>
+    </div>
+  );
+};
+
 const Container = forwardRef<ContainerRef, ContainerProps>((props, ref) => {
   const {
     as,
@@ -85,7 +96,12 @@ const Container = forwardRef<ContainerRef, ContainerProps>((props, ref) => {
     [generateGridTemplateLg(lg, direction)]: lg,
   });
 
-  return <Component ref={ref} {...rest} className={classes} />;
+  return (
+    <Component ref={ref} {...rest} className={classes}>
+      {props.isLoading && <ContainerLoader />}
+      {props.children}
+    </Component>
+  );
 });
 
 export default Container;

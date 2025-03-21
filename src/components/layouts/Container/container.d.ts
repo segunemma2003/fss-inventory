@@ -25,6 +25,7 @@ type ContainerProps = {
   fullWidth?: boolean;
   fullHeight?: boolean;
   style?: CSSProperties;
+  isLoading?: boolean;
 };
 
 type ContainerRef = Ref<ContainerProps["as"]>;

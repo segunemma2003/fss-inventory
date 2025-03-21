@@ -12,7 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { postRequest } from "@/lib/axiosInstance";
 import { useToastHandlers } from "@/hooks/useToaster";
 import { ApiResponse, ApiResponseError, User } from "@/types";
-import { getLoginToken, getLoginUser } from "@/demo";
+// import { getLoginToken, getLoginUser } from "@/demo";
 import { useSetToken, useSetUser } from "@/store/authSlice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -61,14 +61,11 @@ export const Login = () => {
 
       setUser(user);
       setToken(access_token);
-      handler.success("Authentication", data.data.message);
+      if(typeof data?.data?.message === "string") {
+        handler.success("Authentication", data.data.message);
+      }
     },
     onError(error) {
-      const { token } = getLoginToken();
-      const user = getLoginUser();
-
-      setUser(user);
-      setToken(token)
       handler.error("Registration", error);
     },
   });

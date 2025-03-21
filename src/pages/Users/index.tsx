@@ -2,9 +2,12 @@ import Container from "@/components/layouts/Container";
 import { DataTable } from "@/components/layouts/DataTable";
 import TextSearch from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
-import { getEmployees } from "@/demo";
+import { getRequest } from "@/lib/axiosInstance";
+import { ApiResponse, ApiResponseError } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { SlidersHorizontal, User2 } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
+import { AddNewMember } from "./components/AddMember";
 
 export type EmployeeType = {
   employee: string;
@@ -13,11 +16,32 @@ export type EmployeeType = {
   role: string;
 };
 
+export interface ProfileList {
+  id: string;
+  full_name: string;
+  address: null;
+  email: string;
+  phone_number: null;
+  display_name: string;
+  is_locked: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
+
 export function Users() {
-  const columns: ColumnDef<EmployeeType>[] = [
-    { accessorKey: "employee", header: "Customer Name" },
+
+  const { data, isLoading } = useQuery<
+    ApiResponse<ProfileList[]>,
+    ApiResponseError
+  >({
+    queryKey: ["users"],
+    queryFn: async () => await getRequest("profile/"),
+  });
+
+  const columns: ColumnDef<ProfileList>[] = [
+    { accessorKey: "full_name", header: "Customer Name" },
     {
-      accessorKey: "userID",
+      accessorKey: "id",
       header: "User ID",
     },
     {
@@ -25,19 +49,12 @@ export function Users() {
       header: "Email Address",
     },
     {
-      id: "action",
-      header: "Status",
-      cell: () => {
-        return (
-          <Button
-            size={"sm"}
-            variant={"outline"}
-            className="rounded-full"
-          >
-            On duty
-          </Button>
-        );
-      },
+      accessorKey: "phone_number",
+      header: "Phone Number",
+    },
+    {
+      accessorKey: "is_locked",
+      header: "Locked",
     },
   ];
 
@@ -51,17 +68,16 @@ export function Users() {
           </Button>
         </div>
         <div className="flex items-center gap-3">
-          <Button className="rounded-full">
-            <User2 className="w-5 h-5 mr-3" />
-            Create Profile
-          </Button>
+         <AddNewMember />
         </div>
       </div>
+
       <DataTable
-        data={getEmployees() ?? []}
-        columns={columns}
+        data={data?.data.data ?? []}
+        columns={columns as any}
         options={{
           disableSelection: true,
+          isLoading
         }}
       />
     </Container>

@@ -4,36 +4,85 @@ import TextSearch from "@/components/layouts/FormInputs/TextInput";
 import { MapList } from "@/components/layouts/MapList";
 import { MetricCard } from "@/components/layouts/MetricCard";
 import { Button } from "@/components/ui/button";
-import { getProducts } from "@/demo";
+import { getRequest } from "@/lib/axiosInstance";
 import { formatCurrency } from "@/lib/utils";
-import { ProductData } from "@/types";
+import { ApiListResponse, ApiResponseError, ProductData } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { Plus, SlidersHorizontal, Upload } from "lucide-react";
+import { AxiosResponse } from "axios";
+import { Plus, SlidersHorizontal, } from "lucide-react";
 import { useNavigate } from "react-router";
+
+export interface ProductAnalytics {
+  total_products: number;
+  total_stock_quantity: number;
+  total_stock_value: string;
+  total_profit_generated: string;
+  low_stock_products: number;
+  expired_products: number;
+  expiring_soon_products: number;
+}
+
+export interface ProductList {
+  id:            string;
+  name:          string;
+  category_name: string;
+  selling_price: string;
+  quantity:      number;
+  uom:           string;
+  image:         string;
+  expiry_date:   Date;
+  order_history: OrderHistory;
+}
+
+export interface OrderHistory {
+}
+
 
 export const ProductInventory = () => {
   const navigate = useNavigate();
+
+  const analyticsQuery = useQuery<
+    AxiosResponse<ProductAnalytics>,
+    ApiResponseError
+  >({
+    queryKey: ["analytics"],
+    queryFn: async () => await getRequest("products/analytics/"),
+  });
+
+  const { data, isLoading } = useQuery<
+    ApiListResponse<ProductList>,
+    ApiResponseError
+  >({
+    queryKey: ["products"],
+    queryFn: async () => await getRequest("products/"),
+  });
+
   const metrics = [
     {
       title: "Total Revenue Generated",
-      value: "58,231",
+      value: analyticsQuery.data?.data.total_profit_generated ?? '0',
       change: "15",
       isPositive: true,
     },
     {
       title: "Average  Sales Margin",
-      value: formatCurrency(21287.0, "en-NG", "NGN"),
+      value: formatCurrency(0, "en-NG", "NGN"),
       change: "15",
       isPositive: true,
     },
     {
       title: "Available In Stock",
-      value: formatCurrency(212870.0, "en-NG", "NGN"),
+      value: formatCurrency(
+        parseInt(analyticsQuery.data?.data.total_stock_value ?? "0"),
+        "en-NG",
+        "NGN"
+      ),
       change: "4",
     },
     {
       title: "Total Number Of Products",
-      value: "45,231",
+      value: analyticsQuery.data?.data.total_products.toString() ?? '0',
       change: "17",
       isPositive: true,
     },
@@ -93,10 +142,10 @@ export const ProductInventory = () => {
           </Button>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant={"ghost"} className="rounded-full">
+          {/* <Button variant={"ghost"} className="rounded-full">
             <Upload className="w-5 h-5 mr-3" />
             Export
-          </Button>
+          </Button> */}
           <Button
             onClick={() => navigate("/dashboard/add-product")}
             className="rounded-full"
@@ -108,10 +157,11 @@ export const ProductInventory = () => {
       </div>
 
       <DataTable
-        data={getProducts(8) ?? []}
-        columns={columns}
+        data={data?.data.results.data as any ?? []}
+        columns={columns as any}
         options={{
           disableSelection: true,
+          isLoading
         }}
       />
     </Container>

@@ -54,10 +54,13 @@ export const ConfirmAlert = ({
         return;
       }
 
-      toastHandlers.success(
-        TOAST_TITLE,
-        result.data.message ?? "Successfully deleted"
-      );
+      if(typeof result?.data?.message === "string") {
+        toastHandlers.success(
+          TOAST_TITLE,
+          result.data.message ?? "Successfully deleted"
+        );
+        return;
+      }
     } catch (error) {
       const err = error as ApiResponseError;
       toastHandlers.error(TOAST_TITLE, err);

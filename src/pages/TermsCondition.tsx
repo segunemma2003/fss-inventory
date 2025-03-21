@@ -21,7 +21,9 @@ function TermsCondition(props: Props) {
       //   if (res?.data?.status === "success") {
       //     navigate("/login");
       //   }
-      handler.success("Registration", res?.data?.message);
+      if(typeof res?.data?.message === "string") {
+        handler.success("Registration", res?.data?.message);
+      }
     },
     onError: (err) => {
       console.log(err);

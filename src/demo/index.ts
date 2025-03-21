@@ -1,4 +1,5 @@
 import { NotificationItemProps } from "@/layouts/NotificationPanel";
+import { BusinessResponseData } from "@/pages/Business";
 import { CustomerOrderType } from "@/pages/CustomerOrder";
 import { ProductAnalysisData } from "@/pages/SalesAnalytics";
 import { EmployeeType } from "@/pages/Users";
@@ -112,4 +113,18 @@ export const getEmployees = (): EmployeeType[] => makeArrayData(() => ({
   employee: faker.person.fullName(),
   role: faker.person.jobTitle(),
   userID: faker.string.uuid(),
+}))
+
+export const getDemoBusinesses = (): BusinessResponseData[] => makeArrayData(() => ({
+  address: faker.location.streetAddress(),
+  business_type: faker.helpers.enumValue(BusinessType),
+  cac_number: faker.finance.iban(),
+  created_at: faker.date.past().toISOString(),
+  email: faker.internet.email(),
+  id: faker.string.uuid().split('-')[0],
+  industry: faker.commerce.department(),
+  is_active: faker.datatype.boolean(),
+  name: faker.company.name(),
+  phone: faker.phone.number(),
+  website: faker.internet.url(),
 }))

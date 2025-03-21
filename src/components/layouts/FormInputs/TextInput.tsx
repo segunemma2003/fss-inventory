@@ -58,9 +58,11 @@ export const TextInput = (props: TextInputProps) => {
         props.containerClass ?? ""
       }`}
     >
-      {/* <Label className="mb-2 text-sm font-medium text-gray-900">
-        {props.label}
-      </Label> */}
+      {props.label && (
+        <Label className="mb-2 text-sm font-medium text-gray-900">
+          {props.label}
+        </Label>
+      )}
       <div className="relative">
         <div className="flex items-center bg-whit rounded-lg border border-gray-300 focus-within:ring-1">
           {props.startAdornment && (
@@ -76,6 +78,13 @@ export const TextInput = (props: TextInputProps) => {
             <span className="pr-3">{props.endAdornment}</span>
           )}
         </div>
+        <p
+          className="mt-1 text-xs text-muted-foreground font-sans"
+          role="alert"
+          aria-live="polite"
+        >
+          {props.helperText}
+        </p>
         {props.error && (
           <span className="block text-xs text-red-500 mt-1">{props.error}</span>
         )}
@@ -130,7 +139,7 @@ export function TextPassword(props: TextInputProps) {
             <Input
               {...props}
               id={props.name}
-              className="w-full py-2.5 px-3 text-sm bg-transparent focus-visible:ring-offset-0 focus:right-0 focus-visible:outline-none focus-visible:ring-0 text-gray-900 border-0 focus:outline-none focus:ring-0 placeholder:text-gray-400"
+              className="w-full py-2.5 px-3 text-sm bg-transparent focus-visible:ring-offset-0 focus:right-0 focus-visible:outline-none focus-visible:ring-0 text-muted-foreground border-0 focus:outline-none focus:ring-0 placeholder:text-gray-400"
               placeholder="Password"
               type={isVisible ? "text" : "password"}
             />
@@ -244,7 +253,7 @@ export const TextFileUploader = (
     <>
       <FileUploader
         {...props}
-        value={props.value} 
+        value={props.value}
         onValueChange={handleFile}
         dropzoneOptions={dropZoneConfig}
         className={cn(

@@ -2,7 +2,7 @@ import { TextInput } from "@/components/layouts/FormInputs/TextInput";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToastHandlers } from "@/hooks/useToaster";
-import { postRequest } from "@/lib/axiosInstance";
+import { patchRequest } from "@/lib/axiosInstance";
 import { Forger, useForge } from "@/lib/forge";
 import { ApiResponse, ApiResponseError } from "@/types";
 import { useMutation } from "@tanstack/react-query";
@@ -18,23 +18,45 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router";
 
-type FormValue = {};
+type FormValue = {
+  business_name: string;
+  business_address: string;
+  business_phone_number: string;
+  business_website: string;
+  business_type: string;
+  business_email: string;
+  industry: string;
+  cac_number: string;
+  no_of_employees: string;
+  country: string;
+  zipcode: string;
+};
 
 export const RegisterOne = () => {
   const navigate = useNavigate();
-  const { ForgeForm } = useForge({});
   const handler = useToastHandlers();
+  const { ForgeForm, setError } = useForge<FormValue>({});
 
   const { mutate, isPending } = useMutation<
     ApiResponse<any>,
     ApiResponseError,
     FormValue
   >({
-    mutationFn: async (payload) => postRequest("", payload),
+    mutationFn: async (payload) =>
+      patchRequest("/auth/business-profile/", payload),
     onSuccess(data) {
-      handler.success("Registration", data.data.message);
+      if (typeof data.data.message === "string") {
+        handler.success("Registration", data.data.message);
+      }
     },
     onError(error) {
+      const errorData = error.response?.data;
+      if (typeof errorData?.message === "object") {
+        Object.entries(errorData?.message).forEach(([key, value]) =>
+          setError(key as keyof FormValue, { message: value?.[0] ?? "" })
+        );
+      }
+
       handler.error("Registration", error);
     },
   });
@@ -71,7 +93,7 @@ export const RegisterOne = () => {
           <div className="grid grid-cols-4 space-y-5 mb-10 gap-3">
             <Forger
               component={TextInput}
-              name="businessName"
+              name="business_name"
               containerClass="col-span-2"
               placeholder="Business Name"
               startAdornment={
@@ -80,9 +102,9 @@ export const RegisterOne = () => {
             />
             <Forger
               component={TextInput}
-              name="businessAddress"
+              name="business_phone_number"
               containerClass="col-span-2"
-              placeholder="Business Address"
+              placeholder="Business Phone Number"
               startAdornment={<MapPin className="h-5 w-5 mr-2 text-gray-400" />}
             />
             <Forger
@@ -95,7 +117,7 @@ export const RegisterOne = () => {
               }
             />
             <Forger
-              name="businessType"
+              name="business_type"
               component={TextInput}
               placeholder="Business type e.g Retail, Wholesales"
               containerClass="col-span-2"
@@ -105,13 +127,13 @@ export const RegisterOne = () => {
             />
             <Forger
               component={TextInput}
-              name="businessEmail"
+              name="business_email"
               placeholder="Registered Business Email Address"
               startAdornment={<Mail className="h-5 w-5 mr-2 text-gray-400" />}
             />
             <Forger
               component={TextInput}
-              name="businessCac"
+              name="cac_number"
               placeholder="Registered Business CAC"
               startAdornment={
                 <FolderOpen className="h-5 w-5 mr-2 text-gray-400" />
@@ -119,7 +141,7 @@ export const RegisterOne = () => {
             />
             <Forger
               component={TextInput}
-              name="numberOfEmployees"
+              name="no_of_employees"
               placeholder="Number of Employees"
               startAdornment={<IdCard className="h-5 w-5 mr-2 text-gray-400" />}
             />
@@ -131,10 +153,12 @@ export const RegisterOne = () => {
             />
             <Forger
               component={TextInput}
-              name="businessAddress"
+              name="business_address"
+              containerClass="col-span-2"
               placeholder="Business Address"
               startAdornment={<MapPin className="h-5 w-5 mr-2 text-gray-400" />}
             />
+
             <Forger
               component={TextInput}
               name="zipCode"

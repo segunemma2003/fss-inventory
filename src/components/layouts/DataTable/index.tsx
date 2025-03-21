@@ -22,6 +22,7 @@ import {
   OnChangeFn,
   PaginationState,
   SortingState,
+  TableOptions,
   Table as TableType,
   VisibilityState,
   flexRender,
@@ -31,7 +32,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, { ReactNode } from "react";
+import React, { ReactNode, forwardRef, useImperativeHandle } from "react";
 
 type DataTableOptions = {
   disablePagination: boolean;
@@ -48,14 +49,18 @@ type DataTable<T = unknown> = {
   columns: ColumnDef<T>[];
   header?: (value: TableType<T>) => ReactNode;
   options?: Partial<DataTableOptions>;
+  config?: Partial<TableOptions<T>>;
 };
 
-export function DataTable<T = unknown>({
-  data,
-  columns,
-  header,
-  options,
-}: DataTable<T>) {
+// Define the ref type for external access
+export type DataTableRef<T> = {
+  table: TableType<T>;
+};
+
+export const DataTable = forwardRef(function DataTable<T>(
+  { data, columns, header, options, config }: DataTable<T>,
+  ref: React.ForwardedRef<DataTableRef<T>>
+) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -78,16 +83,21 @@ export function DataTable<T = unknown>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    ...(config ?? {}),
 
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
-
       pagination: options?.pagination ?? { pageIndex: 0, pageSize: 10 },
     },
   });
+
+  // Expose the table instance via ref
+  useImperativeHandle(ref, () => ({
+    table,
+  }), [table]);
 
   const activePage = table?.getState()?.pagination?.pageIndex + 1;
 
@@ -215,7 +225,7 @@ export function DataTable<T = unknown>({
       </div>
     </div>
   );
-}
+})
 
 const createPageNumbers = (totalPages: number, currentPage: number) => {
   const pageNumbers = [];

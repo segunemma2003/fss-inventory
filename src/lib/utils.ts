@@ -1,3 +1,4 @@
+import { User } from "@/types";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -50,3 +51,87 @@ export function formatCurrency(
     return amount.toString();
   }
 }
+
+type UserPrivilege = {
+  canCreate: boolean;
+  canUpdate: boolean;
+  canDelete: boolean;
+  canView: boolean;
+};
+
+export const checkUserPrivilege = (
+  pageName: string,
+  userAuthority: User["authority"] = []
+) => {
+  const result: UserPrivilege = {
+    canCreate: false,
+    canDelete: false,
+    canUpdate: false,
+    canView: false,
+  };
+
+  const getPagePrivileges = userAuthority.filter((page) =>
+    page.includes(pageName)
+  );
+
+  ["Create", "Update", "Delete", "View"].forEach((action) => {
+    const isActive = getPagePrivileges.some((privilege) =>
+      privilege.includes(action.toLowerCase())
+    );
+
+    const key = `can${action}`;
+
+    result[key as keyof UserPrivilege] = isActive;
+  });
+
+  return result;
+};
+
+export function combineActions(
+  obj: Record<string, boolean | string[]>
+): string[] {
+  // Filter out keys with false values and empty arrays
+  const filteredObj: Record<string, string[]> = {};
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (obj[key] && Array.isArray(obj[key])) {
+        filteredObj[key] = obj[key] as string[];
+      }
+    }
+  }
+
+  // Combine all arrays into a single array
+  const combinedActions = Object.values(filteredObj).reduce(
+    (acc, actions) => acc.concat(actions),
+    [] as string[]
+  );
+
+  return combinedActions;
+}
+
+export const reverseCombine = (payload: string[]) => {
+  const pagesActive = payload.reduce((prev, curr) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, value] = curr.split("_");
+    const pred = prev as Record<string, boolean | string[]>;
+
+    if (pred[value]) return prev;
+
+    const pagePrivileges = payload.filter((item) => item.includes(value));
+    if (value === "api") {
+      return {
+        ...prev,
+        ["api_key"]: true,
+        ["api_key_actions"]: pagePrivileges,
+      };
+    }
+
+    return {
+      ...prev,
+      [value]: true,
+      [`${value}-actions`]: [...pagePrivileges],
+    };
+  }, {} as Record<string, boolean | string[]>);
+
+  return pagesActive;
+};

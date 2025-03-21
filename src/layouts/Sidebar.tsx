@@ -18,7 +18,7 @@ import { BsCardChecklist } from "react-icons/bs";
 import { ConfirmAlert } from "@/components/layouts/ConfirmAlert";
 import { IconType } from "react-icons/lib";
 // import { MdOutlineAnalytics } from "react-icons/md";
-import { TfiReceipt } from "react-icons/tfi";
+// import { TfiReceipt } from "react-icons/tfi";
 import { MdOutlineReceiptLong } from "react-icons/md";
 import { HiOutlineCog8Tooth } from "react-icons/hi2";
 import { TbUserSquare } from "react-icons/tb";
@@ -59,12 +59,12 @@ export const SideBar = () => {
     //   to: "/dashboard/sales-performance",
     //   active: location.pathname === "/dashboard/sales-performance",
     // },
-    {
-      icon: TfiReceipt,
-      title: "Sales Analytics",
-      to: "/dashboard/sales-analytics",
-      active: location.pathname === "/dashboard/sales-analytics",
-    },
+    // {
+    //   icon: TfiReceipt,
+    //   title: "Sales Analytics",
+    //   to: "/dashboard/sales-analytics",
+    //   active: location.pathname === "/dashboard/sales-analytics",
+    // },
     {
       icon: MdOutlineReceiptLong,
       title: "Customer Order",

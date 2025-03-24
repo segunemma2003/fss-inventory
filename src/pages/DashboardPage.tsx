@@ -85,7 +85,7 @@ export const DashboardPage = () => {
         <Card>
           <CardContent>
             <DataTable
-              data={data?.data.results.data as any ?? []}
+              data={data?.data?.results?.data as any ?? []}
               columns={columns as any}
               options={{ isLoading }}
               header={() => (

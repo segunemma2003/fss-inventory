@@ -6,7 +6,5 @@ export const useAccess = (pageName: string) => {
 
   const result = checkUserPrivilege(pageName, user?.authority ?? []);
 
-  
-
   return result
 }

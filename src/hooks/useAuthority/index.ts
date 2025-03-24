@@ -2,9 +2,6 @@ import { useMemo } from "react";
 import isEmpty from "lodash/isEmpty";
 
 function useAuthority(userAuthority: string[] = [], authority: string[] = [], emptyCheck: boolean = false) {
-  
-  console.log(authority)
-  
   const roleMatched = useMemo(() => {
     return authority.some((role) => userAuthority.includes(role));
   }, [authority, userAuthority]);

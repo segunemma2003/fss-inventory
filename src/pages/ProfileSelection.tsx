@@ -29,6 +29,8 @@ export interface LoginResponse {
   refresh_token: string;
   user: User;
   role: string;
+  role_id: string;
+  priviledges: string[];
 }
 
 const schema = yup.object().shape({
@@ -66,9 +68,9 @@ export const ProfileSelection = () => {
     mutationFn: async (payload) =>
       postRequest("/auth/select-profile/", payload),
     onSuccess(data) {
-      const { access_token, user, role } = data.data.data;
+      const { access_token, user, role, priviledges } = data.data.data;
 
-      setUser({ ...user, role });
+      setUser({ ...user, role, authority: priviledges });
       setToken(access_token);
       if (typeof data?.data?.message === "string") {
         handler.success("Authentication", data.data.message);
@@ -190,4 +192,9 @@ const ProfileItem = ({
       </CardContent>
     </Card>
   );
+};
+
+
+const Placeholder = () => {
+  return <div>Placeholder</div>;
 };

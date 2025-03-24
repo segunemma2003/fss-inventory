@@ -195,6 +195,6 @@ const ProfileItem = ({
 };
 
 
-const Placeholder = () => {
-  return <div>Placeholder</div>;
-};
+// const Placeholder = () => {
+//   return <div>Placeholder</div>;
+// };

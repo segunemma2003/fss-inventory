@@ -13,7 +13,7 @@ type MapListType<T = unknown> = {
   getItemLayout?: () => { width: number; height: number; rowHeight: number };
 };
 
-export const MapList = <T,>({
+export const MapList = <T = unknown>({
   virtualize = false,
   data,
   renderItem,

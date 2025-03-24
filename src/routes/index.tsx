@@ -5,6 +5,7 @@ import { AuthLayout } from "@/layouts/AuthLayout";
 import { NotFound } from "@/layouts/NotFound";
 import { PublicRoute } from "./PublicRoute";
 import { Login } from "@/pages/Login";
+import { ProfileSelection } from "@/pages/ProfileSelection";
 import { Register } from "@/pages/Register";
 import ForgotPassword from "@/pages/ForgotPassword";
 import { RegisterOne } from "@/pages/Register/RegisterOne";
@@ -30,6 +31,7 @@ export const AppRoutes = () => {
   const publicRoutes = [
     { path: "/", element: <Register /> },
     { path: "/login", element: <Login /> },
+    { path: "/profile-selection", element: <ProfileSelection /> },
     { path: "/business-registration", element: <RegisterOne /> },
     { path: "/personal-registration", element: <RegisterTwo /> },
     { path: "/forgot-password", element: <ForgotPassword /> },

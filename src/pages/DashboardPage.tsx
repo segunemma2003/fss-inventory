@@ -42,24 +42,24 @@ export const DashboardPage = () => {
   const metrics = [
     {
       title: "Total Stock Quantity",
-      value: analyticsQuery.data?.data.total_stock_quantity.toString() ?? '0',
+      value: analyticsQuery.data?.data?.total_stock_quantity?.toString?.() ?? '0',
       change: "15",
       isPositive: true,
     },
     {
       title: "Total Stock Value",
-      value: formatCurrency(parseInt(analyticsQuery.data?.data.total_stock_value ?? "0"), "en-NG", "NGN"),
+      value: formatCurrency(parseInt(analyticsQuery.data?.data?.total_stock_value ?? "0"), "en-NG", "NGN"),
       change: "15",
       isPositive: true,
     },
     {
       title: "Profit Margin",
-      value: formatCurrency(parseInt(analyticsQuery.data?.data.total_profit_generated ?? "0"), "en-NG", "NGN"),
+      value: formatCurrency(parseInt(analyticsQuery.data?.data?.total_profit_generated ?? "0"), "en-NG", "NGN"),
       change: "4",
     },
     {
       title: "Total Product Sold",
-      value: analyticsQuery.data?.data.total_products.toString() ?? '0',
+      value: analyticsQuery.data?.data?.total_products?.toString?.() ?? '0',
       change: "17",
       isPositive: true,
     },

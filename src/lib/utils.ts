@@ -135,3 +135,18 @@ export const reverseCombine = (payload: string[]) => {
 
   return pagesActive;
 };
+
+/**
+ * Generates an object mapping URLs to their last path segment
+ * @param urls Array of URL strings to process
+ * @returns Object with URLs as keys and last path segments as values
+ */
+export const generatePageIdentity = (urls: string[]): Record<string, string> => {
+  return urls.reduce((acc, url) => {
+    // Extract the last part after the slash
+    const lastSegment = url.split('/').pop() || '';
+    // Use the original URL as the key and the last segment as the value
+    acc[url] = lastSegment;
+    return acc;
+  }, {} as Record<string, string>);
+};

@@ -1,4 +1,4 @@
-import AuthorityGuard from "@/components/layouts/AuthorityGuard";
+import AuthorityGuard from "./AuthGuard";
 import { Outlet } from "react-router";
 
 export const ProtectedRoute = () => {

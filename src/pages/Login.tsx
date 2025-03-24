@@ -13,7 +13,7 @@ import { postRequest } from "@/lib/axiosInstance";
 import { useToastHandlers } from "@/hooks/useToaster";
 import { ApiResponse, ApiResponseError, User } from "@/types";
 // import { getLoginToken, getLoginUser } from "@/demo";
-import { useSetToken, useSetUser } from "@/store/authSlice";
+import { useSetLoginToken, useSetToken, useSetUser } from "@/store/authSlice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 // import { useState } from "react";
@@ -37,7 +37,7 @@ const schema = yup.object().shape({
 export const Login = () => {
   const setUser = useSetUser();
   const navigate = useNavigate();
-  const setToken = useSetToken();
+  const setToken = useSetLoginToken();
   const handler = useToastHandlers();
   // const [userType, setUserType] = useState<"admin" | "sales" | "inventory">(
   //   "admin"
@@ -58,14 +58,14 @@ export const Login = () => {
   >({
     mutationFn: async (payload) => postRequest("/auth/login/", payload),
     onSuccess(data) {
+      const { access_token } = data.data.data;
 
-      const { access_token, user } = data.data.data;
-
-      setUser(user);
+      // setUser(user);
       setToken(access_token);
       if(typeof data?.data?.message === "string") {
         handler.success("Authentication", data.data.message);
       }
+      navigate("/profile-selection")
     },
     onError(error) {
       if(error.response?.data.message === "Please verify your email address to login") {
@@ -99,29 +99,6 @@ export const Login = () => {
           </p>
         </div>
 
-        {/* <div className="flex items-center justify-center gap-2 mb-10">
-          <Button
-            variant={userType === "admin" ? "default" : "outline"}
-            onClick={() => setUserType("admin")}
-            className="w-fit rounded-full"
-          >
-            Admin
-          </Button>
-          <Button
-            variant={userType === "sales" ? "default" : "outline"}
-            onClick={() => setUserType("sales")}
-            className="w-fit rounded-full"
-          >
-            Sales
-          </Button>
-          <Button
-            variant={userType === "inventory" ? "default" : "outline"}
-            onClick={() => setUserType("inventory")}
-            className="w-fit rounded-full"
-          >
-            Inventory
-          </Button>
-        </div> */}
 
         <ForgeForm onSubmit={mutate} className="mt-10">
           <div className="space-y-4">

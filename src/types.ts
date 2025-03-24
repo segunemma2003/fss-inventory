@@ -22,6 +22,18 @@ export type User = {
   authority?: string[];
 };
 
+export interface UserProfile {
+  id:           string;
+  full_name:    string;
+  address:      null;
+  email:        string;
+  phone_number: null;
+  display_name: string;
+  is_locked:    boolean;
+  created_at:   Date;
+  updated_at:   Date;
+}
+
 export type Api<T> = {
   status: boolean;
   message: string | Record<string, string[]>;

@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import { getNotificationData } from "@/demo";
 import { groupBy } from "lodash";
 import { FaRegBell } from "react-icons/fa";
+import Container from "@/components/layouts/Container";
 
 export function NotificationPanel() {
   const notifications = getNotificationData();
@@ -40,23 +41,25 @@ export function NotificationPanel() {
         <SheetHeader>
           <SheetTitle>Notification</SheetTitle>
         </SheetHeader>
-        <Accordion
-          type="single"
-          collapsible
-          className="w-full"
-          defaultValue="3"
-        >
-          <MapList
-            data={notificationList}
-            renderItem={(group, index) => (
-              <NotificationDateGroup
-                key={index}
-                date={group.title}
-                notifications={group.notifications}
-              />
-            )}
-          />
-        </Accordion>
+        <Container>
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full"
+            defaultValue={notificationList[0].title}
+          >
+            <MapList
+              data={notificationList}
+              renderItem={(group, index) => (
+                <NotificationDateGroup
+                  key={index}
+                  date={group.title}
+                  notifications={group.notifications}
+                />
+              )}
+            />
+          </Accordion>
+        </Container>
       </SheetContent>
     </Sheet>
   );
@@ -103,7 +106,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
 
   return (
     <div
-      className={`gap-2.5 self-stretch p-2.5 text-base font-bold tracking-tight text-right whitespace-nowrap rounded border border-solid ${getStatusStyles()}`}
+      className={`gap-2.5 self-stretch p-2 text-base font-bold tracking-tight text-right whitespace-nowrap rounded border border-solid ${getStatusStyles()}`}
     >
       {getStatusText()}
     </div>
@@ -135,9 +138,9 @@ const NotificationItem = ({
   iconBgColor,
 }: NotificationItemProps) => {
   return (
-    <div className="flex overflow-hidden flex-wrap gap-5 justify-between py-1.5 pr-2.5 pl-1 w-full rounded border border-solid bg-zinc-300 bg-opacity-10 border-zinc-300">
+    <div className="flex overflow-hidden flex-wrap gap-5 justify-between py-1.5 pr-2.5 pl-1 w-full rounded">
       <div className="flex gap-3.5 text-neutral-900">
-        <div className="flex overflow-hidden relative flex-col items-center aspect-square h-[52px] rounded-[100px] w-[52px]">
+        <div className="flex overflow-hidden relative flex-col items-center aspect-square h-10 rounded-[100px] w-10">
           {imageSrc ? (
             <>
               <img
@@ -145,12 +148,12 @@ const NotificationItem = ({
                 className="object-cover absolute inset-0 size-full"
               />
               {status === "completed" ? (
-                <div className="flex relative shrink-0 w-full bg-emerald-700 h-[52px] rounded-[1000px]" />
+                <div className="flex relative shrink-0 w-full bg-emerald-700 h-10 rounded-[1000px]" />
               ) : status === "ongoing" || status === "not-started" ? (
                 <div
                   className={`flex shrink-0 ${
                     iconBgColor || "bg-amber-400"
-                  } h-[52px] rounded-[100px] w-[52px]`}
+                  } h-10 rounded-[100px] w-10`}
                 />
               ) : (
                 <img
@@ -168,8 +171,8 @@ const NotificationItem = ({
           )}
         </div>
         <div className="grow shrink-0 my-auto basis-0 w-fit">
-          <div className="text-lg font-bold">{title}</div>
-          <div className="text-xs font-medium">{description}</div>
+          <div className="text-sm font-bold">{title}</div>
+          <div className="text-xs ">{description}</div>
         </div>
       </div>
       <StatusBadge status={status} />
@@ -188,7 +191,7 @@ const NotificationDateGroup: React.FC<NotificationDateGroupProps> = ({
 }) => {
   return (
     <AccordionItem value={date} key={date} className="py-2">
-      <AccordionTrigger className="py-2 text-[15px] leading-6 hover:no-underline">
+      <AccordionTrigger className=" p-0 !text-[12px] leading-6 hover:no-underline">
         {format(date ?? "12/02/2000", "MMM dd yyyy")}
       </AccordionTrigger>
       <AccordionContent className="text-muted-foreground pb-2">

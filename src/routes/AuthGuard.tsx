@@ -3,6 +3,7 @@ import { generatePageIdentity } from "@/lib/utils";
 import { Navigate, useLocation } from "react-router";
 import { useAccess } from "@/hooks/useAuthority/useAccess";
 import { useAuthentication } from "@/hooks/useAuthentication";
+import { UnAuthorized } from "@/pages/Unauthorise";
 
 type AuthorityGuard = { children: ReactNode };
 
@@ -33,6 +34,10 @@ const AuthGuard = (props: AuthorityGuard) => {
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
+  }
+
+  if(!canView) {
+    return <UnAuthorized />
   }
 
   return children;

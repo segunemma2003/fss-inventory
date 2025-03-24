@@ -13,7 +13,7 @@ import { postRequest } from "@/lib/axiosInstance";
 import { useToastHandlers } from "@/hooks/useToaster";
 import { ApiResponse, ApiResponseError, User } from "@/types";
 // import { getLoginToken, getLoginUser } from "@/demo";
-import { useSetLoginToken, useSetToken, useSetUser } from "@/store/authSlice";
+import { useSetLoginToken } from "@/store/authSlice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 // import { useState } from "react";
@@ -35,7 +35,6 @@ const schema = yup.object().shape({
 });
 
 export const Login = () => {
-  const setUser = useSetUser();
   const navigate = useNavigate();
   const setToken = useSetLoginToken();
   const handler = useToastHandlers();
@@ -60,7 +59,6 @@ export const Login = () => {
     onSuccess(data) {
       const { access_token } = data.data.data;
 
-      // setUser(user);
       setToken(access_token);
       if(typeof data?.data?.message === "string") {
         handler.success("Authentication", data.data.message);

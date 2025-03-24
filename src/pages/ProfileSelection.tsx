@@ -8,7 +8,7 @@ import { getRequest, postRequest } from "@/lib/axiosInstance";
 import { useToastHandlers } from "@/hooks/useToaster";
 import { ApiResponse, ApiResponseError, User, UserProfile } from "@/types";
 // import { getLoginToken, getLoginUser } from "@/demo";
-import { useSetToken, useSetUser } from "@/store/authSlice";
+import { useSetReset, useSetToken, useSetUser } from "@/store/authSlice";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FeatureSection } from "./Register/layoout/FeatureSection";
@@ -39,13 +39,13 @@ const schema = yup.object().shape({
 export const ProfileSelection = () => {
   const setUser = useSetUser();
   const navigate = useNavigate();
+  const setReset = useSetReset();
   const setToken = useSetToken();
   const handler = useToastHandlers();
 
   const { ForgeForm, control, setValue } = useForge<FormValue>({
     defaultValues: {
-      email: "",
-      password: "",
+      profile_id: "",
     },
     resolver: yupResolver(schema),
   });
@@ -82,6 +82,11 @@ export const ProfileSelection = () => {
   const isLocked = data?.data.data.find(
     (item) => item.id === profileId
   )?.is_locked;
+
+  const onSignOut = () => {
+    setReset();
+    navigate("/login");
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-0">
@@ -133,10 +138,16 @@ export const ProfileSelection = () => {
             </div>
           )}
 
-          <Button type="submit" isLoading={isPending} className="w-fit mt-5">
-            Proceed
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button type="submit" isLoading={isPending} className="w-fit mt-5">
+              Proceed
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+
+            <Button onClick={onSignOut} variant={"ghost"} className="w-fit mt-5">
+              Sign out
+            </Button>
+          </div>
         </ForgeForm>
       </div>
       <div className="flex-1">

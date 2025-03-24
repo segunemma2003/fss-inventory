@@ -5,7 +5,6 @@ import { config } from "@/config";
 export const getAxiosInstance = () => {
   const axiosInstance = axios.create();
   const { token, setReset, loginToken, user } = storeFunctions.getState();
-  console.log({ loginToken });
 
   axiosInstance.defaults.baseURL = config.baseUrl;
 

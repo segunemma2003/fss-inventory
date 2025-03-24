@@ -17,7 +17,7 @@ type TLoggerImpl = <T>(
 ) => StateCreator<T, [], []>;
 
 const logger: TLoggerImpl = (config, logger) => (set, get, api) => {
-  const originalConfig = config(set, get, api);
+  const originalConfig = config(set, get, api) as any;
   let actions = originalConfig["actions"] as any;
 
   if (actions && typeof actions === "object") {
@@ -34,7 +34,7 @@ const logger: TLoggerImpl = (config, logger) => (set, get, api) => {
         return [actionName, enhancedFn];
       })
     );
-    
+
     // Spread originalConfig and overwrite the actions property
     return { ...originalConfig, actions: newActions };
   }

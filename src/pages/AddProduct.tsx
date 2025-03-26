@@ -22,8 +22,6 @@ import {
   Pencil,
   Layers2,
   SquareStack,
-  BellRing,
-  CalendarClock,
   CalendarPlus,
   Weight,
 } from "lucide-react";
@@ -122,7 +120,7 @@ export function AddProduct() {
       await externalUploadRequest(
         "engine/upload/",
         payload,
-        "https://api.autogon.ai/api/v1/"
+        "https://devapi.autogon.ai/api/v1/"
       ),
     onSuccess(data) {
       const url = data.data.data.location;

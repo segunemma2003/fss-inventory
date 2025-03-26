@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TextInput } from "@/components/layouts/FormInputs/TextInput";
-import { Forger, useForge} from "@/lib/forge";
+import { Forger, useForge } from "@/lib/forge";
 // import { Label } from "@/components/ui/Label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -30,7 +30,7 @@ const actions: Record<string, ItemsProps[]> = {
       label: "Read",
     },
   ],
-  members: [
+  products: [
     {
       id: "read",
       label: "Read",
@@ -44,13 +44,13 @@ const actions: Record<string, ItemsProps[]> = {
       label: "Delete",
     },
   ],
-  logs: [
+  orders: [
     {
       id: "read",
       label: "Read",
     },
   ],
-  transactions: [
+  profile: [
     {
       id: "read",
       label: "Read",
@@ -68,7 +68,7 @@ const actions: Record<string, ItemsProps[]> = {
       label: "Delete",
     },
   ],
-  function: [
+  activity_log: [
     {
       id: "read",
       label: "Read",
@@ -104,7 +104,7 @@ const actions: Record<string, ItemsProps[]> = {
       label: "Delete",
     },
   ],
-  rules: [
+  businesses: [
     {
       id: "get",
       label: "Get",
@@ -122,7 +122,7 @@ const actions: Record<string, ItemsProps[]> = {
       label: "Delete",
     },
   ],
-  api_key: [
+  plans: [
     {
       id: "read",
       label: "Read",
@@ -136,7 +136,7 @@ const actions: Record<string, ItemsProps[]> = {
       label: "Delete",
     },
   ],
-  dispute: [
+  business_profile: [
     {
       id: "read",
       label: "Read",
@@ -229,666 +229,41 @@ export const RolePermission = forwardRef(
                 </span>
               </div>
               <>
-                <div className="py-3">
-                  <Forger
-                    name="dashboard"
-                    label="Dashboard"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    component={(props: any) => (
-                      <div className="flex items-center gap-2 pb-2">
-                        <Label htmlFor={props.label}>{props.label}</Label>
-                        <Switch
-                          {...props}
-                          name={props.name}
-                          checked={props?.value}
-                          className="data-[state=checked]:bg-primary"
-                          onCheckedChange={(check: boolean) => {
-                            props.onChange(check);
-                            if (check === false) {
-                              setValue(`${props.name}-actions`, []);
-                              return;
-                            }
-                            setValue(`${props.name}-actions`, [
-                              `view_${props.name}`,
-                            ]);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-
-                  {watch("dashboard") && (
-                    <div className="flex gap-2">
-                      {actions?.["dashboard"]?.map?.((item) => (
-                        <div>
-                          <Checkbox
-                            id={item?.id}
-                            disabled={item.id === "read"}
-                            checked={watch("dashboard-actions")?.includes?.(
-                              item.id === "read"
-                                ? "view_dashboard"
-                                : `${item.id}_dashboard`
-                            )}
-                            // defaultChecked={item.id === "read"}
-                            onCheckedChange={(checked) => {
-                              if (checked === false) {
-                                setValue(
-                                  `dashboard-actions`,
-                                  getValues("dashboard-actions").filter(
-                                    (pri: string) => pri !== `${item.id}_roles`
-                                  )
-                                );
-                                return;
-                              }
-                              setValue(`dashboard-actions`, [
-                                ...getValues("dashboard-actions"),
-                                `${item.id}_dashboard`,
-                              ]);
-                            }}
-                            className={
-                              "data-[state=checked]:bg-primary data-[state=checked]:text-white "
-                            }
-                          />
-
-                          <Label
-                            htmlFor={item.id}
-                            className="text-sm font-medium leading-none px-2"
-                          >
-                            {item?.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="py-3">
-                  <Forger
-                    name="roles"
-                    label="Roles"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    component={(props: any) => (
-                      <div className="flex items-center gap-2 pb-2">
-                        <Label htmlFor={props.label}>{props.label}</Label>
-                        <Switch
-                          {...props}
-                          name={props.name}
-                          checked={props?.value}
-                          className="data-[state=checked]:bg-primary"
-                          onCheckedChange={(check: boolean) => {
-                            props.onChange(check);
-                            if (check === false) {
-                              setValue(`${props.name}-actions`, []);
-                              return;
-                            }
-                            setValue(`${props.name}-actions`, [
-                              `view_${props.name}`,
-                            ]);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-
-                  {watch("roles") && (
-                    <div className="flex gap-2">
-                      {actions?.["roles"]?.map?.((item) => (
-                        <div>
-                          <Checkbox
-                            id={item?.id}
-                            disabled={item.id === "read"}
-                            checked={watch("roles-actions")?.includes?.(
-                              item.id === "read"
-                                ? "view_roles"
-                                : `${item.id}_roles`
-                            )}
-                            // defaultChecked={item.id === "read"}
-                            onCheckedChange={(checked) => {
-                              if (checked === false) {
-                                setValue(
-                                  `roles-actions`,
-                                  getValues("roles-actions").filter(
-                                    (pri: string) => pri !== `${item.id}_roles`
-                                  )
-                                );
-                                return;
-                              }
-                              setValue(`roles-actions`, [
-                                ...getValues("roles-actions"),
-                                `${item.id}_roles`,
-                              ]);
-                            }}
-                            className={
-                              "data-[state=checked]:bg-primary data-[state=checked]:text-white "
-                            }
-                          />
-
-                          <Label
-                            htmlFor={item.id}
-                            className="text-sm font-medium leading-none px-2"
-                          >
-                            {item?.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="py-3">
-                  <Forger
-                    name="rules"
-                    label="Rules"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    component={(props: any) => (
-                      <div className="flex items-center gap-2 pb-2">
-                        <Label htmlFor={props.label}>{props.label}</Label>
-                        <Switch
-                          {...props}
-                          name={props.name}
-                          checked={props?.value}
-                          className="data-[state=checked]:bg-primary"
-                          onCheckedChange={(check: boolean) => {
-                            props.onChange(check);
-                            if (check === false) {
-                              setValue(`${props.name}-actions`, []);
-                              return;
-                            }
-                            setValue(`${props.name}-actions`, [
-                              `get_${props.name}`,
-                            ]);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-
-                  {watch("rules") && (
-                    <div className="flex gap-2">
-                      {actions["rules"].map((item) => (
-                        <div>
-                          <Checkbox
-                            id={item?.id}
-                            disabled={item.id === "get"}
-                            checked={watch("rules-actions")?.includes?.(
-                              item.id === "get"
-                                ? "get_rules"
-                                : `${item.id}_rules`
-                            )}
-                            // defaultChecked={item.id === "read"}
-                            onCheckedChange={(checked) => {
-                              if (checked === false) {
-                                setValue(
-                                  `rules-actions`,
-                                  getValues("rules-actions").filter(
-                                    (pri: string) => pri !== `${item.id}_rules`
-                                  )
-                                );
-                                return;
-                              }
-                              setValue(`rules-actions`, [
-                                ...getValues("rules-actions"),
-                                `${item.id}_rules`,
-                              ]);
-                            }}
-                            className={
-                              "data-[state=checked]:bg-primary data-[state=checked]:text-white "
-                            }
-                          />
-
-                          <Label
-                            htmlFor={item.id}
-                            className="text-sm font-medium leading-none px-2"
-                          >
-                            {item?.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="py-3">
-                  <Forger
-                    name="api_key"
-                    label="Api Keys"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    component={(props: any) => (
-                      <div className="flex items-center gap-2 pb-2">
-                        <Label htmlFor={props.label}>{props.label}</Label>
-                        <Switch
-                          {...props}
-                          name={props.name}
-                          checked={props?.value}
-                          className="data-[state=checked]:bg-primary"
-                          onCheckedChange={(check: boolean) => {
-                            props.onChange(check);
-                            if (check === false) {
-                              setValue(`${props.name}-actions`, []);
-                              return;
-                            }
-                            setValue(`${props.name}-actions`, [
-                              `view_${props.name}`,
-                            ]);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-
-                  {watch("api_key") && (
-                    <div className="flex gap-2">
-                      {actions["api_key"].map((item) => (
-                        <div>
-                          <Checkbox
-                            id={item?.id}
-                            disabled={item.id === "read"}
-                            checked={watch("api_key-actions")?.includes?.(
-                              item.id === "read"
-                                ? "view_api_key"
-                                : `${item.id}_api_key`
-                            )}
-                            // defaultChecked={item.id === "read"}
-                            onCheckedChange={(checked) => {
-                              if (checked === false) {
-                                setValue(
-                                  `api_key-actions`,
-                                  getValues("api_key-actions")?.filter?.(
-                                    (pri: string) =>
-                                      pri !== `${item.id}_api_key`
-                                  )
-                                );
-                                return;
-                              }
-                              setValue(`api_key-actions`, [
-                                ...getValues("api_key-actions"),
-                                `${item.id}_api_key`,
-                              ]);
-                            }}
-                            className={
-                              "data-[state=checked]:bg-primary data-[state=checked]:text-white "
-                            }
-                          />
-
-                          <Label
-                            htmlFor={item.id}
-                            className="text-sm font-medium leading-none px-2"
-                          >
-                            {item?.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="py-3">
-                  <Forger
-                    name="function"
-                    label="Function"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    component={(props: any) => (
-                      <div className="flex items-center gap-2 pb-2">
-                        <Label htmlFor={props.label}>{props.label}</Label>
-                        <Switch
-                          {...props}
-                          name={props.name}
-                          checked={props?.value}
-                          className="data-[state=checked]:bg-primary"
-                          onCheckedChange={(check: boolean) => {
-                            props.onChange(check);
-                            if (check === false) {
-                              setValue(`${props.name}-actions`, []);
-                              return;
-                            }
-                            setValue(`${props.name}-actions`, [
-                              `view_${props.name}`,
-                            ]);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-
-                  {watch("function") && (
-                    <div className="flex items-center gap-2">
-                      {actions["function"].map((item) => (
-                        <div>
-                          <Checkbox
-                            id={item?.id}
-                            disabled={item.id === "read"}
-                            checked={watch("function-actions").includes(
-                              item.id === "read"
-                                ? "view_function"
-                                : `${item.id}_function`
-                            )}
-                            // defaultChecked={item.id === "read"}
-                            onCheckedChange={(checked) => {
-                              if (checked === false) {
-                                setValue(
-                                  `function-actions`,
-                                  getValues("function-actions").filter(
-                                    (pri: string) =>
-                                      pri !== `${item.id}_function`
-                                  )
-                                );
-                                return;
-                              }
-                              setValue(`function-actions`, [
-                                ...getValues("function-actions"),
-                                `${item.id}_function`,
-                              ]);
-                            }}
-                            className={
-                              "data-[state=checked]:bg-primary data-[state=checked]:text-white "
-                            }
-                          />
-
-                          <Label
-                            htmlFor={item.id}
-                            className="text-sm font-medium leading-none px-2"
-                          >
-                            {item?.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="py-3">
-                  <Forger
-                    name="dispute"
-                    label="Dispute"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    component={(props: any) => (
-                      <div className="flex items-center gap-2 pb-2">
-                        <Label htmlFor={props.label}>{props.label}</Label>
-                        <Switch
-                          {...props}
-                          name={props.name}
-                          checked={props?.value}
-                          className="data-[state=checked]:bg-primary"
-                          onCheckedChange={(check: boolean) => {
-                            props.onChange(check);
-                            if (check === false) {
-                              setValue(`${props.name}-actions`, []);
-                              return;
-                            }
-                            setValue(`${props.name}-actions`, [
-                              `view_${props.name}`,
-                            ]);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-
-                  {watch("dispute") && (
-                    <div className="flex gap-2">
-                      {actions["dispute"].map((item) => (
-                        <div>
-                          <Checkbox
-                            id={item?.id}
-                            disabled={item.id === "read"}
-                            checked={watch("dispute-actions")?.includes?.(
-                              item.id === "read"
-                                ? "view_dispute"
-                                : `${item.id}_dispute`
-                            )}
-                            // defaultChecked={item.id === "read"}
-                            onCheckedChange={(checked) => {
-                              if (checked === false) {
-                                setValue(
-                                  `dispute-actions`,
-                                  getValues("dispute-actions")?.filter?.(
-                                    (pri: string) =>
-                                      pri !== `${item.id}_dispute`
-                                  )
-                                );
-                                return;
-                              }
-                              setValue(`dispute-actions`, [
-                                ...getValues("dispute-actions"),
-                                `${item.id}_dispute`,
-                              ]);
-                            }}
-                            className={
-                              "data-[state=checked]:bg-primary data-[state=checked]:text-white "
-                            }
-                          />
-
-                          <Label
-                            htmlFor={item.id}
-                            className="text-sm font-medium leading-none px-2"
-                          >
-                            {item?.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="py-3">
-                  <Forger
-                    name="transactions"
-                    label="Transactions"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    component={(props: any) => (
-                      <div className="flex items-center gap-2 pb-2">
-                        <Label htmlFor={props.label}>{props.label}</Label>
-                        <Switch
-                          {...props}
-                          name={props.name}
-                          checked={props?.value}
-                          className="data-[state=checked]:bg-primary"
-                          onCheckedChange={(check: boolean) => {
-                            props.onChange(check);
-                            if (check === false) {
-                              setValue(`${props.name}-actions`, []);
-                              return;
-                            }
-                            setValue(`${props.name}-actions`, [
-                              `view_${props.name}`,
-                            ]);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-
-                  {watch("transactions") && (
-                    <div className="flex gap-2">
-                      {actions["transactions"].map((item) => (
-                        <div>
-                          <Checkbox
-                            id={item?.id}
-                            disabled={item.id === "read"}
-                            checked={watch("transactions-actions").includes(
-                              item.id === "read"
-                                ? "view_transactions"
-                                : `${item.id}_transactions`
-                            )}
-                            onCheckedChange={(checked) => {
-                              if (checked === false) {
-                                setValue(
-                                  `transactions-actions`,
-                                  getValues("transactions-actions").filter(
-                                    (pri: string) =>
-                                      pri !== `${item.id}_transactions`
-                                  )
-                                );
-                                return;
-                              }
-                              setValue(`transactions-actions`, [
-                                ...getValues("transactions-actions"),
-                                `${item.id}_transactions`,
-                              ]);
-                            }}
-                            className={
-                              "data-[state=checked]:bg-primary data-[state=checked]:text-white "
-                            }
-                          />
-
-                          <Label
-                            htmlFor={item.id}
-                            className="text-sm font-medium leading-none px-2"
-                          >
-                            {item?.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="py-3">
-                  <Forger
-                    name="members"
-                    label="Team Member"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    component={(props: any) => (
-                      <div className="flex items-center gap-2 pb-2">
-                        <Label htmlFor={props.label}>{props.label}</Label>
-                        <Switch
-                          {...props}
-                          name={props.name}
-                          checked={props?.value}
-                          className="data-[state=checked]:bg-primary"
-                          onCheckedChange={(check: boolean) => {
-                            props.onChange(check);
-                            if (check === false) {
-                              setValue(`${props.name}-actions`, []);
-                              return;
-                            }
-                            setValue(`${props.name}-actions`, [
-                              `view_${props.name}`,
-                            ]);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-
-                  {watch("members") && (
-                    <div className="flex gap-2">
-                      {actions["members"].map((item) => (
-                        <div>
-                          <Checkbox
-                            id={item?.id}
-                            disabled={item.id === "read"}
-                            checked={watch("members-actions").includes(
-                              item.id === "read"
-                                ? "view_members"
-                                : `${item.id}_members`
-                            )}
-                            // defaultChecked={item.id === "read"}
-                            onCheckedChange={(checked) => {
-                              if (checked === false) {
-                                setValue(
-                                  `members-actions`,
-                                  getValues("members-actions").filter(
-                                    (pri: string) =>
-                                      pri !== `${item.id}_members`
-                                  )
-                                );
-                                return;
-                              }
-                              setValue(`members-actions`, [
-                                ...getValues("members-actions"),
-                                `${item.id}_members`,
-                              ]);
-                            }}
-                            className={
-                              "data-[state=checked]:bg-primary data-[state=checked]:text-white "
-                            }
-                          />
-
-                          <Label
-                            htmlFor={item.id}
-                            className="text-sm font-medium leading-none px-2"
-                          >
-                            {item?.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="py-3">
-                  <Forger
-                    name="logs"
-                    label="Team Logs"
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    component={(props: any) => (
-                      <div className="flex items-center gap-2 pb-2">
-                        <Label htmlFor={props.label}>{props.label}</Label>
-                        <Switch
-                          {...props}
-                          name={props.name}
-                          checked={props?.value}
-                          className="data-[state=checked]:bg-primary"
-                          onCheckedChange={(check: boolean) => {
-                            props.onChange(check);
-                            if (check === false) {
-                              setValue(`${props.name}-actions`, []);
-                              return;
-                            }
-                            setValue(`${props.name}-actions`, [
-                              `view_${props.name}`,
-                            ]);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-
-                  {watch("logs") && (
-                    <div className="flex gap-2">
-                      {actions["logs"].map((item) => (
-                        <div>
-                          <Checkbox
-                            id={item?.id}
-                            disabled={item.id === "read"}
-                            checked={watch("logs-actions").includes(
-                              item.id === "read"
-                                ? "view_logs"
-                                : `${item.id}_logs`
-                            )}
-                            // defaultChecked={item.id === "read"}
-                            onCheckedChange={(checked) => {
-                              if (checked === false) {
-                                setValue(
-                                  `logs-actions`,
-                                  getValues("logs-actions").filter(
-                                    (pri: string) => pri !== `${item.id}_logs`
-                                  )
-                                );
-                                return;
-                              }
-                              setValue(`logs-actions`, [
-                                ...getValues("logs-actions"),
-                                `${item.id}_logs`,
-                              ]);
-                            }}
-                            className={
-                              "data-[state=checked]:bg-primary data-[state=checked]:text-white "
-                            }
-                          />
-
-                          <Label
-                            htmlFor={item.id}
-                            className="text-sm font-medium leading-none px-2"
-                          >
-                            {item?.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <RadioInput
+                  getValue={watch}
+                  getValues={getValues}
+                  label="Dashboard"
+                  name="dashboard"
+                  onChange={setValue}
+                />
+                <RadioInput
+                  getValue={watch}
+                  getValues={getValues}
+                  label="Profile"
+                  name="profile"
+                  onChange={setValue}
+                />
+                <RadioInput
+                  getValue={watch}
+                  getValues={getValues}
+                  label="Activity"
+                  name="activity_log"
+                  onChange={setValue}
+                />
+                <RadioInput
+                  name="roles"
+                  label="Roles"
+                  getValue={watch}
+                  onChange={setValue}
+                  getValues={getValues}
+                />
+                <RadioInput
+                  name="businesses"
+                  label="Businesses"
+                  getValue={watch}
+                  onChange={setValue}
+                  getValues={getValues}
+                />
               </>
 
               <Button isLoading={loading} type="submit" className="w-full">
@@ -901,3 +276,90 @@ export const RolePermission = forwardRef(
     );
   }
 );
+
+type RadioInputType = {
+  onChange: (key: string, value: any) => void;
+  name: string;
+  label: string;
+  getValue: (value: string) => any;
+  getValues: (value: string) => any;
+};
+
+const RadioInput = ({
+  onChange,
+  label,
+  name,
+  getValue,
+  getValues,
+}: RadioInputType) => {
+  return (
+    <div className="py-3">
+      <Forger
+        name={name}
+        label={label}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        component={(props: any) => (
+          <div className="flex items-center gap-2 pb-2">
+            <Label htmlFor={props.label}>{props.label}</Label>
+            <Switch
+              {...props}
+              name={props.name}
+              checked={props?.value}
+              className="data-[state=checked]:bg-primary"
+              onCheckedChange={(check: boolean) => {
+                props.onChange(check);
+                if (check === false) {
+                  onChange(`${props.name}-actions`, []);
+                  return;
+                }
+                onChange(`${props.name}-actions`, [`view_${props.name}`]);
+              }}
+            />
+          </div>
+        )}
+      />
+
+      {getValue(name) && (
+        <div className="flex gap-2">
+          {actions[name].map((item) => (
+            <div className="flex items-center gap-1">
+              <Checkbox
+                id={item?.id}
+                disabled={item.id === "read"}
+                checked={getValue(`${name}-actions`).includes(
+                  item.id === "read" ? `view_${name}` : `${item.id}_${name}`
+                )}
+                // defaultChecked={item.id === "read"}
+                onCheckedChange={(checked) => {
+                  if (checked === false) {
+                    onChange(
+                      `${name}-actions`,
+                      getValues(`${name}-actions`).filter(
+                        (pri: string) => pri !== `${item.id}_logs`
+                      )
+                    );
+                    return;
+                  }
+                  onChange(`${name}-actions`, [
+                    ...getValues(`${name}-action`),
+                    `${item.id}_${name}`,
+                  ]);
+                }}
+                className={
+                  "data-[state=checked]:bg-primary data-[state=checked]:text-white"
+                }
+              />
+
+              <Label
+                htmlFor={item.id}
+                className="text-sm font-medium leading-none px-2"
+              >
+                {item?.label}
+              </Label>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};

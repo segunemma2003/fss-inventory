@@ -1,16 +1,15 @@
 import { ConfirmAlert } from "@/components/layouts/ConfirmAlert";
 import Container from "@/components/layouts/Container";
-import { DataTable, DataTableRef } from "@/components/layouts/DataTable";
-import { IndeterminateCheckbox } from "@/components/layouts/DataTable/components";
+import { DataTable } from "@/components/layouts/DataTable";
+// import { IndeterminateCheckbox } from "@/components/layouts/DataTable/components";
 import TextSearch from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
-import { useToastHandlers } from "@/hooks/useToaster";
-import { deleteRequest, getRequest } from "@/lib/axiosInstance";
+import { getRequest } from "@/lib/axiosInstance";
 import { ApiListResponse, ApiResponseError } from "@/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChevronRight, SlidersHorizontal, Trash, User } from "lucide-react";
-import { useRef, useState } from "react";
+import { ChevronRight, Trash, User } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 interface Props {}
@@ -48,15 +47,12 @@ const getBusinesses = (data: BusinessResponseData[]): BusinessListType[] => {
 
 function Business(props: Props) {
   const navigate = useNavigate();
-  const Thandler = useToastHandlers();
   const {} = props;
   const [search, setSearch] = useState({
     query: "",
     fields: ["customer_name", "category_name"],
   });
 
-  // Create a ref for the DataTable
-  const tableRef = useRef<DataTableRef<BusinessListType>>(null);
 
   const { data, isLoading } = useQuery<
     ApiListResponse<BusinessResponseData[]>,
@@ -65,19 +61,6 @@ function Business(props: Props) {
     queryKey: ["businesses", search.query],
     queryFn: async () => await getRequest("business/"),
     refetchOnWindowFocus: false,
-  });
-
-  const selectedRowId =
-    tableRef.current?.table.getSelectedRowModel().rows[0]?.original.id;
-
-  const deleteMutation = useMutation({
-    mutationFn: async () => await deleteRequest(`/business/${selectedRowId}/`),
-    onSuccess(data) {
-      if (typeof data.data.message === "string") {
-        Thandler.success("Business Profile", data.data.message);
-      }
-    },
-    // onError(error, variablecontext) {},
   });
 
   const columns: ColumnDef<BusinessListType>[] = [

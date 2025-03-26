@@ -1,9 +1,9 @@
 import { NotificationItemProps } from "@/layouts/NotificationPanel";
 import { BusinessResponseData } from "@/pages/Business";
 import { CustomerOrderType } from "@/pages/CustomerOrder";
-import { ProductAnalysisData } from "@/pages/SalesAnalytics";
+// import { ProductAnalysisData } from "@/pages/SalesAnalytics";
 import { EmployeeType } from "@/pages/Users";
-import { ProductData, User } from "@/types";
+import { User } from "@/types";
 import { faker } from "@faker-js/faker";
 
 export const makeArrayData = <T = unknown>(func: () => T) =>
@@ -55,35 +55,29 @@ export const getLoginUser = (): User => {
   };
 };
 
-export const getProducts = (numberOfItem: number = 3): ProductData[] =>
-  makeArrayDataWithLength(
-    () => ({
-      available: faker.number.int({ min: 1, max: 100 }),
-      product_category: faker.commerce.productAdjective(),
-      product_name: faker.commerce.productName(),
-      price: faker.commerce.price(),
-      product_id: faker.string.uuid(),
-      shelf_life: faker.number.int({ min: 1, max: 100 }),
-      product_image: faker.image.urlPicsumPhotos(),
-    }),
-    numberOfItem
-  );
+// export const getProducts = (numberOfItem: number = 3): ProductData[] =>
+//   makeArrayDataWithLength(
+//     () => ({
 
-export const getProductAnalysis = (
-  numberOfItem: number = 3
-): ProductAnalysisData[] =>
-  makeArrayDataWithLength(
-    () => ({
-      product_id: faker.string.uuid(),
-      product_name: faker.commerce.productName(),
-      profit_earned: faker.commerce.price({ max: 100 }),
-      purchase_price: faker.commerce.price(),
-      quantity_sold: faker.number.int({ min: 1, max: 1000 }),
-      selling_price: faker.commerce.price(),
-      shelf_life: faker.number.int({ min: 1, max: 100 }),
-    }),
-    numberOfItem
-  );
+//     }),
+//     numberOfItem
+//   );
+
+// export const getProductAnalysis = (
+//   numberOfItem: number = 3
+// ): ProductAnalysisData[] =>
+//   makeArrayDataWithLength(
+//     () => ({
+//       product_id: faker.string.uuid(),
+//       product_name: faker.commerce.productName(),
+//       profit_earned: faker.commerce.price({ max: 100 }),
+//       purchase_price: faker.commerce.price(),
+//       quantity_sold: faker.number.int({ min: 1, max: 1000 }),
+//       selling_price: faker.commerce.price(),
+//       shelf_life: faker.number.int({ min: 1, max: 100 }),
+//     }),
+//     numberOfItem
+//   );
 
 export const getNotificationData = (): NotificationItemProps[] =>
   makeArrayData(() => ({

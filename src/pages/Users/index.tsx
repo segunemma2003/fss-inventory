@@ -1,12 +1,12 @@
 import Container from "@/components/layouts/Container";
 import { DataTable } from "@/components/layouts/DataTable";
 import TextSearch from "@/components/layouts/FormInputs/TextInput";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { getRequest } from "@/lib/axiosInstance";
 import { ApiResponse, ApiResponseError } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { SlidersHorizontal } from "lucide-react";
+import { Lock, LockOpen } from "lucide-react";
 import { AddNewMember } from "./components/AddMember";
 
 export type EmployeeType = {
@@ -18,18 +18,16 @@ export type EmployeeType = {
 
 export interface ProfileList {
   id: string;
-  full_name: string;
+  display_name: string;
   address: null;
   email: string;
   phone_number: null;
-  display_name: string;
   is_locked: boolean;
   created_at: Date;
   updated_at: Date;
 }
 
 export function Users() {
-
   const { data, isLoading } = useQuery<
     ApiResponse<ProfileList[]>,
     ApiResponseError
@@ -39,7 +37,7 @@ export function Users() {
   });
 
   const columns: ColumnDef<ProfileList>[] = [
-    { accessorKey: "full_name", header: "Customer Name" },
+    { accessorKey: "display_name", header: "Customer Name" },
     {
       accessorKey: "id",
       header: "User ID",
@@ -55,6 +53,13 @@ export function Users() {
     {
       accessorKey: "is_locked",
       header: "Locked",
+      cell(props) {
+        return props.getValue() ? (
+          <Lock className="h-5 w-5" />
+        ) : (
+          <LockOpen className="h-5 w-5" />
+        );
+      },
     },
   ];
 
@@ -63,12 +68,12 @@ export function Users() {
       <div className="flex items-center justify-between mt-8 mb-3">
         <div className="flex items-center gap-3">
           <TextSearch />
-          <Button variant={"outline"} size={"icon"}>
+          {/* <Button variant={"outline"} size={"icon"}>
             <SlidersHorizontal className="w-5 h-5 " />
-          </Button>
+          </Button> */}
         </div>
         <div className="flex items-center gap-3">
-         <AddNewMember />
+          <AddNewMember />
         </div>
       </div>
 
@@ -77,7 +82,7 @@ export function Users() {
         columns={columns as any}
         options={{
           disableSelection: true,
-          isLoading
+          isLoading,
         }}
       />
     </Container>

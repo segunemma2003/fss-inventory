@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { format } from 'date-fns';
 import { UserRoundPen } from "lucide-react";
+import { MdOutlineSavings } from "react-icons/md";
 
 type NavigationItem = {
   icon: IconType;
@@ -91,6 +92,12 @@ export const SideBar = () => {
       title: "Roles",
       to: "/dashboard/roles",
       active: location.pathname === "/dashboard/roles",
+    },
+    {
+      icon: MdOutlineSavings,
+      title: "Savings",
+      to: "/dashboard/savings-plan",
+      active: location.pathname === "/dashboard/savings-plan",
     },
     {
       icon: HiOutlineCog8Tooth,

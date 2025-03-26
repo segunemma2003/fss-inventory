@@ -2,7 +2,7 @@ import Container from "@/components/layouts/Container";
 import { DataTable } from "@/components/layouts/DataTable";
 import TextSearch from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
-import { getProductAnalysis } from "@/demo";
+// import { getProductAnalysis } from "@/demo";
 import { formatCurrency } from "@/lib/utils";
 import { ProductData } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
@@ -13,7 +13,7 @@ interface Props {}
 
 export type ProductAnalysisData = Pick<
   ProductData,
-  "shelf_life" | "product_id" | 'product_name'
+  "id"
 > & {
   quantity_sold: number;
   purchase_price: string;
@@ -103,7 +103,7 @@ function SalesAnalytics(props: Props) {
         </div>
       </div>
       <DataTable
-        data={getProductAnalysis(8) ?? []}
+        data={[]}
         columns={columns as any}
         options={{
           disableSelection: true,

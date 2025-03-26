@@ -30,6 +30,22 @@ import {
 import { useEffect, useState } from "react";
 
 interface Props {}
+interface Plan {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  duration: string;
+  duration_display: string;
+  duration_days: number;
+  is_active: boolean;
+  total_products: number;
+  total_items: number;
+  total_value: string;
+  created_at: Date;
+  updated_at: Date;
+  plan_products: any[];
+}
 
 type FormValue = {
   name: string;
@@ -66,24 +82,6 @@ function CreateSavingsPlan(props: Props) {
   const { ForgeForm } = useForge<FormValue>({});
   const [orders, setOrders] = useState<Order[]>([]);
 
-  const { mutate: createOrder } = useMutation<
-    ApiResponse,
-    ApiResponseError,
-    FormValue
-  >({
-    mutationFn: async (values) => {
-      return await postRequest("/orders/", { ...values, items: orders });
-    },
-    onSuccess(data) {
-      if (typeof data.data.message === "string") {
-        handler.success("Order Creation", data.data.message);
-      }
-    },
-    onError(error) {
-      handler.error("Order Creation", error);
-    },
-  });
-
   const { mutate: AddProductPlanMutate } = useMutation<
     ApiResponse,
     ApiResponseError,
@@ -98,6 +96,28 @@ function CreateSavingsPlan(props: Props) {
       if (typeof data.data.message === "string") {
         handler.success("Savings Creation", data.data.message);
       }
+    },
+    onError(error) {
+      handler.error("Savings Creation", error);
+    },
+  });
+
+  const { mutate: createOrder } = useMutation<
+    ApiResponse<Plan>,
+    ApiResponseError,
+    FormValue
+  >({
+    mutationFn: async (values) => {
+      return await postRequest("/plans/", { ...values });
+    },
+    onSuccess(data) {
+      if (typeof data.data.message === "string") {
+        handler.success("Savings Creation", data.data.message);
+      }
+      AddProductPlanMutate({
+        planId: data.data.data.id,
+        plan_products: orders,
+      });
     },
     onError(error) {
       handler.error("Savings Creation", error);
@@ -129,7 +149,7 @@ function CreateSavingsPlan(props: Props) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant={"outline"} className="rounded-full">
+        <Button className="rounded-full">
           <PiggyBank className="h-5 w-5 mr-2" />
           Create Savings
         </Button>

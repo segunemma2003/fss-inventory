@@ -24,6 +24,7 @@ import Settings from '@/pages/settings'
 import Business from "@/pages/Business";
 import CreateBusiness from "@/pages/Business/Create";
 import BusinessDetails from "@/pages/Business/Details";
+import Savings from "@/pages/Savings";
 import Roles from '@/pages/Roles';
 import { Routes, Route } from "react-router";
 
@@ -51,6 +52,7 @@ export const AppRoutes = () => {
     { path: "/dashboard/settings", element: <Settings /> },
     { path: "/dashboard/roles", element: <Roles /> },
     { path: "/dashboard/business-id", element: <Business /> },
+    { path: "/dashboard/savings-plan", element: <Savings /> },
     { path: "/dashboard/business-id/create", element: <CreateBusiness /> },
     { path: "/dashboard/business-id/details", element: <BusinessDetails /> },
   ];

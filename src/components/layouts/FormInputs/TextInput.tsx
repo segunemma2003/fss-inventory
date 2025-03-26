@@ -16,6 +16,7 @@ import {
   FileUploaderContent,
   FileUploaderItem,
 } from "@/components/ui/file-upload";
+import { Tag, TagInput } from "emblor";
 
 export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string | ReactNode;
@@ -107,7 +108,7 @@ export const TextArea = (props: TextAreaProps) => {
         <span>{props.startAdornment}</span>
         <Textarea
           {...props}
-          className="w-full text-sm leading-5 border-0 text-muted-foreground !focus-visible:ring-0 !ring-0 !focus:border-0 !focus:outline-none px-0 placeholder:text-xs placeholder:text-muted flex-1 focus-visible:ring-offset-0"
+          className="w-full text-sm leading-5 border-0 text-muted-foreground !focus-visible:ring-0 !ring-0 !focus:border-0 !focus:outline-none px-0 placeholder:text-xs placeholder:text-muted-foreground flex-1 focus-visible:ring-offset-0 focus:outline-none focus:ring-0 focus-visible:ring-0"
         />
         <span>{props.endAdornment}</span>
       </div>
@@ -242,7 +243,7 @@ export const TextFileUploader = (
   const dropZoneConfig = {
     maxFiles: 5,
     maxSize: 1024 * 1024 * 4,
-    multiple: true,
+    multiple: false,
   };
 
   const handleFile = (files: File[] | null) => {
@@ -256,8 +257,9 @@ export const TextFileUploader = (
         value={props.value}
         onValueChange={handleFile}
         dropzoneOptions={dropZoneConfig}
+        reSelect={true}
         className={cn(
-          "relative bg-background rounded-lg",
+          "relative rounded-lg",
           props.containerClass
         )}
       >
@@ -266,6 +268,7 @@ export const TextFileUploader = (
             {props.element}
           </div>
         </FileInput>
+
         <FileUploaderContent>
           {props.value &&
             props.value.length > 0 &&
@@ -281,3 +284,70 @@ export const TextFileUploader = (
     </>
   );
 };
+
+export function TextTagInput({
+  label,
+  containerClass,
+  ...rest
+}: TextInputProps & { value: Tag[] }) {
+  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
+
+  return (
+    <div className={cn("space-y-2", containerClass)}>
+      {label && <Label htmlFor={rest.name}>{label}</Label>}
+      <TagInput
+        id={rest.name}
+        tags={rest.value}
+        setTags={() => {}}
+        onTagAdd={(tag) => {
+          const tagValue: Tag = {
+            id: tag,
+            text: tag,
+          };
+
+          const payload = {
+            target: { value: [...rest.value, tagValue], name: rest?.name },
+          } as any;
+
+          rest?.onChange?.(payload);
+        }}
+        onTagRemove={(tag) => {
+          const payload = {
+            target: {
+              value: rest.value.filter((item) => item.id !== tag),
+              name: rest?.name,
+            },
+          } as any;
+
+          rest?.onChange?.(payload);
+        }}
+        placeholder={rest.placeholder}
+        styleClasses={{
+          tagList: {
+            container: "gap-1",
+          },
+          input:
+            "flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300",
+          tag: {
+            body: "relative h-7 bg-background border border-input hover:bg-background rounded-md font-medium text-xs ps-2 pe-7",
+            closeButton:
+              "absolute -inset-y-px -end-px p-0 rounded-s-none rounded-e-lg flex size-7 transition-colors outline-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 text-muted-foreground/80 hover:text-foreground",
+          },
+        }}
+        activeTagIndex={activeTagIndex}
+        setActiveTagIndex={setActiveTagIndex}
+        inlineTags={false}
+        inputFieldPosition="top"
+      />
+      <span className="text-xs text-red-500 mt-1">{rest.error}</span>
+
+      <p
+        className="mt-1 text-xs text-slate-500 font-sans"
+        role="alert"
+        aria-live="polite"
+      >
+        {rest.helperText}
+      </p>
+    </div>
+  );
+}

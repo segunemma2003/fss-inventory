@@ -2,11 +2,11 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { storeFunctions } from "@/store/authSlice";
 import { config } from "@/config";
 
-export const getAxiosInstance = () => {
+export const getAxiosInstance = (url?: string) => {
   const axiosInstance = axios.create();
   const { token, setReset, loginToken, user } = storeFunctions.getState();
 
-  axiosInstance.defaults.baseURL = config.baseUrl;
+  axiosInstance.defaults.baseURL = url ?? config.baseUrl;
 
   if (token && user !== null) {
     axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -65,5 +65,14 @@ export const putRequest = async <T = unknown>(url: string, payload: T) => {
 
 export const deleteRequest = async <T = unknown>(url: string, payload?: T) => {
   const res = await getAxiosInstance().delete(`${url}`, { data: payload });
+  return res;
+};
+
+export const externalUploadRequest = async (url: string, payload: FormData, baseUrl?: string) => {
+  const res = await getAxiosInstance(baseUrl).post(`${url}`, payload, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return res;
 };

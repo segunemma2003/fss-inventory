@@ -54,7 +54,7 @@ export const ProfileSelection = () => {
 
   const [profileId] = useWatch({ control, name: ["profile_id"] });
 
-  const { data } = useQuery<ApiResponse<UserProfile[]>, ApiResponseError>({
+  const { data, isLoading } = useQuery<ApiResponse<UserProfile[]>, ApiResponseError>({
     queryKey: ["user-profile"],
     queryFn: async () => await getRequest("profile/"),
     refetchOnWindowFocus: false,
@@ -107,10 +107,12 @@ export const ProfileSelection = () => {
           </h2>
         </div>
 
-        <ForgeForm onSubmit={mutate} className="mt-8 space-y-6">
+        <ForgeForm onSubmit={mutate} className="mt-8 space-y-4">
           <ScrollArea>
-            <div className="max-h-60">
+            <div className="max-h-60 py-2 space-y-3">
               <MapList
+                isLoading={isLoading}
+                PlaceholderComponent={Placeholder}
                 data={data?.data?.data ?? []}
                 renderItem={(item, index) => (
                   <ProfileItem
@@ -146,7 +148,11 @@ export const ProfileSelection = () => {
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
 
-            <Button onClick={onSignOut} variant={"ghost"} className="w-fit mt-5">
+            <Button
+              onClick={onSignOut}
+              variant={"ghost"}
+              className="w-fit mt-5"
+            >
               Sign out
             </Button>
           </div>
@@ -194,7 +200,14 @@ const ProfileItem = ({
   );
 };
 
-
-// const Placeholder = () => {
-//   return <div>Placeholder</div>;
-// };
+const Placeholder = () => {
+  return (
+    <div className="max-w-xs py-2.5 h-20 rounded-lg px-3 bg-gray-200 animate-pulse">
+      <div className="h-4 w-4 rounded-full border border-gray-500" />
+      <div className="space-y-2">
+        <span className="max-w-sm bg-gray-400 h-3"></span>
+        <span className="max-w-40 bg-gray-400 h-3"></span>
+      </div>
+    </div>
+  );
+};

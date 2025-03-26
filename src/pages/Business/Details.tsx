@@ -53,16 +53,18 @@ function Details(props: Props) {
     refetchOnWindowFocus: false,
   });
 
-  const orderQuery = useQuery<
-    ApiListResponse<Order[]>,
-    ApiResponseError
-  >({
+  const orderQuery = useQuery<ApiListResponse<Order[]>, ApiResponseError>({
     queryKey: ["business-order"],
-    queryFn: async () => await getRequest(`business/${location.state.id}/orders/`),
+    queryFn: async () =>
+      await getRequest(`business/${location.state.id}/orders/`),
     refetchOnWindowFocus: false,
   });
 
-  const { mutate } = useMutation<ApiResponse, ApiResponseError, FormValue>({
+  const { mutate, isPending } = useMutation<
+    ApiResponse,
+    ApiResponseError,
+    FormValue
+  >({
     mutationFn: async (payload) =>
       await patchRequest("/api/business/create", payload),
     onSuccess(data) {
@@ -99,20 +101,20 @@ function Details(props: Props) {
 
   useEffect(() => {
     if (isSuccess) {
-        Object.entries(data?.data?.data).map((item) => {
-          setValue(item[0] as keyof FormValue, item[1]);
-        })
+      Object.entries(data?.data?.data).map((item) => {
+        setValue(item[0] as keyof FormValue, item[1]);
+      });
     }
-  }, [isSuccess])
+  }, [isSuccess]);
 
   return (
     <Container as="section">
-      <div className="py-4 mb-10">
+      <div className="py-4 mb-10 w-fit">
         <BackButton title="Back" />
       </div>
 
       <div className="flex gap-3">
-        <div className="flex-1">
+        <div className="flex-1 mb-5">
           <Card>
             <CardContent>
               <HeaderSection />
@@ -190,9 +192,9 @@ function Details(props: Props) {
             </div> */}
 
                 <div className="">
-                  <Button>
+                  <Button type="submit" isLoading={isPending}>
                     <Edit2 />
-                    Create Business Profile
+                    Edit Business Profile
                   </Button>
                 </div>
               </ForgeForm>
@@ -225,9 +227,7 @@ function Details(props: Props) {
       </div>
 
       <DataTable
-        data={
-          getOrders(orderQuery.data?.data?.results?.data ?? []) ?? []
-        }
+        data={getOrders(orderQuery.data?.data?.results?.data ?? []) ?? []}
         columns={columns as ColumnDef<unknown>[]}
         config={{ enableMultiRowSelection: false }}
         options={{

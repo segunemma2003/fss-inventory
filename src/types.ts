@@ -52,13 +52,23 @@ export type ApiListResponse<T = unknown> = AxiosResponse<ApiList<Api<T>>>;
 export type ApiResponseError = AxiosError<Api<{}>>;
 
 export type ProductData = {
-  product_name: string;
-  product_category: string;
-  available: number;
-  product_id: string;
-  shelf_life: number;
-  price: string;
-  product_image: string;
+  name: string;
+  category_name: string;
+  expiry_date: string;
+  id: string
+  image: string;
+  order_history
+  : 
+  {}
+  quantity
+  : 
+  50
+  selling_price
+  : 
+  "52000.00"
+  uom
+  : 
+  "Bag"
 };
 
 export interface CustomerResponseData {

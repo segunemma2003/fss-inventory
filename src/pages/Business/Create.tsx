@@ -30,9 +30,9 @@ function Create(props: Props) {
   const Thandler = useToastHandlers();
   const { ForgeForm } = useForge<FormValue>({});
 
-  const { mutate } = useMutation<ApiResponse, ApiResponseError, FormValue>({
+  const { mutate, isPending } = useMutation<ApiResponse, ApiResponseError, FormValue>({
     mutationFn: async (payload) =>
-      await postRequest("/api/business/create", payload),
+      await postRequest("/business/", payload),
     onSuccess(data) {
       if (typeof data.data.message === "string") {
         Thandler.success("Create Business", data.data.message);
@@ -41,13 +41,13 @@ function Create(props: Props) {
       navigate(-1);
     },
     onError(error) {
-      Thandler.error("Registration", error);
+      Thandler.error("Create Business", error);
     },
   });
 
   return (
     <Container as="section">
-      <div className="py-4 mb-10">
+      <div className="py-4 mb-10 w-fit">
         <BackButton title="Back" />
       </div>
 
@@ -139,7 +139,7 @@ function Create(props: Props) {
             </div> */}
 
           <div className="">
-            <Button>
+            <Button type='submit' isLoading={isPending}>
               <Edit2 />
               Create Business Profile
             </Button>

@@ -11,9 +11,11 @@ import {
 } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { SlidersHorizontal, Upload } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import CreateCustomOrder from "./components/CreateCustomOrder";
 import { OrderDialog } from "./Details";
+import { useState } from "react";
+import { useFilter } from "@/hooks/useFilter";
 
 export type CustomerOrderType = {
   name: string;
@@ -21,8 +23,12 @@ export type CustomerOrderType = {
   purchase_method: string;
 };
 
-
 function CustomerOrder() {
+  const [query, setQuery] = useState({
+    query: "",
+    fields: ["customer_name", "category_name"],
+  });
+
   const { data, isLoading } = useQuery<
     ApiListResponse<CustomerResponseData[]>,
     ApiResponseError
@@ -31,10 +37,15 @@ function CustomerOrder() {
     queryFn: async () => await getRequest("orders/"),
   });
 
+  const { data: OrderList } = useFilter({
+    data: data?.data.results.data as any,
+    search: query,
+  });
+
   const columns: ColumnDef<CustomerResponseData>[] = [
-    { accessorKey: "name", header: "Customer Name" },
+    { accessorKey: "customer_name", header: "Customer Name" },
     {
-      accessorKey: "purchase_method",
+      accessorKey: "payment_method_display",
       header: "Purchase Method",
     },
     {
@@ -45,9 +56,7 @@ function CustomerOrder() {
       id: "action",
       header: "ACTION",
       cell: ({ row }) => {
-        return (
-          <OrderDialog id={row.original.id} />
-        )
+        return <OrderDialog id={row.original.id} />;
       },
     },
   ];
@@ -56,21 +65,19 @@ function CustomerOrder() {
     <Container className="py-10">
       <div className="flex items-center justify-between mt-8 mb-3">
         <div className="flex items-center gap-3">
-          <TextSearch />
-          <Button variant={"outline"} size={"icon"}>
-            <SlidersHorizontal className="w-5 h-5 " />
-          </Button>
+          <TextSearch
+            value={query.query}
+            onChange={(e) =>
+              setQuery((prev) => ({ ...prev, query: e.target.value }))
+            }
+          />
         </div>
         <div className="flex items-center gap-3">
           <CreateCustomOrder />
-          <Button className="rounded-full">
-            <Upload className="w-5 h-5 mr-3" />
-            Export
-          </Button>
         </div>
       </div>
       <DataTable
-        data={data?.data?.results?.data  ?? []}
+        data={OrderList ?? []}
         columns={columns as ColumnDef<unknown>[]}
         options={{
           disableSelection: true,

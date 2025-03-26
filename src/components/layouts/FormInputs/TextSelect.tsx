@@ -22,12 +22,14 @@ export type TextSelectProps = {
 export const TextSelect = ({ label, ...rest }: TextSelectProps) => {
   return (
     <div className={rest?.containerClass ?? ""}>
-      <Label
-        htmlFor={typeof label === "string" ? label : ""}
-        className="mb-3 block text-sm text-stone-900"
-      >
-        {label}
-      </Label>
+      {label && (
+        <Label
+          htmlFor={typeof label === "string" ? label : ""}
+          className="mb-3 block text-sm text-stone-900"
+        >
+          {label}
+        </Label>
+      )}
 
       <Select
         defaultValue={rest.value}
@@ -37,7 +39,7 @@ export const TextSelect = ({ label, ...rest }: TextSelectProps) => {
       >
         <SelectTrigger className="w-full 1text-xs !text-stone-400">
           <SelectValue
-            className="1text-xs !text-gray-300"
+            className="1text-xs !text-gray-300 !h-60"
             placeholder={rest?.placeholder}
           />
         </SelectTrigger>

@@ -4,13 +4,16 @@ import TextSearch from "@/components/layouts/FormInputs/TextInput";
 import { MapList } from "@/components/layouts/MapList";
 import { MetricCard } from "@/components/layouts/MetricCard";
 import { Button } from "@/components/ui/button";
+import { useFilter } from "@/hooks/useFilter";
 import { getRequest } from "@/lib/axiosInstance";
 import { formatCurrency } from "@/lib/utils";
 import { ApiListResponse, ApiResponseError, ProductData } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { AxiosResponse } from "axios";
-import { Plus, SlidersHorizontal, } from "lucide-react";
+import { format } from "date-fns";
+import { Plus } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 export interface ProductAnalytics {
@@ -24,22 +27,24 @@ export interface ProductAnalytics {
 }
 
 export interface ProductList {
-  id:            string;
-  name:          string;
+  id: string;
+  name: string;
   category_name: string;
   selling_price: string;
-  quantity:      number;
-  uom:           string;
-  image:         string;
-  expiry_date:   Date;
+  quantity: number;
+  uom: string;
+  image: string;
+  expiry_date: Date;
   order_history: OrderHistory;
 }
 
-export interface OrderHistory {
-}
-
+export interface OrderHistory {}
 
 export const ProductInventory = () => {
+  const [query, setQuery] = useState({
+    query: "",
+    fields: ["name", "category_name"],
+  });
   const navigate = useNavigate();
 
   const analyticsQuery = useQuery<
@@ -58,16 +63,25 @@ export const ProductInventory = () => {
     queryFn: async () => await getRequest("products/"),
   });
 
+  const { data: productList } = useFilter({
+    data: data?.data.results.data as any,
+    search: query,
+  });
+
   const metrics = [
     {
       title: "Total Revenue Generated",
-      value: analyticsQuery.data?.data.total_profit_generated ?? '0',
+      value: analyticsQuery.data?.data.total_profit_generated ?? "0",
       change: "15",
       isPositive: true,
     },
     {
       title: "Average Sales Margin",
-      value: formatCurrency(parseInt(analyticsQuery.data?.data.total_profit_generated ?? "0"), "en-NG", "NGN"),
+      value: formatCurrency(
+        parseInt(analyticsQuery.data?.data.total_profit_generated ?? "0"),
+        "en-NG",
+        "NGN"
+      ),
       change: "15",
       isPositive: true,
     },
@@ -82,45 +96,32 @@ export const ProductInventory = () => {
     },
     {
       title: "Total Number Of Products",
-      value: analyticsQuery.data?.data.total_products.toString() ?? '0',
+      value: analyticsQuery.data?.data.total_products.toString() ?? "0",
       change: "17",
       isPositive: true,
     },
   ];
 
   const columns: ColumnDef<ProductData>[] = [
-    { accessorKey: "product_name", header: "Product Name" },
-    { accessorKey: "product_id", header: "Product ID" },
-    { accessorKey: "product_category", header: "Category" },
-    { accessorKey: "available", header: "Product Qty" },
-    { accessorKey: "shelf_life", header: "Shelf Life" },
+    { accessorKey: "name", header: "Product Name" },
+    { accessorKey: "quantity", header: "Quantity" },
+    { accessorKey: "category_name", header: "Category" },
+    { accessorKey: "uom", header: "Unit Of Measurement" },
     {
-      accessorKey: "price",
-      header: "Price (N)",
+      accessorKey: "expiry_date",
+      header: "Expiration Date",
       cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("price"));
-        const formatted = formatCurrency(amount, "en-NG", "NGN");
-        return formatted;
+        const date = format(row.getValue('expiry_date'), 'MMM dd, yyyy');
+        return date;
       },
     },
     {
-      id: "action",
-      header: "ACTION",
+      accessorKey: "selling_price",
+      header: "Price (N)",
       cell: ({ row }) => {
-        return (
-          <Button
-            size={"sm"}
-            variant={"outline"}
-            className="rounded-full border-primary text-primary"
-            onClick={() =>
-              navigate("/dashboard/detail", {
-                state: { id: row.original.product_id },
-              })
-            }
-          >
-            View History
-          </Button>
-        );
+        const amount = parseFloat(row.getValue("selling_price"));
+        const formatted = formatCurrency(amount, "en-NG", "NGN");
+        return formatted;
       },
     },
   ];
@@ -136,16 +137,17 @@ export const ProductInventory = () => {
 
       <div className="flex items-center justify-between mt-8 mb-3">
         <div className="flex items-center gap-3">
-          <TextSearch />
-          <Button variant={"outline"} size={"icon"}>
+          <TextSearch
+            value={query.query}
+            onChange={(e) =>
+              setQuery((prev) => ({ ...prev, query: e.target.value }))
+            }
+          />
+          {/* <Button variant={"outline"} size={"icon"}>
             <SlidersHorizontal className="w-5 h-5 " />
-          </Button>
+          </Button> */}
         </div>
         <div className="flex items-center gap-3">
-          {/* <Button variant={"ghost"} className="rounded-full">
-            <Upload className="w-5 h-5 mr-3" />
-            Export
-          </Button> */}
           <Button
             onClick={() => navigate("/dashboard/add-product")}
             className="rounded-full"
@@ -157,11 +159,11 @@ export const ProductInventory = () => {
       </div>
 
       <DataTable
-        data={data?.data.results.data as any ?? []}
+        data={(productList as any) ?? []}
         columns={columns as any}
         options={{
           disableSelection: true,
-          isLoading
+          isLoading,
         }}
       />
     </Container>

@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useToastHandlers } from "@/hooks/useToaster";
-import { postRequest } from "@/lib/axiosInstance";
+import { patchRequest, postRequest } from "@/lib/axiosInstance";
 import { Forger, useForge } from "@/lib/forge";
 import { ApiResponse, ApiResponseError } from "@/types";
 import { useMutation } from "@tanstack/react-query";
@@ -21,8 +21,8 @@ import {
   Building,
   IdCard,
   MapPin,
-  Package,
   Phone,
+  PiggyBank,
   Plus,
   RotateCcw,
   User,
@@ -30,15 +30,22 @@ import {
 import { useEffect, useState } from "react";
 
 interface Props {}
+
 type FormValue = {
-  customer_name: string;
-  customer_address: string;
-  customer_phone: string;
-  payment_method: string;
-  payment_source: string;
-  business: null;
-  status: string;
-  notes: string;
+  name: string;
+  description: string;
+  price: string;
+  duration: string;
+  duration_days: number;
+};
+
+type ProductPlanForm = {
+  plan_products: {
+    product: string;
+    quantity: number;
+    price: number;
+  }[];
+  planId: string;
 };
 
 type Order = {
@@ -46,13 +53,14 @@ type Order = {
   quantity: number;
   price: number;
 };
+
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
   }
 }
 
-function CreateCustomOrder(props: Props) {
+function CreateSavingsPlan(props: Props) {
   const {} = props;
   const handler = useToastHandlers();
   const { ForgeForm } = useForge<FormValue>({});
@@ -73,6 +81,26 @@ function CreateCustomOrder(props: Props) {
     },
     onError(error) {
       handler.error("Order Creation", error);
+    },
+  });
+
+  const { mutate: AddProductPlanMutate } = useMutation<
+    ApiResponse,
+    ApiResponseError,
+    ProductPlanForm
+  >({
+    mutationFn: async (values) => {
+      return await patchRequest(`/plans/${values.planId}/products/`, {
+        plan_products: values.plan_products,
+      });
+    },
+    onSuccess(data) {
+      if (typeof data.data.message === "string") {
+        handler.success("Savings Creation", data.data.message);
+      }
+    },
+    onError(error) {
+      handler.error("Savings Creation", error);
     },
   });
 
@@ -101,14 +129,14 @@ function CreateCustomOrder(props: Props) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="rounded-full">
-          <Package className="h-5 w-5 mr-2" />
-          Create Order
+        <Button variant={"outline"} className="rounded-full">
+          <PiggyBank className="h-5 w-5 mr-2" />
+          Create Savings
         </Button>
       </SheetTrigger>
       <SheetContent className="!max-w-xl">
         <SheetHeader>
-          <SheetTitle>Create New Order</SheetTitle>
+          <SheetTitle>Create New Savings</SheetTitle>
           <SheetDescription>
             <div className="mt-5">
               <h5 className="font-urbanist font-medium">
@@ -118,9 +146,8 @@ function CreateCustomOrder(props: Props) {
               <ForgeForm onSubmit={createOrder} className="mt-3 mb-10">
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <Forger
-                    name="customer_name"
-                    placeholder="Customer Name"
-                    // label="Business Name"
+                    name="saving_name"
+                    placeholder="Savings Name"
                     component={TextInput}
                     startAdornment={
                       <User className="h-5 w-5 mr-2 text-gray-400" />
@@ -275,7 +302,7 @@ function CreateCustomOrder(props: Props) {
   );
 }
 
-export default CreateCustomOrder;
+export default CreateSavingsPlan;
 
 const defaultColumn: Partial<ColumnDef<Order>> = {
   cell: ({ getValue, row: { index }, column: { id }, table }) => {

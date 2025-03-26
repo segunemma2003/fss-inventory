@@ -35,7 +35,7 @@ export const DashboardPage = () => {
   ApiListResponse<ProductList>,
     ApiResponseError
   >({
-    queryKey: ["analytics"],
+    queryKey: ["products", { min_quantity: 20 }],
     queryFn: async () => await getRequest("products/", { params: { min_quantity: 20 } }),
   });
 

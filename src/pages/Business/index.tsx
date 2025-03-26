@@ -1,3 +1,4 @@
+import { ConfirmAlert } from "@/components/layouts/ConfirmAlert";
 import Container from "@/components/layouts/Container";
 import { DataTable, DataTableRef } from "@/components/layouts/DataTable";
 import { IndeterminateCheckbox } from "@/components/layouts/DataTable/components";
@@ -8,13 +9,8 @@ import { deleteRequest, getRequest } from "@/lib/axiosInstance";
 import { ApiListResponse, ApiResponseError } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  ChevronRight,
-  SlidersHorizontal,
-  Trash,
-  User,
-} from "lucide-react";
-import { useRef } from "react";
+import { ChevronRight, SlidersHorizontal, Trash, User } from "lucide-react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 interface Props {}
@@ -54,6 +50,10 @@ function Business(props: Props) {
   const navigate = useNavigate();
   const Thandler = useToastHandlers();
   const {} = props;
+  const [search, setSearch] = useState({
+    query: "",
+    fields: ["customer_name", "category_name"],
+  });
 
   // Create a ref for the DataTable
   const tableRef = useRef<DataTableRef<BusinessListType>>(null);
@@ -62,7 +62,7 @@ function Business(props: Props) {
     ApiListResponse<BusinessResponseData[]>,
     ApiResponseError
   >({
-    queryKey: ["businesses"],
+    queryKey: ["businesses", search.query],
     queryFn: async () => await getRequest("business/"),
     refetchOnWindowFocus: false,
   });
@@ -80,33 +80,31 @@ function Business(props: Props) {
     // onError(error, variablecontext) {},
   });
 
-  console.log({ selectedRowId });
-
   const columns: ColumnDef<BusinessListType>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <IndeterminateCheckbox
-          {...{
-            checked: table.getIsAllRowsSelected(),
-            indeterminate: table.getIsSomeRowsSelected(),
-            onChange: table.getToggleAllRowsSelectedHandler(),
-          }}
-        />
-      ),
-      cell: ({ row }) => (
-        <div className="px-1">
-          <IndeterminateCheckbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler(),
-            }}
-          />
-        </div>
-      ),
-    },
+    // {
+    //   id: "select",
+    //   header: ({ table }) => (
+    //     <IndeterminateCheckbox
+    //       {...{
+    //         checked: table.getIsAllRowsSelected(),
+    //         indeterminate: table.getIsSomeRowsSelected(),
+    //         onChange: table.getToggleAllRowsSelectedHandler(),
+    //       }}
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <div className="px-1">
+    //       <IndeterminateCheckbox
+    //         {...{
+    //           checked: row.getIsSelected(),
+    //           disabled: !row.getCanSelect(),
+    //           indeterminate: row.getIsSomeSelected(),
+    //           onChange: row.getToggleSelectedHandler(),
+    //         }}
+    //       />
+    //     </div>
+    //   ),
+    // },
     { accessorKey: "name", header: "Business Name" },
     {
       accessorKey: "id",
@@ -129,18 +127,34 @@ function Business(props: Props) {
       header: "ACTION",
       cell: ({ row }) => {
         return (
-          <Button
-            size={"icon"}
-            variant={"ghost"}
-            className=""
-            onClick={() =>
-              navigate("/dashboard/business-id/details", {
-                state: { id: row.original?.id },
-              })
-            }
-          >
-            <ChevronRight />
-          </Button>
+          <div className="flex items-center gap-3">
+            <ConfirmAlert
+              text="Are you sure, you want to delete this business?"
+              url={`/business/${row.original.id}/`}
+              title={``}
+              trigger={
+                <Button
+                  size={"icon"}
+                  variant={"destructive"}
+                  className=""
+                >
+                  <Trash />
+                </Button>
+              }
+            />
+            <Button
+              size={"icon"}
+              variant={"ghost"}
+              className=""
+              onClick={() =>
+                navigate("/dashboard/business-id/details", {
+                  state: { id: row.original?.id },
+                })
+              }
+            >
+              <ChevronRight />
+            </Button>
+          </div>
         );
       },
     },
@@ -150,39 +164,42 @@ function Business(props: Props) {
     <Container as="section" className="py-10">
       <div className="flex items-center justify-between mt-8 mb-3">
         <div className="flex items-center gap-3">
-          <TextSearch />
-          <Button variant={"outline"} size={"icon"}>
+          <TextSearch
+            value={search.query}
+            onChange={(e) =>
+              setSearch((prev) => ({ ...prev, query: e.target.value }))
+            }
+          />
+          {/* <Button variant={"outline"} size={"icon"}>
             <SlidersHorizontal className="w-5 h-5 " />
-          </Button>
+          </Button> */}
         </div>
         <div className="flex items-center gap-3">
           <Button
             onClick={() => navigate("/dashboard/business-id/create")}
-            variant={"outline"}
             className="rounded-full"
           >
             <User className="w-5 h-5 mr-3" />
             Create Profile
           </Button>
-          <Button
+          {/* <Button
             disabled={!selectedRowId}
             onClick={() => deleteMutation.mutate()}
             className="rounded-full"
           >
             <Trash className="w-5 h-5 mr-3" />
             Delete
-          </Button>
+          </Button> */}
         </div>
       </div>
 
       <DataTable
-        data={
-          getBusinesses(data?.data?.results?.data ?? []) ?? []
-        }
+        data={getBusinesses(data?.data?.results?.data ?? []) ?? []}
         columns={columns as ColumnDef<unknown>[]}
         config={{ enableMultiRowSelection: false }}
         options={{
           isLoading,
+          disableSelection: true
         }}
       />
     </Container>

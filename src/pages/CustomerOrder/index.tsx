@@ -1,7 +1,6 @@
 import Container from "@/components/layouts/Container";
 import { DataTable } from "@/components/layouts/DataTable";
 import TextSearch from "@/components/layouts/FormInputs/TextInput";
-import { Button } from "@/components/ui/button";
 // import { getCustomerOrders } from "@/demo";
 import { getRequest } from "@/lib/axiosInstance";
 import {
@@ -11,7 +10,6 @@ import {
 } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { SlidersHorizontal } from "lucide-react";
 import CreateCustomOrder from "./components/CreateCustomOrder";
 import { OrderDialog } from "./Details";
 import { useState } from "react";

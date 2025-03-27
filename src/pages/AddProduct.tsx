@@ -118,9 +118,9 @@ export function AddProduct() {
     mutationKey: ["image-upload"],
     mutationFn: async (payload) =>
       await externalUploadRequest(
-        "engine/upload/",
+        "core/upload/",
         payload,
-        "https://devapi.autogon.ai/api/v1/"
+        "https://api.omniguard360.ai/api/v1/"
       ),
     onSuccess(data) {
       const url = data.data.data.location;

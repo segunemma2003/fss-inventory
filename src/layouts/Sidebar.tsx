@@ -95,9 +95,9 @@ export const SideBar = () => {
     },
     {
       icon: MdOutlineSavings,
-      title: "Savings",
-      to: "/dashboard/savings-plan",
-      active: location.pathname === "/dashboard/savings-plan",
+      title: "Food Plan",
+      to: "/dashboard/food-plan",
+      active: location.pathname === "/dashboard/food-plan",
     },
     {
       icon: HiOutlineCog8Tooth,

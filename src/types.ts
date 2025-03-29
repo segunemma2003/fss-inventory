@@ -23,15 +23,15 @@ export type User = {
 };
 
 export interface UserProfile {
-  id:           string;
-  full_name:    string;
-  address:      null;
-  email:        string;
+  id: string;
+  full_name: string;
+  address: null;
+  email: string;
   phone_number: null;
   display_name: string;
-  is_locked:    boolean;
-  created_at:   Date;
-  updated_at:   Date;
+  is_locked: boolean;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export type Api<T> = {
@@ -55,20 +55,12 @@ export type ProductData = {
   name: string;
   category_name: string;
   expiry_date: string;
-  id: string
+  id: string;
   image: string;
-  order_history
-  : 
-  {}
-  quantity
-  : 
-  50
-  selling_price
-  : 
-  "52000.00"
-  uom
-  : 
-  "Bag"
+  order_history: Record<any, any>;
+  quantity: number;
+  selling_price: string;
+  uom: string;
 };
 
 export interface CustomerResponseData {
@@ -90,7 +82,15 @@ export interface CustomerResponseData {
   order_date: string;
   created_at: Date;
   updated_at: Date;
-  items: Order[];
+  items: {
+    id: string;
+    price: string;
+    product: string;
+    product_category: string;
+    product_name: string;
+    quantity: number;
+    subtotal: string;
+  }[];
 }
 
 export interface Order {

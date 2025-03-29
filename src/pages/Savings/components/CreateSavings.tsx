@@ -1,5 +1,7 @@
 import { DataTable } from "@/components/layouts/DataTable";
+import { TextArea } from "@/components/layouts/FormInputs/TextArea";
 import { TextInput } from "@/components/layouts/FormInputs/TextInput";
+import { TextSelect } from "@/components/layouts/FormInputs/TextSelect";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -11,21 +13,21 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useToastHandlers } from "@/hooks/useToaster";
-import { patchRequest, postRequest } from "@/lib/axiosInstance";
+import { getRequest, patchRequest, postRequest } from "@/lib/axiosInstance";
 import { Forger, useForge } from "@/lib/forge";
-import { ApiResponse, ApiResponseError } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { ProductList } from "@/pages/ProductInventory";
+import { ApiListResponse, ApiResponse, ApiResponseError } from "@/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef, RowData } from "@tanstack/react-table";
 import {
   ArrowRight,
-  Building,
-  IdCard,
   MapPin,
-  Phone,
   PiggyBank,
   Plus,
   RotateCcw,
   User,
+  Clock,
+  Calendar,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -124,6 +126,14 @@ function CreateSavingsPlan(props: Props) {
     },
   });
 
+  const { data } = useQuery<
+    ApiListResponse<ProductList[]>,
+    ApiResponseError
+  >({
+    queryKey: ["products"],
+    queryFn: async () => await getRequest("products/"),
+  });
+
   const columns: ColumnDef<Order>[] = [
     {
       id: "S/N",
@@ -135,6 +145,14 @@ function CreateSavingsPlan(props: Props) {
     {
       accessorKey: "product",
       header: "Product Name",
+      meta: {
+        inputType: "select",
+        options:
+          data?.data.results.data.map((item) => ({
+            label: item.name,
+            value: item.id,
+          })) ?? [],
+      },
     },
     {
       accessorKey: "quantity",
@@ -151,12 +169,12 @@ function CreateSavingsPlan(props: Props) {
       <SheetTrigger asChild>
         <Button className="rounded-full">
           <PiggyBank className="h-5 w-5 mr-2" />
-          Create Savings
+          Create Food Plan
         </Button>
       </SheetTrigger>
       <SheetContent className="!max-w-xl">
         <SheetHeader>
-          <SheetTitle>Create New Savings</SheetTitle>
+          <SheetTitle>Create Food Plan</SheetTitle>
           <SheetDescription>
             <div className="mt-5">
               <h5 className="font-urbanist font-medium">
@@ -166,18 +184,19 @@ function CreateSavingsPlan(props: Props) {
               <ForgeForm onSubmit={createOrder} className="mt-3 mb-10">
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <Forger
-                    name="saving_name"
-                    placeholder="Savings Name"
+                    name="name"
+                    placeholder="Food Plan Name"
                     component={TextInput}
                     startAdornment={
                       <User className="h-5 w-5 mr-2 text-gray-400" />
                     }
                   />
                   <Forger
-                    name="customer_address"
-                    placeholder="Customer Address"
+                    name="price"
+                    placeholder="Price"
                     // label="Business "
                     component={TextInput}
+                    type="number"
                     startAdornment={
                       <MapPin className="h-5 w-5 mr-2 text-gray-400" />
                     }
@@ -186,66 +205,36 @@ function CreateSavingsPlan(props: Props) {
 
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <Forger
-                    name="customer_phone"
-                    placeholder="Customer Phone"
-                    // label="Business Name"
-                    component={TextInput}
+                    name="duration"
+                    placeholder="Duration"
+                    component={TextSelect}
+                    options={[
+                      { label: "Daily", value: "daily" },
+                      { label: "Weekly", value: "weekly" },
+                      { label: "Monthly", value: "monthly" },
+                      { label: "Quarterly", value: "quarterly" },
+                      { label: "Yearly", value: "yearly" },
+                    ]}
                     startAdornment={
-                      <Phone className="h-5 w-5 mr-2 text-gray-400" />
+                      <Clock className="h-5 w-5 mr-2 text-gray-400" />
                     }
                   />
                   <Forger
-                    name="payment_method"
-                    placeholder="Payment Method"
+                    name="duration_days"
+                    placeholder="Duration Days"
                     // label="Business Type"
                     component={TextInput}
                     startAdornment={
-                      <IdCard className="h-5 w-5 mr-2 text-gray-400" />
+                      <Calendar className="h-5 w-5 mr-2 text-gray-400" />
                     }
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 mb-3">
-                  <Forger
-                    name="payment_source"
-                    placeholder="Payment Source"
-                    // label="Business Name"
-                    component={TextInput}
-                    startAdornment={
-                      <User className="h-5 w-5 mr-2 text-gray-400" />
-                    }
-                  />
-                  <Forger
-                    name="business"
-                    placeholder="Business"
-                    // label="Business Type"
-                    component={TextInput}
-                    startAdornment={
-                      <Building className="h-5 w-5 mr-2 text-gray-400" />
-                    }
-                  />
-                </div>
-
-                {/* <div className="grid grid-cols-2 gap-3 mb-3">
-                  <Forger
-                    name="customer_name"
-                    placeholder="Hom"
-                    label="Business Name"
-                    component={TextInput}
-                    startAdornment={
-                      <User className="h-5 w-5 mr-2 text-gray-400" />
-                    }
-                  />
-                  <Forger
-                    name="customer_address"
-                    placeholder="retail"
-                    label="Business Type"
-                    component={TextInput}
-                    startAdornment={
-                      <Building className="h-5 w-5 mr-2 text-gray-400" />
-                    }
-                  />
-                </div> */}
+                <Forger
+                  name="description"
+                  placeholder="description"
+                  component={TextArea}
+                />
 
                 <h5 className="mt-5 font-urbanist font-medium">Order List</h5>
 
@@ -275,6 +264,7 @@ function CreateSavingsPlan(props: Props) {
                     disablePagination: true,
                   }}
                 />
+
                 <div className="flex items-center justify-between gap-3">
                   <Button
                     size={"sm"}
@@ -309,7 +299,7 @@ function CreateSavingsPlan(props: Props) {
 
                 <SheetFooter className="mt-20 items-end p-0">
                   <Button type={"submit"} className="w-fit">
-                    Create Order
+                    Create Plan
                   </Button>
                   <ArrowRight className="h-5 w-5" />
                 </SheetFooter>
@@ -327,18 +317,39 @@ export default CreateSavingsPlan;
 const defaultColumn: Partial<ColumnDef<Order>> = {
   cell: ({ getValue, row: { index }, column: { id }, table }) => {
     const initialValue = getValue();
-    // We need to keep and update the state of the cell normally
     const [value, setValue] = useState(initialValue);
-
-    // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = () => {
       table.options.meta?.updateData(index, id, value);
     };
-
-    // If the initialValue is changed external, sync it up with our state
     useEffect(() => {
       setValue(initialValue);
     }, [initialValue]);
+
+    // Get column definition and meta
+    const columnMeta = table.getAllColumns().find((c) => c.id === id)?.columnDef
+      ?.meta as {
+      inputType?: string;
+      options: { value: string; label: string }[];
+    };
+    const inputType = columnMeta?.inputType || "input";
+    const options = columnMeta?.options || [];
+
+    if (inputType === "select") {
+      return (
+        <select
+          value={value as string}
+          onChange={(e) => setValue(e.target.value)}
+          className="w-fit min-w-[2rem]"
+          onBlur={onBlur}
+        >
+          {options.map((option: { value: string; label: string }) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      );
+    }
 
     return (
       <input

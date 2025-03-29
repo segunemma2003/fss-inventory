@@ -52,7 +52,7 @@ export const AppRoutes = () => {
     { path: "/dashboard/settings", element: <Settings /> },
     { path: "/dashboard/roles", element: <Roles /> },
     { path: "/dashboard/business-id", element: <Business /> },
-    { path: "/dashboard/savings-plan", element: <Savings /> },
+    { path: "/dashboard/food-plan", element: <Savings /> },
     { path: "/dashboard/business-id/create", element: <CreateBusiness /> },
     { path: "/dashboard/business-id/details", element: <BusinessDetails /> },
   ];

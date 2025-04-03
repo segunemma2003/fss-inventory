@@ -36,7 +36,7 @@ type NavigationItem = {
   active: boolean;
   badge?: number;
 };
-
+ 
 export const SideBar = () => {
   const location = useLocation();
 

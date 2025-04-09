@@ -1,5 +1,4 @@
 import { DataTable } from "@/components/layouts/DataTable";
-import { TextArea } from "@/components/layouts/FormInputs/TextArea";
 import { TextInput } from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,7 +52,7 @@ declare module "@tanstack/react-table" {
   }
 }
 
-function CreateCustomOrder(props: Props) {
+function CreateOrder(props: Props) {
   const {} = props;
   const handler = useToastHandlers();
   const { ForgeForm } = useForge<FormValue>({});
@@ -65,15 +64,15 @@ function CreateCustomOrder(props: Props) {
     FormValue
   >({
     mutationFn: async (values) => {
-      return await postRequest("/orders/custom/", { ...values, items: orders });
+      return await postRequest("/orders/", { ...values, items: orders });
     },
     onSuccess(data) {
       if (typeof data.data.message === "string") {
-        handler.success("Custom Order Creation", data.data.message);
+        handler.success("Order Creation", data.data.message);
       }
     },
     onError(error) {
-      handler.error("Custom Order Creation", error);
+      handler.error("Order Creation", error);
     },
   });
 
@@ -86,12 +85,8 @@ function CreateCustomOrder(props: Props) {
       },
     },
     {
-      accessorKey: "name",
+      accessorKey: "product",
       header: "Product Name",
-    },
-    {
-      accessorKey: "description",
-      header: "Description",
     },
     {
       accessorKey: "quantity",
@@ -108,12 +103,12 @@ function CreateCustomOrder(props: Props) {
       <SheetTrigger asChild>
         <Button className="rounded-full">
           <Package className="h-5 w-5 mr-2" />
-          Create Custom Order
+          Create Order
         </Button>
       </SheetTrigger>
       <SheetContent className="!max-w-xl">
         <SheetHeader>
-          <SheetTitle>Create New Custom Order</SheetTitle>
+          <SheetTitle>Create New Order</SheetTitle>
           <SheetDescription>
             <div className="mt-5">
               <h5 className="font-urbanist font-medium">
@@ -132,18 +127,6 @@ function CreateCustomOrder(props: Props) {
                     }
                   />
                   <Forger
-                    name="customer_phone"
-                    placeholder="Customer Phone"
-                    // label="Business Name"
-                    component={TextInput}
-                    startAdornment={
-                      <Phone className="h-5 w-5 mr-2 text-gray-400" />
-                    }
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <Forger
                     name="customer_address"
                     placeholder="Customer Address"
                     // label="Business "
@@ -154,16 +137,70 @@ function CreateCustomOrder(props: Props) {
                   />
                 </div>
 
-                <div className="mb-3">
+                <div className="grid grid-cols-2 gap-3 mb-3">
                   <Forger
-                    name="notes"
-                    placeholder="Notes"
+                    name="customer_phone"
+                    placeholder="Customer Phone"
                     // label="Business Name"
-                    component={TextArea}
+                    component={TextInput}
+                    startAdornment={
+                      <Phone className="h-5 w-5 mr-2 text-gray-400" />
+                    }
+                  />
+                  <Forger
+                    name="payment_method"
+                    placeholder="Payment Method"
+                    // label="Business Type"
+                    component={TextInput}
+                    startAdornment={
+                      <IdCard className="h-5 w-5 mr-2 text-gray-400" />
+                    }
                   />
                 </div>
 
-                <h5 className="mt-5 font-urbanist font-medium">Custom Order List</h5>
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <Forger
+                    name="payment_source"
+                    placeholder="Payment Source"
+                    // label="Business Name"
+                    component={TextInput}
+                    startAdornment={
+                      <User className="h-5 w-5 mr-2 text-gray-400" />
+                    }
+                  />
+                  <Forger
+                    name="business"
+                    placeholder="Business"
+                    // label="Business Type"
+                    component={TextInput}
+                    startAdornment={
+                      <Building className="h-5 w-5 mr-2 text-gray-400" />
+                    }
+                  />
+                </div>
+
+                {/* <div className="grid grid-cols-2 gap-3 mb-3">
+                  <Forger
+                    name="customer_name"
+                    placeholder="Hom"
+                    label="Business Name"
+                    component={TextInput}
+                    startAdornment={
+                      <User className="h-5 w-5 mr-2 text-gray-400" />
+                    }
+                  />
+                  <Forger
+                    name="customer_address"
+                    placeholder="retail"
+                    label="Business Type"
+                    component={TextInput}
+                    startAdornment={
+                      <Building className="h-5 w-5 mr-2 text-gray-400" />
+                    }
+                  />
+                </div> */}
+
+                <h5 className="mt-5 font-urbanist font-medium">Order List</h5>
 
                 <DataTable
                   data={orders}
@@ -238,7 +275,7 @@ function CreateCustomOrder(props: Props) {
   );
 }
 
-export default CreateCustomOrder;
+export default CreateOrder;
 
 const defaultColumn: Partial<ColumnDef<Order>> = {
   cell: ({ getValue, row: { index }, column: { id }, table }) => {

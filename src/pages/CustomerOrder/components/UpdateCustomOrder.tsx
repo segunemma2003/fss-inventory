@@ -53,7 +53,7 @@ declare module "@tanstack/react-table" {
   }
 }
 
-function CreateCustomOrder(props: Props) {
+function UpdateCustomOrder(props: Props) {
   const {} = props;
   const handler = useToastHandlers();
   const { ForgeForm } = useForge<FormValue>({});
@@ -238,7 +238,7 @@ function CreateCustomOrder(props: Props) {
   );
 }
 
-export default CreateCustomOrder;
+export default UpdateCustomOrder;
 
 const defaultColumn: Partial<ColumnDef<Order>> = {
   cell: ({ getValue, row: { index }, column: { id }, table }) => {

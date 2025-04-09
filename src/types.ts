@@ -124,3 +124,31 @@ export interface Item {
   price: string;
   subtotal: string;
 }
+
+export interface CustomOrderItem {
+  id: string;
+  customer_name: string;
+  customer_address: string;
+  customer_phone: string;
+  status: string;
+  total: number;
+}
+
+export interface CustomOrderDetail {
+  id:               string;
+  customer_name:    string;
+  customer_address: string;
+  customer_phone:   string;
+  notes:            string;
+  status:           string;
+  items:            CustomItem[];
+}
+
+export interface CustomItem {
+  id:          number;
+  name:        string;
+  description: string;
+  quantity:    number;
+  price:       string;
+  image:       string;
+}

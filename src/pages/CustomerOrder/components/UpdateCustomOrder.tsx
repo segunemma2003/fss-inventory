@@ -19,8 +19,6 @@ import { useMutation } from "@tanstack/react-query";
 import { ColumnDef, RowData } from "@tanstack/react-table";
 import {
   ArrowRight,
-  Building,
-  IdCard,
   MapPin,
   Package,
   Phone,

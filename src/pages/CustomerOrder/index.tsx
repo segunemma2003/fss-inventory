@@ -29,43 +29,6 @@ export type CustomerOrderType = {
 };
 
 function CustomerOrder() {
-  const [query, setQuery] = useState({
-    query: "",
-    fields: ["customer_name", "category_name"],
-  });
-
-  const { data, isLoading } = useQuery<
-    ApiListResponse<CustomerResponseData[]>,
-    ApiResponseError
-  >({
-    queryKey: ["customerOrders"],
-    queryFn: async () => await getRequest("orders/"),
-  });
-
-  const { data: OrderList } = useFilter({
-    data: data?.data.results.data as any,
-    search: query,
-  });
-
-  const columns: ColumnDef<CustomerResponseData>[] = [
-    { accessorKey: "customer_name", header: "Customer Name" },
-    {
-      accessorKey: "payment_method_display",
-      header: "Purchase Method",
-    },
-    {
-      accessorKey: "total",
-      header: "Amount Spent",
-    },
-    {
-      id: "action",
-      header: "ACTION",
-      cell: ({ row }) => {
-        return <OrderDialog id={row.original.id} />;
-      },
-    },
-  ];
-
   return (
     <Container className="py-10">
       <Tabs defaultValue="tab-1">

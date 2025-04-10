@@ -6,7 +6,7 @@ import { getRequest } from "@/lib/axiosInstance";
 import { ApiResponse, ApiResponseError, CustomerResponseData, CustomOrderDetail } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { SquareArrowOutUpRight, SquareArrowRight } from "lucide-react";
+import { SquareArrowOutUpRight } from "lucide-react";
 
 interface CustomerInfoProps {
   name: string;

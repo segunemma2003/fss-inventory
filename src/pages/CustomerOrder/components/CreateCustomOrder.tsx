@@ -19,8 +19,6 @@ import { useMutation } from "@tanstack/react-query";
 import { ColumnDef, RowData } from "@tanstack/react-table";
 import {
   ArrowRight,
-  Building,
-  IdCard,
   MapPin,
   Package,
   Phone,
@@ -47,6 +45,7 @@ type Order = {
   quantity: number;
   price: number;
 };
+
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;

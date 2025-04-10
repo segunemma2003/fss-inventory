@@ -6,6 +6,7 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { ApiResponse, ApiResponseError, CustomerResponseData } from "@/types";
 import { getRequest } from "@/lib/axiosInstance";
+import { formatCurrency } from "@/lib/utils";
 
 interface CustomerInfoProps {
   name: string;
@@ -40,17 +41,14 @@ interface TotalSectionProps {
 
 const TotalSection: React.FC<TotalSectionProps> = ({ total }) => {
   return (
-    <div className="mt-6 w-full whitespace-nowrap text-neutral-900 max-md:max-w-full">
+    <div className="w-full whitespace-nowrap text-neutral-900 max-md:max-w-full">
       <Separator className="w-full" />
       <div className="flex flex-wrap gap-10 justify-between items-end mt-5 w-full max-md:max-w-full">
         <h2 className="text-base leading-tight">Total</h2>
-        <div className="flex gap-0.5 items-center px-2 text-2xl">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/877fbded3c1141a18415be7a6b510b08/b1f671dd598c424e325393851df1117eb48e817f4419e970d4499fc118408ea9?placeholderIfAbsent=true"
-            alt="Currency icon"
-            className="object-contain shrink-0 self-stretch my-auto w-5 aspect-[1.33]"
-          />
-          <span className="self-stretch my-auto">{total}</span>
+        <div className="flex gap-0.5 items-center text-2xl">
+          <span className="self-stretch my-auto">
+            {formatCurrency(parseInt(total), "en-NG", "NGN")}
+          </span>
         </div>
       </div>
     </div>
@@ -67,7 +65,6 @@ export const OrderDialog = ({ id }: { id: string }) => {
   });
 
   console.log(data?.data);
-  
 
   const columns: ColumnDef<CustomerResponseData["items"][0]>[] = [
     { accessorKey: "product_name", header: "Product Name" },
@@ -78,8 +75,10 @@ export const OrderDialog = ({ id }: { id: string }) => {
     {
       accessorKey: "price",
       header: "Amount Spent",
+      cell({ row }) {
+        return formatCurrency(parseInt(row.original.price), "en-NG", "NGN");
+      },
     },
-    
   ];
 
   const customerOrder = data?.data.data;
@@ -87,18 +86,14 @@ export const OrderDialog = ({ id }: { id: string }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          size={"sm"}
-          variant={"outline"}
-          className="rounded-full"
-        >
+        <Button size={"sm"} variant={"outline"} className="rounded-full">
           View Order
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl">
-          <div className="mb-3">
-            <h3 className="text-3xl font-semibold text-red-600">Order List</h3>
-          </div>
+        <div className="mb-3">
+          <h3 className="text-3xl font-semibold text-red-600">Order List</h3>
+        </div>
 
         <CustomerInfo
           gender={customerOrder?.order_date ?? ""}
@@ -116,7 +111,19 @@ export const OrderDialog = ({ id }: { id: string }) => {
           }}
         />
 
-        <TotalSection total="12,427,00" />
+        <div className="flex items-center justify-between border-b pb-2 border-gray-200">
+          <h2 className="text-sm">Tax</h2>
+          <span className="self-stretch my-auto">
+            {formatCurrency(parseInt(data?.data?.data?.tax ?? '0'), "en-NG", "NGN")}
+          </span>
+        </div>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm">Subtotal</h2>
+          <span className="self-stretch my-auto">
+            {formatCurrency(parseInt(data?.data?.data?.subtotal ?? '0'), "en-NG", "NGN")}
+          </span>
+        </div>
+        <TotalSection total={data?.data?.data?.total ?? "0"} />
       </DialogContent>
     </Dialog>
   );

@@ -21,6 +21,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { ShoppingBasket, ShoppingCart, Trash } from "lucide-react";
 import { CustomOrderDialog } from "./components/CustomOrderDialog";
 import { ConfirmAlert } from "@/components/layouts/ConfirmAlert";
+import UpdateCustomOrder from "./components/UpdateCustomOrder";
 
 export type CustomerOrderType = {
   name: string;
@@ -176,6 +177,7 @@ const CustomOrder = () => {
               title="Delete Custom Order"
               trigger={<Trash className="h-4 w-4 cursor-pointer text-red-800" />}
             />
+            <UpdateCustomOrder id={row.original.id} />
             <CustomOrderDialog id={row.original.id} />
           </div>
         );

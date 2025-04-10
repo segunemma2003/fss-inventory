@@ -58,7 +58,7 @@ function CreateCustomOrder(props: Props) {
   const { ForgeForm } = useForge<FormValue>({});
   const [orders, setOrders] = useState<Order[]>([]);
 
-  const { mutate: createOrder } = useMutation<
+  const { mutate: createOrder, isPending } = useMutation<
     ApiResponse,
     ApiResponseError,
     FormValue
@@ -223,7 +223,7 @@ function CreateCustomOrder(props: Props) {
                 </div>
 
                 <SheetFooter className="mt-20 items-end p-0">
-                  <Button type={"submit"} className="w-fit">
+                  <Button type={"submit"} isLoading={isPending} className="w-fit">
                     Create Order
                   </Button>
                   <ArrowRight className="h-5 w-5" />

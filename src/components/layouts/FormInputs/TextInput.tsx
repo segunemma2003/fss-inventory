@@ -256,7 +256,7 @@ export const TextFileUploader = ({
     }
   };
 
-  const handleFileChange = (files: File[] | null | undefined) => {
+  const handleFileChange = (files: any) => {
     if (onChange) {
       onChange(files === undefined ? null : files);
     }

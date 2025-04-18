@@ -37,17 +37,30 @@ type EditProfileDialogProps = {
   trigger?: React.ReactNode;
 };
 
-// Validation schema
-const schema = yup.object().shape<Record<keyof ProfileFormData, yup.AnySchema>>({
-  full_name: yup.string().default(""),
-  address: yup.string().default(""),
-  email: yup.string().email("Must be a valid email").required("Email is required"),
-  phone_number: yup.string().default(""),
-  display_name: yup.string().required("Display name is required"),
-  pin: yup.string()
-    .required("PIN is required")
-    .matches(/^\d{4}$/, "PIN must be exactly 4 digits")
+// Define base schemas
+const fullNameSchema = yup.string().default("");
+const addressSchema = yup.string().default("");
+const emailSchema = yup.string().email("Must be a valid email").required("Email is required");
+const phoneNumberSchema = yup.string().default("");
+const displayNameSchema = yup.string().required("Display name is required");
+const pinSchema = yup.string()
+  .required("PIN is required")
+  .matches(/^\d{4}$/, "PIN must be exactly 4 digits");
+
+// Create combined schema
+const profileSchema = yup.object({
+  full_name: fullNameSchema,
+  address: addressSchema,
+  email: emailSchema,
+  phone_number: phoneNumberSchema,
+  display_name: displayNameSchema,
+  pin: pinSchema,
 });
+
+// TypeScript validation
+type SchemaType = yup.InferType<typeof profileSchema>;
+// Make sure schema matches ProfileFormData
+const _typeCheck: ProfileFormData = {} as SchemaType;
 
 export function EditProfileDialog({ profile, trigger }: EditProfileDialogProps) {
   const [open, setOpen] = useState(false);
@@ -66,7 +79,7 @@ export function EditProfileDialog({ profile, trigger }: EditProfileDialogProps) 
       display_name: "",
       pin: "",
     },
-    resolver: yupResolver(schema),
+    resolver: yupResolver(profileSchema),
   });
 
   // Update form data when profile changes

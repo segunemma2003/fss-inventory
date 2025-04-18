@@ -15,6 +15,7 @@ import { format } from "date-fns";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { CategoryDialog } from "@/components/layouts/CategoryDialog";
 
 export interface ProductAnalytics {
   total_products: number;
@@ -148,6 +149,7 @@ export const ProductInventory = () => {
           </Button> */}
         </div>
         <div className="flex items-center gap-3">
+          <CategoryDialog />
           <Button
             onClick={() => navigate("/dashboard/add-product")}
             className="rounded-full"

@@ -41,15 +41,17 @@ export type TextAreaProps = React.InputHTMLAttributes<HTMLTextAreaElement> & {
   inputLength?: number;
 };
 
-export type TextFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
+export type TextFileProps = {
   label?: string | JSX.Element;
   containerClass?: string;
   error?: string;
   startAdornment?: ReactNode;
   endAdornment?: ReactNode;
   helperText?: string;
-  files: File[] | null;
-  onChange: (value: File[] | null) => void;
+  files?: File[] | null;
+  value?: File[] | null;
+  onChange?: (value: File[] | null) => void;
+  element: JSX.Element;
 };
 
 export const TextInput = (props: TextInputProps) => {
@@ -237,42 +239,50 @@ export const FileSvgDraw = () => {
   );
 };
 
-export const TextFileUploader = (
-  props: TextFileProps & { value: File[] | null; element: JSX.Element }
-) => {
+export const TextFileUploader = ({
+  value,
+  onChange,
+  element,
+  containerClass,
+  error,
+  ...props
+}: TextFileProps) => {
   const dropZoneConfig = {
-    maxFiles: 5,
-    maxSize: 1024 * 1024 * 4,
+    maxFiles: 1,
+    maxSize: 1024 * 1024 * 4, // 4MB
     multiple: false,
+    accept: {
+      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+    }
   };
 
   const handleFile = (files: File[] | null) => {
-    props?.onChange?.(files);
+    onChange?.(files);
   };
 
   return (
     <>
       <FileUploader
         {...props}
-        value={props.value}
+        value={value}
         onValueChange={handleFile}
         dropzoneOptions={dropZoneConfig}
         reSelect={true}
         className={cn(
-          "relative rounded-lg",
-          props.containerClass
+          "relative rounded-lg border-2 border-dashed",
+          containerClass
         )}
       >
-        <FileInput className="outline-dashed outline-1 outline-white bg-accent min-h-40">
-          <div className="flex items-center justify-center h-full flex-col pb-4 w-full ">
-            {props.element}
+        <FileInput className="min-h-40 bg-accent/5 hover:bg-accent/10 transition-colors duration-200">
+          <div className="flex items-center justify-center h-full flex-col pb-4 w-full">
+            {element}
           </div>
         </FileInput>
 
         <FileUploaderContent>
-          {props.value &&
-            props.value.length > 0 &&
-            props.value?.map?.((file, i) => (
+          {value &&
+            value.length > 0 &&
+            value?.map?.((file, i) => (
               <FileUploaderItem key={i} index={i}>
                 <Paperclip className="h-4 w-4 stroke-current" />
                 <span>{file.name}</span>
@@ -280,7 +290,7 @@ export const TextFileUploader = (
             ))}
         </FileUploaderContent>
       </FileUploader>
-      <span className="text-xs text-red-500 mt-1">{props.error}</span>
+      <span className="text-xs text-red-500 mt-1">{error}</span>
     </>
   );
 };

@@ -326,37 +326,40 @@ export const FileInput = forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => {
   const { dropzoneState, isFileTooBig, isLOF } = useFileUpload();
-  const rootProps = isLOF ? {} : dropzoneState.getRootProps();
+  const { getRootProps, getInputProps, isDragAccept, isDragReject, inputRef } = dropzoneState;
+  const rootProps = isLOF ? {} : getRootProps();
 
   return (
     <div
       ref={ref}
       {...props}
-      className={`relative w-full ${
-        isLOF ? "opacity-50 cursor-not-allowed " : "cursor-pointer "
-      }`}
+      className={cn(
+        "relative w-full",
+        isLOF ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+      )}
     >
       <div
-        className={cn(
-          `w-full rounded-lg duration-300 ease-in-out bg-amber-500
-         ${
-           dropzoneState.isDragAccept
-             ? "border-green-500"
-             : dropzoneState.isDragReject || isFileTooBig
-               ? "border-red-500"
-               : "border-gray-300"
-         }`,
-          className,
-        )}
         {...rootProps}
+        onClick={rootProps.onClick}
+        onKeyDown={rootProps.onKeyDown}
+        className={cn(
+          "w-full rounded-lg duration-300 ease-in-out",
+          isDragAccept
+            ? "border-green-500"
+            : isDragReject || isFileTooBig
+              ? "border-red-500"
+              : "border-gray-300",
+          className
+        )}
       >
         {children}
       </div>
       <Input
-        ref={dropzoneState.inputRef}
+        ref={inputRef}
+        type="file"
         disabled={isLOF}
-        {...dropzoneState.getInputProps()}
-        className={`${isLOF ? "cursor-not-allowed" : ""}`}
+        {...getInputProps()}
+        className="hidden"
       />
     </div>
   );

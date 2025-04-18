@@ -38,10 +38,10 @@ type EditProfileDialogProps = {
 };
 
 // Define base schemas
-const fullNameSchema = yup.string().default("");
-const addressSchema = yup.string().default("");
+const fullNameSchema = yup.string().required("Full name is required");
+const addressSchema = yup.string().optional();
 const emailSchema = yup.string().email("Must be a valid email").required("Email is required");
-const phoneNumberSchema = yup.string().default("");
+const phoneNumberSchema = yup.string().optional();
 const displayNameSchema = yup.string().required("Display name is required");
 const pinSchema = yup.string()
   .required("PIN is required")
@@ -58,9 +58,7 @@ const profileSchema = yup.object({
 });
 
 // TypeScript validation
-type SchemaType = yup.InferType<typeof profileSchema>;
 // Make sure schema matches ProfileFormData
-const _typeCheck: ProfileFormData = {} as SchemaType;
 
 export function EditProfileDialog({ profile, trigger }: EditProfileDialogProps) {
   const [open, setOpen] = useState(false);

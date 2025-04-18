@@ -24,6 +24,11 @@ type FormValue = {
   profile_id: string;
 };
 
+// Extended user type including profileId
+type ExtendedUser = User & {
+  profileId?: string;
+};
+
 export interface LoginResponse {
   access_token: string;
   refresh_token: string;
@@ -67,10 +72,17 @@ export const ProfileSelection = () => {
   >({
     mutationFn: async (payload) =>
       postRequest("/auth/select-profile/", payload),
-    onSuccess(data) {
+    onSuccess(data, variables) {
       const { access_token, user, role, priviledges } = data.data.data;
 
-      setUser({ ...user, role, authority: priviledges });
+      const extendedUser: ExtendedUser = {
+        ...user,
+        role,
+        authority: priviledges,
+        profileId: variables.profile_id
+      };
+      
+      setUser(extendedUser);
       setToken(access_token);
       if (typeof data?.data?.message === "string") {
         handler.success("Authentication", data.data.message);

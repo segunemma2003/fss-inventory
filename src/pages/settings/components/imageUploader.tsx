@@ -2,15 +2,15 @@
 
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { UploadIcon } from "lucide-react";
+import { Camera } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const ImageUploadOverlay: React.FC = () => {
   return (
-    <div className="flex absolute bottom-0 left-2/4 gap-2.5 justify-center items-center px-2.5 py-1.5 bg-accent -translate-x-2/4 backdrop-blur-[2px] h-[65px] w-[380px] max-md:w-80 max-md:h-[60px] max-sm:px-2 max-sm:py-1 max-sm:h-[55px] max-sm:w-[280px]">
-      <p className="text-sm font-bold leading-5 text-muted-foreground max-sm:text-xs">
-        Upload Image
-      </p>
-      <UploadIcon className="w-5 h-5 flex-shrink-0 text-muted-foreground" />
+    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity">
+      <div className="flex items-center justify-center bg-white/20 backdrop-blur-sm p-2 rounded-full">
+        <Camera className="w-5 h-5 text-white" />
+      </div>
     </div>
   );
 };
@@ -22,7 +22,7 @@ interface ImageUploaderProps {
 
 export const ImageUploader: React.FC<ImageUploaderProps> = ({
   onImageUpload,
-  // className,
+  className,
 }) => {
   const [image, setImage] = useState<string | null>(
     "https://img.freepik.com/premium-psd/ice-cube-border-transparent-background_53876-209958.jpg"
@@ -48,14 +48,17 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   };
 
   return (
-    <Card
-      className="relative rounded-xl border border-solid border-neutral-400 h-[200px] w-[230px] max-md:h-[180px] max-md:w-[200px] max-sm:h-40 max-sm:w-[180px] cursor-pointer overflow-hidden py-0 mx-auto"
+    <div
+      className={cn(
+        "relative rounded-full overflow-hidden cursor-pointer",
+        className
+      )}
       onClick={handleClick}
     >
       {image && (
         <img
           src={image}
-          alt="Uploaded preview"
+          alt="Profile picture"
           className="w-full h-full object-cover"
         />
       )}
@@ -68,6 +71,6 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         className="hidden"
         aria-label="Upload image"
       />
-    </Card>
+    </div>
   );
 };

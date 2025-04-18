@@ -20,6 +20,7 @@ export type User = {
   role: string;
   is_active: boolean;
   authority?: string[];
+  profileId?: string;
 };
 
 export interface UserProfile {

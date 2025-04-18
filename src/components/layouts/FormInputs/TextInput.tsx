@@ -256,8 +256,10 @@ export const TextFileUploader = ({
     }
   };
 
-  const handleFile = (files: File[] | null | undefined) => {
-    onChange?.(files || null);
+  const handleFileChange = (files: File[] | null | undefined) => {
+    if (onChange) {
+      onChange(files === undefined ? null : files);
+    }
   };
 
   return (
@@ -265,7 +267,7 @@ export const TextFileUploader = ({
       <FileUploader
         {...props}
         value={value}
-        onValueChange={handleFile}
+        onValueChange={handleFileChange}
         dropzoneOptions={dropZoneConfig}
         reSelect={true}
         className={cn(

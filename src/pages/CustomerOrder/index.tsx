@@ -2,7 +2,7 @@ import Container from "@/components/layouts/Container";
 import { DataTable } from "@/components/layouts/DataTable";
 import TextSearch from "@/components/layouts/FormInputs/TextInput";
 // import { getCustomerOrders } from "@/demo";
-import { getRequest, getAxiosInstance } from "@/lib/axiosInstance";
+import { getRequest } from "@/lib/axiosInstance";
 import {
   ApiListResponse,
   ApiResponseError,

@@ -38,11 +38,11 @@ type EditProfileDialogProps = {
 };
 
 // Validation schema
-const schema = yup.object().shape({
-  full_name: yup.string(),
-  address: yup.string(),
+const schema = yup.object().shape<Record<keyof ProfileFormData, yup.AnySchema>>({
+  full_name: yup.string().default(""),
+  address: yup.string().default(""),
   email: yup.string().email("Must be a valid email").required("Email is required"),
-  phone_number: yup.string(),
+  phone_number: yup.string().default(""),
   display_name: yup.string().required("Display name is required"),
   pin: yup.string()
     .required("PIN is required")

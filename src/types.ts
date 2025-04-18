@@ -152,3 +152,25 @@ export interface CustomItem {
   price:       string;
   image:       string;
 }
+
+export interface CustomerOverview {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  total_purchases: number;
+  total_amount_spent: number;
+  products_bought: {
+    id: string;
+    name: string;
+    description: string;
+    category_name: string;
+    selling_price: number;
+    tags: string[];
+    uom: string;
+    image: string;
+  }[];
+  purchase_frequency: string;
+  last_purchase_date: string;
+}

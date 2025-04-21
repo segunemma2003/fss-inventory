@@ -282,14 +282,14 @@ export const TextFileUploader = ({
         // @ts-ignore - Bypassing the type check issue
         onValueChange={typedValueChange}
         dropzoneOptions={dropZoneConfig}
-        reSelect={true}
+        // reSelect={true}
         className={cn(
           "relative rounded-lg border-2 border-dashed",
           containerClass
         )}
       >
         <FileInput className="min-h-40 bg-accent/5 hover:bg-accent/10 transition-colors duration-200">
-          <div className="flex items-center justify-center h-full flex-col pb-4 w-full">
+          <div className="flex items-center justify-center h-40 flex-col w-full">
             {element}
           </div>
         </FileInput>

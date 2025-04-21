@@ -1,6 +1,5 @@
 "use client";
  
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
   Dispatch,
@@ -326,8 +325,18 @@ export const FileInput = forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => {
   const { dropzoneState, isFileTooBig, isLOF } = useFileUpload();
-  const { getRootProps, getInputProps, isDragAccept, isDragReject, inputRef } = dropzoneState;
+  const { 
+    getRootProps, 
+    getInputProps, 
+    isDragAccept, 
+    isDragReject, 
+    open,
+    inputRef 
+  } = dropzoneState;
+  
+  // Don't get root props when max files limit is reached
   const rootProps = isLOF ? {} : getRootProps();
+  
 
   return (
     <div
@@ -340,8 +349,6 @@ export const FileInput = forwardRef<
     >
       <div
         {...rootProps}
-        onClick={rootProps.onClick}
-        onKeyDown={rootProps.onKeyDown}
         className={cn(
           "w-full rounded-lg duration-300 ease-in-out",
           isDragAccept
@@ -351,15 +358,23 @@ export const FileInput = forwardRef<
               : "border-gray-300",
           className
         )}
+        onClick={(e) => {
+          e.preventDefault();
+          if (!isLOF) {
+            open();
+          } else {
+            toast.error("Maximum number of files reached");
+          }
+        }}
       >
         {children}
       </div>
-      <Input
+      <input
         ref={inputRef}
         type="file"
-        disabled={isLOF}
         {...getInputProps()}
         className="hidden"
+        disabled={isLOF}
       />
     </div>
   );

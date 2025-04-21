@@ -1,7 +1,6 @@
 import { NotificationItemProps } from "@/layouts/NotificationPanel";
 import { BusinessResponseData } from "@/pages/Business";
 import { CustomerOrderType } from "@/pages/CustomerOrder";
-// import { ProductAnalysisData } from "@/pages/SalesAnalytics";
 import { EmployeeType } from "@/pages/Users";
 import { User } from "@/types";
 import { faker } from "@faker-js/faker";

@@ -239,7 +239,7 @@ const Customers = () => {
   >({
     queryKey: ["customers"],
     queryFn: async () => {
-      const baseUrl = "https://iu36btxbs4d5awdsyrz2ahab4y0zvodv.lambda-url.us-east-2.on.aws/api/v1/";
+      const baseUrl = import.meta.env.VITE_CUSTOMER_API_BASE_URL || "https://iu36btxbs4d5awdsyrz2ahab4y0zvodv.lambda-url.us-east-2.on.aws/api/v1/";
       const response = await axios.get(`${baseUrl}auth/admin/customers/overview/`, {
         headers: { "Security-Key": "dj8K9m#P$2nL5v@xQ7wR3tY1aZ4hC6fE" },
       });

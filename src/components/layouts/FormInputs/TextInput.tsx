@@ -103,7 +103,7 @@ export const TextArea = (props: TextAreaProps) => {
         props.containerClass ?? ""
       }`}
     >
-      <Label className="flex flex-col justify-center text-sm whitespace-nowrap text-stone-900">
+      <Label className="text-sm whitespace-nowrap text-stone-900">
         {props.label}
       </Label>
       <div className="flex items-baseline bg-transparent text-muted-foreground rounded-lg border border-solid border-stone-300 py-1 mt-2 px-3 gap-1">

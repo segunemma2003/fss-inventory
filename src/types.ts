@@ -21,6 +21,7 @@ export type User = {
   is_active: boolean;
   authority?: string[];
   profileId?: string;
+  last_login: string;
 };
 
 export interface UserProfile {
@@ -33,6 +34,7 @@ export interface UserProfile {
   is_locked: boolean;
   created_at: Date;
   updated_at: Date;
+  last_login: string;
 }
 
 export type Api<T> = {
@@ -62,6 +64,8 @@ export type ProductData = {
   quantity: number;
   selling_price: string;
   uom: string;
+  description?: string;
+  cost_price?: string;
 };
 
 export interface CustomerResponseData {

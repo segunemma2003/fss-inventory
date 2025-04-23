@@ -16,6 +16,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { CategoryDialog } from "@/components/layouts/CategoryDialog";
+import { UpdateProductDialog } from "@/components/layouts/UpdateProductDialog";
 
 export interface ProductAnalytics {
   total_products: number;
@@ -123,6 +124,13 @@ export const ProductInventory = () => {
         const amount = parseFloat(row.getValue("selling_price"));
         const formatted = formatCurrency(amount, "en-NG", "NGN");
         return formatted;
+      },
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        return <UpdateProductDialog product={row.original} />;
       },
     },
   ];

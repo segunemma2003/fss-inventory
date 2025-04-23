@@ -25,9 +25,10 @@ import { TbUserSquare } from "react-icons/tb";
 // import { FaRegEdit } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { RiLogoutCircleLine } from "react-icons/ri";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import { UserRoundPen } from "lucide-react";
 import { MdOutlineSavings } from "react-icons/md";
+import { useUser } from "@/store/authSlice";
 
 type NavigationItem = {
   icon: IconType;
@@ -36,9 +37,9 @@ type NavigationItem = {
   active: boolean;
   badge?: number;
 };
- 
 export const SideBar = () => {
   const location = useLocation();
+  const user = useUser();
 
   const navigation: NavigationItem[] = [
     {
@@ -149,7 +150,10 @@ export const SideBar = () => {
               {userManageNavigation.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={item.active}>
-                    <Link to={item.to} className="data-[active=true]:!bg-primary data-[active=true]:text-white data-[active=true]:rounded-full px-4 py-2">
+                    <Link
+                      to={item.to}
+                      className="data-[active=true]:!bg-primary data-[active=true]:text-white data-[active=true]:rounded-full px-4 py-2"
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -178,7 +182,9 @@ export const SideBar = () => {
         />
         <div className="py-2">
           <h6 className="text-xs font-urbanist font-semibold">Last Login:</h6>
-          <p className="text-sm font-urbanist ">{format('12/04/2025', 'do MMMM yyyy hh:mm')}</p>
+          <p className="text-sm font-urbanist ">
+            {format(user?.last_login || "12/04/2025", "do MMMM yyyy hh:mm")}
+          </p>
         </div>
       </SidebarFooter>
     </Sidebar>

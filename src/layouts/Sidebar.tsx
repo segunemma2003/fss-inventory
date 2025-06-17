@@ -28,6 +28,7 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import { format } from "date-fns";
 import { UserRoundPen } from "lucide-react";
 import { MdOutlineSavings } from "react-icons/md";
+import { HiOutlineQuestionMarkCircle } from "react-icons/hi2";
 import { useUser } from "@/store/authSlice";
 
 type NavigationItem = {
@@ -78,6 +79,12 @@ export const SideBar = () => {
       title: "Business ID",
       to: "/dashboard/business-id",
       active: location.pathname === "/dashboard/business-id",
+    },
+    {
+      icon: HiOutlineQuestionMarkCircle,
+      title: "FAQs",
+      to: "/dashboard/faqs",
+      active: location.pathname === "/dashboard/faqs",
     },
   ];
 

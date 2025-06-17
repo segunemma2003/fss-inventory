@@ -22,6 +22,7 @@ const pageIdentifier = {
   "/dashboard/business-id/create": "businesses",
   "/dashboard/business-id/details": "businesses",
   "/dashboard/food-plan": "plans",
+  "/dashboard/faqs": "faqs",
 };
 
 const AuthGuard = (props: AuthorityGuard) => {

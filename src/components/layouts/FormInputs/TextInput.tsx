@@ -62,12 +62,12 @@ export const TextInput = (props: TextInputProps) => {
       }`}
     >
       {props.label && (
-        <Label className="mb-2 text-sm font-medium text-gray-900">
+        <Label className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
           {props.label}
         </Label>
       )}
       <div className="relative">
-        <div className="flex items-center bg-whit rounded-lg border border-gray-300 focus-within:ring-1">
+        <div className="flex items-center bg-white dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 focus-within:ring-1 focus-within:dark:ring-gray-500">
           {props.startAdornment && (
             <span className="pl-3 text-muted-foreground">
               {props.startAdornment}
@@ -75,7 +75,7 @@ export const TextInput = (props: TextInputProps) => {
           )}
           <Input
             {...props}
-            className="w-full py-2.5 px-3 text-sm rounded-l-none bg-transparent focus-visible:ring-offset-0 focus:right-0 focus-visible:outline-none focus-visible:ring-0 text-muted-foreground border-0 focus:outline-none focus:ring-0 placeholder:text-gray-400"
+            className="w-full py-2.5 px-3 text-sm rounded-l-none bg-transparent focus-visible:ring-offset-0 focus:right-0 focus-visible:outline-none focus-visible:ring-0 text-muted-foreground dark:text-gray-200 border-0 focus:outline-none focus:ring-0 placeholder:text-gray-400 dark:placeholder:text-gray-500"
           />
           {props.endAdornment && (
             <span className="pr-3">{props.endAdornment}</span>

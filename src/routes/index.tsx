@@ -26,6 +26,7 @@ import CreateBusiness from "@/pages/Business/Create";
 import BusinessDetails from "@/pages/Business/Details";
 import Savings from "@/pages/Savings";
 import Roles from '@/pages/Roles';
+import FAQ from '@/pages/FAQ';
 import { Routes, Route } from "react-router";
 
 export const AppRoutes = () => {
@@ -55,6 +56,7 @@ export const AppRoutes = () => {
     { path: "/dashboard/food-plan", element: <Savings /> },
     { path: "/dashboard/business-id/create", element: <CreateBusiness /> },
     { path: "/dashboard/business-id/details", element: <BusinessDetails /> },
+    { path: "/dashboard/faqs", element: <FAQ /> },
   ];
 
   return (

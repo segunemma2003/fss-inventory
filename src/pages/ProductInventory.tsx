@@ -8,7 +8,7 @@ import { useFilter } from "@/hooks/useFilter";
 import { getRequest } from "@/lib/axiosInstance";
 import { formatCurrency } from "@/lib/utils";
 import { ApiListResponse, ApiResponseError, ProductData } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { AxiosResponse } from "axios";
 import { format } from "date-fns";
@@ -17,6 +17,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { CategoryDialog } from "@/components/layouts/CategoryDialog";
 import { UpdateProductDialog } from "@/components/layouts/UpdateProductDialog";
+import { ConfirmAlert } from "@/components/layouts/ConfirmAlert";
+import { Trash2 } from "lucide-react";
 
 export interface ProductAnalytics {
   total_products: number;
@@ -48,6 +50,7 @@ export const ProductInventory = () => {
     fields: ["name", "category_name"],
   });
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const analyticsQuery = useQuery<
     AxiosResponse<ProductAnalytics>,
@@ -130,7 +133,26 @@ export const ProductInventory = () => {
       id: "actions",
       header: "Actions",
       cell: ({ row }) => {
-        return <UpdateProductDialog product={row.original} />;
+        return (
+          <div className="flex items-center gap-2">
+            <UpdateProductDialog product={row.original} />
+            <ConfirmAlert
+              url={`products/${row.original.id}/`}
+              title="Delete Product"
+              text={`Are you sure you want to delete "${row.original.name}"? This action cannot be undone.`}
+              icon={Trash2}
+              onSuccess={() => {
+                queryClient.invalidateQueries({ queryKey: ["products"] });
+                queryClient.invalidateQueries({ queryKey: ["analytics"] });
+              }}
+              trigger={
+                <Button size="sm" variant="destructive" className="h-8 w-8 p-0">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              }
+            />
+          </div>
+        );
       },
     },
   ];

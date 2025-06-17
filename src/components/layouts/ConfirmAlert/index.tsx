@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { useSetReset } from "@/store/authSlice";
 
 type ConfirmAlertProps = {
@@ -24,6 +24,7 @@ type ConfirmAlertProps = {
   children?: ReactNode;
   trigger?: ReactNode;
   onClose?: (open: boolean) => void;
+  onSuccess?: () => void;
   logout?: boolean;
   icon?: any;
 };
@@ -34,9 +35,11 @@ export const ConfirmAlert = ({
   children,
   logout,
   onClose,
+  onSuccess,
   trigger,
   url = "",
 }: ConfirmAlertProps) => {
+  const [open, setOpen] = useState(false);
   const setReset = useSetReset();
   const toastHandlers = useToastHandlers();
 
@@ -59,8 +62,11 @@ export const ConfirmAlert = ({
           TOAST_TITLE,
           result.data.message ?? "Successfully deleted"
         );
-        return;
       }
+      
+      // Close dialog and trigger success callback
+      setOpen(false);
+      onSuccess?.();
     } catch (error) {
       const err = error as ApiResponseError;
       toastHandlers.error(TOAST_TITLE, err);
@@ -71,6 +77,8 @@ export const ConfirmAlert = ({
     const TOAST_TITLE = "Log out";
     try {
       setReset();
+      setOpen(false);
+      onSuccess?.();
     } catch (error) {
       const err = error as ApiResponseError;
       toastHandlers.error(TOAST_TITLE, err);
@@ -81,8 +89,10 @@ export const ConfirmAlert = ({
 
   return (
     <Dialog
-      onOpenChange={(open) => {
-        onClose?.(open);
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        onClose?.(isOpen);
       }}
     >
       {children}

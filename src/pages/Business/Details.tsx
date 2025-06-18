@@ -3,13 +3,13 @@ import Container from "@/components/layouts/Container";
 import { DataTable } from "@/components/layouts/DataTable";
 import { TextInput } from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToastHandlers } from "@/hooks/useToaster";
 import { getRequest, patchRequest } from "@/lib/axiosInstance";
 import { Forger, useForge } from "@/lib/forge";
 import { formatCurrency } from "@/lib/utils";
-import { ApiListResponse, ApiResponse, ApiResponseError, Order } from "@/types";
+import { ApiListResponse, ApiResponse, ApiResponseError } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit2, Mail, MapPin, IdCard, Building, User, Wallet } from "lucide-react";
@@ -172,11 +172,6 @@ function Details(props: Props) {
     refetchOnWindowFocus: false,
   });
 
-  const walletAnalyticsQuery = useQuery<ApiResponse<any>, ApiResponseError>({
-    queryKey: ["business-wallet-analytics"],
-    queryFn: async () => await getRequest(`business/${location.state.id}/wallet/analytics/`),
-    refetchOnWindowFocus: false,
-  });
 
   const { mutate, isPending } = useMutation<
     ApiResponse,

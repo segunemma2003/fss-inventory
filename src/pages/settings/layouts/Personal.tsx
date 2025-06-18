@@ -26,7 +26,7 @@ type PresignedURL = { filename: string; contentType: string };
 
 export function Personal() {
   const user = useUser();
-  const [profilePicUrl, setProfilePicUrl] = useState<string | null>(null);
+  const [_, setProfilePicUrl] = useState<string | null>(null);
   const handler = useToastHandlers();
   const queryClient = useQueryClient();
 

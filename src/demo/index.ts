@@ -51,6 +51,7 @@ export const getLoginUser = (): User => {
     role: "admin",
     zipCode: faker.location.zipCode(),
     is_active: faker.datatype.boolean(),
+    last_login: "12/06/1999"
   };
 };
 

@@ -1,8 +1,9 @@
 import { DataTable } from "@/components/layouts/DataTable";
-import { TextInput } from "@/components/layouts/FormInputs/TextInput";
+import { TextInput, TextPassword } from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -11,14 +12,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useToastHandlers } from "@/hooks/useToaster";
-import { postRequest } from "@/lib/axiosInstance";
+import { getRequest, postRequest } from "@/lib/axiosInstance";
 import { Forger, useForge } from "@/lib/forge";
-import { ApiResponse, ApiResponseError } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { ApiList, ApiResponse, ApiResponseError, ProductData } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef, RowData } from "@tanstack/react-table";
 import {
   ArrowRight,
   Building,
+  CreditCard,
   IdCard,
   MapPin,
   Package,
@@ -27,7 +29,8 @@ import {
   RotateCcw,
   User,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { AxiosResponse } from "axios";
 
 interface Props {}
 type FormValue = {
@@ -36,7 +39,7 @@ type FormValue = {
   customer_phone: string;
   payment_method: string;
   payment_source: string;
-  business: null;
+  business: string | null;
   status: string;
   notes: string;
 };
@@ -49,14 +52,39 @@ type Order = {
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+    products?: ProductData[];
   }
 }
 
 function CreateOrder(props: Props) {
   const {} = props;
   const handler = useToastHandlers();
-  const { ForgeForm } = useForge<FormValue>({});
+  const queryClient = useQueryClient();
+  const closeRef = React.useRef<HTMLButtonElement>(null);
+  const { ForgeForm } = useForge<FormValue>({
+    defaultValues: {
+      customer_name: "",
+      customer_address: "",
+      customer_phone: "",
+      payment_method: "",
+      payment_source: "",
+      business: null,
+      status: "pending",
+      notes: ""
+    }
+  });
   const [orders, setOrders] = useState<Order[]>([]);
+  
+  // Fetch products from API
+  const { data: productsData } = useQuery<
+    AxiosResponse<ApiList<{ data: ProductData[]}>>,
+    ApiResponseError
+  >({
+    queryKey: ["products"],
+    queryFn: async () => {
+      return await getRequest("/products/");
+    },
+  });
 
   const { mutate: createOrder } = useMutation<
     ApiResponse,
@@ -69,6 +97,12 @@ function CreateOrder(props: Props) {
     onSuccess(data) {
       if (typeof data.data.message === "string") {
         handler.success("Order Creation", data.data.message);
+        // Invalidate and refetch the orders query
+        queryClient.invalidateQueries({ queryKey: ["customerOrders"] });
+        // Reset the form and close the sheet
+        setOrders([]);
+        // Close the sheet
+        closeRef.current?.click();
       }
     },
     onError(error) {
@@ -106,12 +140,12 @@ function CreateOrder(props: Props) {
           Create Order
         </Button>
       </SheetTrigger>
-      <SheetContent className="!max-w-xl">
+      <SheetContent className="!max-w-xl dark:bg-gray-900 dark:text-gray-100">
         <SheetHeader>
-          <SheetTitle>Create New Order</SheetTitle>
+          <SheetTitle className="dark:text-gray-100">Create New Order</SheetTitle>
           <SheetDescription>
             <div className="mt-5">
-              <h5 className="font-urbanist font-medium">
+              <h5 className="font-urbanist font-medium text-gray-900 dark:text-gray-100">
                 Customer Information
               </h5>
 
@@ -120,19 +154,31 @@ function CreateOrder(props: Props) {
                   <Forger
                     name="customer_name"
                     placeholder="Customer Name"
-                    // label="Business Name"
+                    label="Customer Name"
                     component={TextInput}
+                    required
+                    rules={{ 
+                      required: "Customer name is required",
+                      minLength: {
+                        value: 2,
+                        message: "Name must be at least 2 characters"
+                      }
+                    }}
                     startAdornment={
-                      <User className="h-5 w-5 mr-2 text-gray-400" />
+                      <User className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
                     }
                   />
                   <Forger
                     name="customer_address"
                     placeholder="Customer Address"
-                    // label="Business "
+                    label="Customer Address"
                     component={TextInput}
+                    required
+                    rules={{ 
+                      required: "Customer address is required" 
+                    }}
                     startAdornment={
-                      <MapPin className="h-5 w-5 mr-2 text-gray-400" />
+                      <MapPin className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
                     }
                   />
                 </div>
@@ -141,19 +187,32 @@ function CreateOrder(props: Props) {
                   <Forger
                     name="customer_phone"
                     placeholder="Customer Phone"
-                    // label="Business Name"
+                    label="Customer Phone"
                     component={TextInput}
+                    type="tel"
+                    required
+                    rules={{ 
+                      required: "Phone number is required",
+                      pattern: {
+                        value: /^[0-9+\-\s()]*$/,
+                        message: "Please enter a valid phone number"
+                      }
+                    }}
                     startAdornment={
-                      <Phone className="h-5 w-5 mr-2 text-gray-400" />
+                      <Phone className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
                     }
                   />
                   <Forger
                     name="payment_method"
                     placeholder="Payment Method"
-                    // label="Business Type"
+                    label="Payment Method"
                     component={TextInput}
+                    required
+                    rules={{ 
+                      required: "Payment method is required" 
+                    }}
                     startAdornment={
-                      <IdCard className="h-5 w-5 mr-2 text-gray-400" />
+                      <CreditCard className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
                     }
                   />
                 </div>
@@ -162,19 +221,23 @@ function CreateOrder(props: Props) {
                   <Forger
                     name="payment_source"
                     placeholder="Payment Source"
-                    // label="Business Name"
+                    label="Payment Source"
                     component={TextInput}
+                    required
+                    rules={{ 
+                      required: "Payment source is required" 
+                    }}
                     startAdornment={
-                      <User className="h-5 w-5 mr-2 text-gray-400" />
+                      <IdCard className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
                     }
                   />
                   <Forger
                     name="business"
                     placeholder="Business"
-                    // label="Business Type"
+                    label="Business"
                     component={TextInput}
                     startAdornment={
-                      <Building className="h-5 w-5 mr-2 text-gray-400" />
+                      <Building className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
                     }
                   />
                 </div>
@@ -200,7 +263,7 @@ function CreateOrder(props: Props) {
                   />
                 </div> */}
 
-                <h5 className="mt-5 font-urbanist font-medium">Order List</h5>
+                <h5 className="mt-5 font-urbanist font-medium text-gray-900 dark:text-gray-100">Order List</h5>
 
                 <DataTable
                   data={orders}
@@ -220,6 +283,7 @@ function CreateOrder(props: Props) {
                           })
                         );
                       },
+                      products: productsData?.data?.results?.data || []
                     },
                   }}
                   columns={columns as ColumnDef<unknown>[]}
@@ -228,7 +292,7 @@ function CreateOrder(props: Props) {
                     disablePagination: true,
                   }}
                 />
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center justify-between gap-3 mt-4">
                   <Button
                     size={"sm"}
                     variant={"outline"}
@@ -245,6 +309,7 @@ function CreateOrder(props: Props) {
                         ];
                       })
                     }
+                    type="button"
                   >
                     Add Product
                     <Plus className="h-5 w-5 ml-2" />
@@ -254,6 +319,10 @@ function CreateOrder(props: Props) {
                     size={"sm"}
                     variant={"destructive"}
                     className="rounded-full"
+                    type="button"
+                    onClick={() => {
+                      setOrders([]);
+                    }}
                   >
                     <RotateCcw className="h-5 w-5 mr-2" />
                     Reset
@@ -261,16 +330,21 @@ function CreateOrder(props: Props) {
                 </div>
 
                 <SheetFooter className="mt-20 items-end p-0">
-                  <Button type={"submit"} className="w-fit">
+                  <Button 
+                    type={"submit"} 
+                    className="w-fit"
+                    disabled={orders.length === 0}
+                  >
                     Create Order
+                    <ArrowRight className="h-5 w-5 ml-2" />
                   </Button>
-                  <ArrowRight className="h-5 w-5" />
                 </SheetFooter>
               </ForgeForm>
             </div>
           </SheetDescription>
         </SheetHeader>
       </SheetContent>
+      <SheetClose ref={closeRef} className="hidden" />
     </Sheet>
   );
 }
@@ -293,12 +367,43 @@ const defaultColumn: Partial<ColumnDef<Order>> = {
       setValue(initialValue);
     }, [initialValue]);
 
+    // Use appropriate input type based on column ID
+    const inputType = id === 'quantity' || id === 'price' ? 'number' : 'text';
+    const inputStep = id === 'price' ? '0.01' : '1';
+    const inputMin = '0';
+
+    // If this is the product column, render a select input with product options
+    if (id === 'product') {
+      const products = table.options.meta?.products || [];
+      
+      return (
+        <select
+          value={value as string}
+          onChange={(e) => setValue(e.target.value)}
+          className="w-fit min-w-[10rem] p-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          onBlur={onBlur}
+          required
+        >
+          <option value="">Select a product</option>
+          {products.map((product: ProductData) => (
+            <option key={product.id} value={product.id}>
+              {product.name} - {product.uom}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
     return (
       <input
         value={value as string}
         onChange={(e) => setValue(e.target.value)}
-        className="w-fit min-w-[2rem]"
+        className="w-fit min-w-[5rem] p-1 border border-gray-200 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
         onBlur={onBlur}
+        type={inputType}
+        step={inputStep}
+        min={inputMin}
+        required
       />
     );
   },

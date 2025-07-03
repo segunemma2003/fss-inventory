@@ -4,6 +4,7 @@ import { TextInput } from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -15,8 +16,9 @@ import { useToastHandlers } from "@/hooks/useToaster";
 import { postRequest } from "@/lib/axiosInstance";
 import { Forger, useForge } from "@/lib/forge";
 import { ApiResponse, ApiResponseError } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef, RowData } from "@tanstack/react-table";
+import React from "react";
 import {
   ArrowRight,
   MapPin,
@@ -57,6 +59,8 @@ function CreateCustomOrder(props: Props) {
   const handler = useToastHandlers();
   const { ForgeForm } = useForge<FormValue>({});
   const [orders, setOrders] = useState<Order[]>([]);
+  const queryClient = useQueryClient();
+  const closeRef = React.useRef<HTMLButtonElement>(null);
 
   const { mutate: createOrder, isPending } = useMutation<
     ApiResponse,
@@ -69,6 +73,14 @@ function CreateCustomOrder(props: Props) {
     onSuccess(data) {
       if (typeof data.data.message === "string") {
         handler.success("Custom Order Creation", data.data.message);
+        // Invalidate the customOrders query to trigger a refetch
+        queryClient.invalidateQueries({ queryKey: ["customOrders"] });
+        // Reset the order form
+        setOrders([]);
+        // Close the sheet
+        if (closeRef.current) {
+          closeRef.current.click();
+        }
       }
     },
     onError(error) {
@@ -113,125 +125,126 @@ function CreateCustomOrder(props: Props) {
       <SheetContent className="!max-w-xl">
         <SheetHeader>
           <SheetTitle>Create New Custom Order</SheetTitle>
-          <SheetDescription>
-            <div className="mt-5">
-              <h5 className="font-urbanist font-medium">
-                Customer Information
+        </SheetHeader>
+        <SheetDescription>
+          <div className="mt-5 px-4">
+            <h5 className="font-urbanist font-medium">Customer Information</h5>
+
+            <ForgeForm onSubmit={createOrder} className="mt-3 mb-10">
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <Forger
+                  name="customer_name"
+                  placeholder="Customer Name"
+                  // label="Business Name"
+                  component={TextInput}
+                  startAdornment={
+                    <User className="h-5 w-5 mr-2 text-gray-400" />
+                  }
+                />
+                <Forger
+                  name="customer_phone"
+                  placeholder="Customer Phone"
+                  // label="Business Name"
+                  component={TextInput}
+                  startAdornment={
+                    <Phone className="h-5 w-5 mr-2 text-gray-400" />
+                  }
+                />
+              </div>
+
+              <div className="mb-3">
+                <Forger
+                  name="customer_address"
+                  placeholder="Customer Address"
+                  // label="Business "
+                  component={TextInput}
+                  startAdornment={
+                    <MapPin className="h-5 w-5 mr-2 text-gray-400" />
+                  }
+                />
+              </div>
+
+              <div className="mb-3">
+                <Forger
+                  name="notes"
+                  placeholder="Notes"
+                  // label="Business Name"
+                  component={TextArea}
+                />
+              </div>
+
+              <h5 className="mt-5 font-urbanist font-medium">
+                Custom Order List
               </h5>
 
-              <ForgeForm onSubmit={createOrder} className="mt-3 mb-10">
-                <div className="grid grid-cols-2 gap-3 mb-3">
-                  <Forger
-                    name="customer_name"
-                    placeholder="Customer Name"
-                    // label="Business Name"
-                    component={TextInput}
-                    startAdornment={
-                      <User className="h-5 w-5 mr-2 text-gray-400" />
-                    }
-                  />
-                  <Forger
-                    name="customer_phone"
-                    placeholder="Customer Phone"
-                    // label="Business Name"
-                    component={TextInput}
-                    startAdornment={
-                      <Phone className="h-5 w-5 mr-2 text-gray-400" />
-                    }
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <Forger
-                    name="customer_address"
-                    placeholder="Customer Address"
-                    // label="Business "
-                    component={TextInput}
-                    startAdornment={
-                      <MapPin className="h-5 w-5 mr-2 text-gray-400" />
-                    }
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <Forger
-                    name="notes"
-                    placeholder="Notes"
-                    // label="Business Name"
-                    component={TextArea}
-                  />
-                </div>
-
-                <h5 className="mt-5 font-urbanist font-medium">Custom Order List</h5>
-
-                <DataTable
-                  data={orders}
-                  config={{
-                    defaultColumn: defaultColumn as any,
-                    meta: {
-                      updateData: (rowIndex, columnId, value) => {
-                        setOrders((old) =>
-                          old.map((row, index) => {
-                            if (index === rowIndex) {
-                              return {
-                                ...old[rowIndex]!,
-                                [columnId]: value,
-                              };
-                            }
-                            return row;
-                          })
-                        );
-                      },
+              <DataTable
+                data={orders}
+                config={{
+                  defaultColumn: defaultColumn as any,
+                  meta: {
+                    updateData: (rowIndex, columnId, value) => {
+                      setOrders((old) =>
+                        old.map((row, index) => {
+                          if (index === rowIndex) {
+                            return {
+                              ...old[rowIndex]!,
+                              [columnId]: value,
+                            };
+                          }
+                          return row;
+                        })
+                      );
                     },
-                  }}
-                  columns={columns as ColumnDef<unknown>[]}
-                  options={{
-                    disableSelection: true,
-                    disablePagination: true,
-                  }}
-                />
-                <div className="flex items-center justify-between gap-3">
-                  <Button
-                    size={"sm"}
-                    variant={"outline"}
-                    className="rounded-full"
-                    onClick={() =>
-                      setOrders((prev) => {
-                        return [
-                          ...prev,
-                          {
-                            product: "",
-                            quantity: 0,
-                            price: 0,
-                          },
-                        ];
-                      })
-                    }
-                  >
-                    Add Product
-                    <Plus className="h-5 w-5 ml-2" />
-                  </Button>
+                  },
+                }}
+                columns={columns as ColumnDef<unknown>[]}
+                options={{
+                  disableSelection: true,
+                  disablePagination: true,
+                }}
+              />
+              <div className="flex items-center justify-between gap-3">
+                <Button
+                  size={"sm"}
+                  variant={"outline"}
+                  className="rounded-full"
+                  onClick={() =>
+                    setOrders((prev) => {
+                      return [
+                        ...prev,
+                        {
+                          product: "",
+                          quantity: 0,
+                          price: 0,
+                        },
+                      ];
+                    })
+                  }
+                >
+                  Add Product
+                  <Plus className="h-5 w-5 ml-2" />
+                </Button>
 
-                  <Button
-                    size={"sm"}
-                    variant={"destructive"}
-                    className="rounded-full"
-                  >
-                    <RotateCcw className="h-5 w-5 mr-2" />
-                    Reset
-                  </Button>
-                </div>
+                <Button
+                  size={"sm"}
+                  variant={"destructive"}
+                  className="rounded-full"
+                >
+                  <RotateCcw className="h-5 w-5 mr-2" />
+                  Reset
+                </Button>
+              </div>
 
-                <SheetFooter className="mt-20 items-end p-0">
-                  <Button type={"submit"} isLoading={isPending} className="w-fit">
-                    Create Order
-                  </Button>
+              <SheetFooter className="mt-20 items-end p-0">
+                <SheetClose ref={closeRef} className="hidden" />
+                <Button type={"submit"} isLoading={isPending} className="w-fit">
+                  Create Order
                   <ArrowRight className="h-5 w-5" />
-                </SheetFooter>
-              </ForgeForm>
-            </div>
-          </SheetDescription>
-        </SheetHeader>
+                </Button>
+              </SheetFooter>
+            </ForgeForm>
+          </div>
+        </SheetDescription>
       </SheetContent>
     </Sheet>
   );

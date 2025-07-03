@@ -6,7 +6,7 @@ import { NotFound } from "@/layouts/NotFound";
 import { PublicRoute } from "./PublicRoute";
 import { Login } from "@/pages/Login";
 import { ProfileSelection } from "@/pages/ProfileSelection";
-import { Register } from "@/pages/Register";
+// import { Register } from "@/pages/Register";
 import ForgotPassword from "@/pages/ForgotPassword";
 import { RegisterOne } from "@/pages/Register/RegisterOne";
 import { RegisterTwo } from "@/pages/Register/RegisterTwo";
@@ -31,8 +31,8 @@ import { Routes, Route } from "react-router";
 
 export const AppRoutes = () => {
   const publicRoutes = [
-    { path: "/", element: <Register /> },
-    { path: "/login", element: <Login /> },
+    // { path: "/", element: <Register /> },
+    { path: "/", element: <Login /> },
     { path: "/profile-selection", element: <ProfileSelection /> },
     { path: "/business-registration", element: <RegisterOne /> },
     { path: "/personal-registration", element: <RegisterTwo /> },

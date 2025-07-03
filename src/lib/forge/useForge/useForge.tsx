@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {
+import {
   ReactNode,
   cloneElement,
   Children,
@@ -105,42 +105,69 @@ export const useForge = <
       { className, children, onSubmit, onError, control = "form" },
       ref
     ): JSX.Element => {
-      const updatedChildren = Children.map(children, (child) => {
-        if (isButtonSlot(child)) {
-          return cloneElement(child, {
-            onClick: formProps.handleSubmit(onSubmit, onError),
-          });
+      const processChildrenRecursively = (children: any, depth = 0): any => {
+        // Prevent infinite recursion with a reasonable depth limit
+        if (depth > 10) {
+          return children;
         }
 
-        if (isInputSlot(child) && control === "form") {
-          return React.createElement(child.type, {
-            ...{
-              ...child.props,
-              ...formProps.register(child.props.name),
-              key: child.props.name,
-            },
-          });
-        }
+        return Children.map(children, (child) => {
+          // Skip non-React elements (strings, numbers, null, undefined)
+          if (!isElementSlot(child)) {
+            return child;
+          }
 
-        if (isNestedSlot(child)) {
-          return createElement(child.type, {
-            ...{
-              ...child.props,
-              children: Children.map(child.props.children, (child) => {
-                return isButtonSlot(child)
-                  ? cloneElement(child, {
-                      onClick: formProps.handleSubmit(onSubmit, onError),
-                    })
-                  : child;
-              }),
-            },
-          });
-        }
+          // Handle button elements - attach form submit handler
+          if (isButtonSlot(child)) {
+            return cloneElement(child, {
+              onClick: formProps.handleSubmit(onSubmit),
+            } as any);
+          }
 
-        return isElementSlot(child)
-          ? cloneElement(child, { control: formProps.control })
-          : undefined;
-      });
+          // Handle input elements in native mode - register with form control
+          if (isInputSlot(child) && control === "forger") {
+            return createElement((child as any).type, {
+              ...{
+                ...((child as any).props as any),
+                ...formProps.register(((child as any).props as any).name),
+                key: ((child as any).props as any).name,
+              },
+            });
+          }
+
+          // Get child's children for recursive processing
+          const childChildren = ((child as any).props as any)?.children;
+
+          // If this element has children, process them recursively
+          if (childChildren) {
+            const processedChildren = processChildrenRecursively(
+              childChildren,
+              depth + 1
+            );
+
+            // For nested container elements (div, section, main), use createElement to preserve structure
+            if (isNestedSlot(child)) {
+              return createElement((child as any).type, {
+                ...{
+                  ...((child as any).props as any),
+                  children: processedChildren,
+                },
+              });
+            }
+
+            // For other elements with children, clone and update
+            return cloneElement(child, {
+              ...{ control },
+              children: processedChildren,
+            } as any);
+          }
+
+          // For leaf elements without children, just pass control prop
+          return cloneElement(child, { control } as any);
+        });
+      };
+
+      const updatedChildren = processChildrenRecursively(children);
 
       useImperativeHandle(
         ref,

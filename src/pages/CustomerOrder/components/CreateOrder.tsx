@@ -1,5 +1,6 @@
 import { DataTable } from "@/components/layouts/DataTable";
-import { TextInput, TextPassword } from "@/components/layouts/FormInputs/TextInput";
+import { TextInput } from "@/components/layouts/FormInputs/TextInput";
+import { TextSelect } from "@/components/layouts/FormInputs/TextSelect";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -20,8 +21,6 @@ import { ColumnDef, RowData } from "@tanstack/react-table";
 import {
   ArrowRight,
   Building,
-  CreditCard,
-  IdCard,
   MapPin,
   Package,
   Phone,
@@ -204,32 +203,37 @@ function CreateOrder(props: Props) {
                   />
                   <Forger
                     name="payment_method"
-                    placeholder="Payment Method"
+                    placeholder="Select Payment Method"
                     label="Payment Method"
-                    component={TextInput}
+                    component={TextSelect}
                     required
                     rules={{ 
                       required: "Payment method is required" 
                     }}
-                    startAdornment={
-                      <CreditCard className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
-                    }
+                    options={[
+                      { label: "Cash", value: "cash" },
+                      { label: "Card", value: "card" },
+                      { label: "Bank Transfer", value: "bank_transfer" },
+                      { label: "Mobile Money", value: "mobile_money" },
+                      { label: "Business Wallet", value: "business_wallet" }
+                    ]}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <Forger
                     name="payment_source"
-                    placeholder="Payment Source"
+                    placeholder="Select Payment Source"
                     label="Payment Source"
-                    component={TextInput}
+                    component={TextSelect}
                     required
                     rules={{ 
                       required: "Payment source is required" 
                     }}
-                    startAdornment={
-                      <IdCard className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
-                    }
+                    options={[
+                      { label: "Direct Payment", value: "direct" },
+                      { label: "Business Wallet", value: "business_wallet" }
+                    ]}
                   />
                   <Forger
                     name="business"

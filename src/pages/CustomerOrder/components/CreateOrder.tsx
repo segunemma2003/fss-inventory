@@ -26,6 +26,7 @@ import {
   Phone,
   Plus,
   RotateCcw,
+  Trash2,
   User,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -129,6 +130,24 @@ function CreateOrder(props: Props) {
       accessorKey: "price",
       header: "Price",
     },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row: { index } }) => {
+        return (
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() => {
+              setOrders((prev) => prev.filter((_, i) => i !== index));
+            }}
+            className="h-8 w-8 p-0"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        );
+      },
+    },
   ];
 
   return (
@@ -139,7 +158,7 @@ function CreateOrder(props: Props) {
           Create Order
         </Button>
       </SheetTrigger>
-      <SheetContent className="!max-w-xl dark:bg-gray-900 dark:text-gray-100">
+      <SheetContent className="!max-w-xl dark:bg-gray-900 overflow-auto dark:text-gray-100">
         <SheetHeader>
           <SheetTitle className="dark:text-gray-100">Create New Order</SheetTitle>
           <SheetDescription>

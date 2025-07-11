@@ -26,6 +26,7 @@ import {
   Phone,
   Plus,
   RotateCcw,
+  Trash2,
   User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -112,6 +113,24 @@ function CreateCustomOrder(props: Props) {
       accessorKey: "price",
       header: "Price",
     },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row: { index } }) => {
+        return (
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() => {
+              setOrders((prev) => prev.filter((_, i) => i !== index));
+            }}
+            className="h-8 w-8 p-0"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        );
+      },
+    },
   ];
 
   return (
@@ -122,7 +141,7 @@ function CreateCustomOrder(props: Props) {
           Create Custom Order
         </Button>
       </SheetTrigger>
-      <SheetContent className="!max-w-xl">
+      <SheetContent className="!max-w-xl overflow-auto">
         <SheetHeader>
           <SheetTitle>Create New Custom Order</SheetTitle>
         </SheetHeader>
@@ -229,6 +248,10 @@ function CreateCustomOrder(props: Props) {
                   size={"sm"}
                   variant={"destructive"}
                   className="rounded-full"
+                  type="button"
+                  onClick={() => {
+                    setOrders([]);
+                  }}
                 >
                   <RotateCcw className="h-5 w-5 mr-2" />
                   Reset
@@ -272,7 +295,7 @@ const defaultColumn: Partial<ColumnDef<Order>> = {
       <input
         value={value as string}
         onChange={(e) => setValue(e.target.value)}
-        className="w-fit min-w-[2rem]"
+        className="w-fit min-w-[2rem] border border-gray-300 rounded-md px-2 py-1"
         onBlur={onBlur}
       />
     );

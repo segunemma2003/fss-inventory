@@ -19,13 +19,15 @@ import { useState } from "react";
 import { useFilter } from "@/hooks/useFilter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { ShoppingBasket, ShoppingCart, Trash, Users } from "lucide-react";
+import { ShoppingBasket, ShoppingCart, Trash, Users, FileText } from "lucide-react";
 import { CustomOrderDialog } from "./components/CustomOrderDialog";
 import { ConfirmAlert } from "@/components/layouts/ConfirmAlert";
 import UpdateCustomOrder from "./components/UpdateCustomOrder";
 import { CustomerProductsDialog } from "./components/CustomerProductsDialog";
 import { formatCurrency } from "@/lib/utils";
 import axios from "axios";
+import InvoiceButton from "./components/InvoiceButton";
+import InvoiceManagement from "./components/InvoiceManagement";
 
 export type CustomerOrderType = {
   name: string;
@@ -63,6 +65,14 @@ function CustomerOrder() {
               />
               Customers
             </TabsTrigger>
+            <TabsTrigger value="tab-4" className="group">
+              <FileText
+                className="-ms-0.5 me-1.5 opacity-60"
+                size={16}
+                aria-hidden="true"
+              />
+              Invoices
+            </TabsTrigger>
           </TabsList>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
@@ -75,6 +85,9 @@ function CustomerOrder() {
         </TabsContent>
         <TabsContent value="tab-3">
           <Customers />
+        </TabsContent>
+        <TabsContent value="tab-4">
+          <InvoiceManagement />
         </TabsContent>
       </Tabs>
     </Container>
@@ -116,7 +129,12 @@ const Orders = () => {
       id: "action",
       header: "ACTION",
       cell: ({ row }) => {
-        return <OrderDialog id={row.original.id} />;
+        return (
+          <div className="flex items-center gap-2">
+            <InvoiceButton orderId={row.original.id} />
+            <OrderDialog id={row.original.id} />
+          </div>
+        );
       },
     },
   ];
@@ -186,7 +204,8 @@ const CustomOrder = () => {
       header: "ACTION",
       cell: ({ row }) => {
         return (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <InvoiceButton customOrderId={row.original.id} />
             <ConfirmAlert
               text={`You are about to delete this order by ${row.original.customer_name}, are you sure?`}
               title="Delete Custom Order"

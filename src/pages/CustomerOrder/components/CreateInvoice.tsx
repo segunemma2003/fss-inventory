@@ -16,7 +16,7 @@ import {
   CustomOrderDetail,
 } from "@/types";
 import { AxiosResponse } from "axios";
-import { useWatch } from "react-hook-form";
+// import { useWatch } from "react-hook-form";
 
 type InvoiceItem = CustomerResponseData["items"][0];
 
@@ -34,7 +34,7 @@ interface InvoiceData {
   customer_email: string;
   invoice_date: string;
   due_date: string;
-  tax_rate: string;
+  // tax_rate: string;
   notes: string;
   terms: string;
   items: InvoiceItem[];
@@ -83,7 +83,7 @@ export const CreateInvoice = React.memo<CreateInvoiceProps>(
       } as InvoiceData;
     }, [orderData, customOrderData]);
 
-    const { ForgeForm, control, reset } = useForge<InvoiceData>({
+    const { ForgeForm, reset } = useForge<InvoiceData>({
     });
 
     useEffect(() => {
@@ -91,8 +91,6 @@ export const CreateInvoice = React.memo<CreateInvoiceProps>(
         reset(prePopulatedData)
       }
     }, [prePopulatedData])
-
-    const taxRate = useWatch({ control, name: "tax_rate" });
 
     // Create invoice mutation
     const createInvoiceMutation = useMutation<
@@ -146,7 +144,6 @@ export const CreateInvoice = React.memo<CreateInvoiceProps>(
       (formData: InvoiceData) => {
         const invoicePayload = {
           ...formData,
-          tax_rate: (parseFloat(formData.tax_rate ?? "0") / 100).toFixed(2).toString(),
           items: prePopulatedData.items.map((item) => ({
             description: item.product_name,
             quantity: item.quantity,
@@ -220,8 +217,8 @@ export const CreateInvoice = React.memo<CreateInvoiceProps>(
 
     // Memoized totals calculation
     const totals = React.useMemo(
-      () => calculateTotals(prePopulatedData.items, parseFloat(taxRate ?? "0")),
-      [calculateTotals, prePopulatedData.items, taxRate]
+      () => calculateTotals(prePopulatedData.items, parseFloat("0")),
+      [calculateTotals, prePopulatedData.items]
     );
 
     return (
@@ -361,7 +358,7 @@ export const CreateInvoice = React.memo<CreateInvoiceProps>(
                     <span>Subtotal:</span>
                     <span>₦{totals.subtotal}</span>
                   </div>
-                  <div className="flex justify-between">
+                  {/* <div className="flex justify-between">
                     <span>
                       Tax (
                       <Forger
@@ -373,7 +370,7 @@ export const CreateInvoice = React.memo<CreateInvoiceProps>(
                       )%:
                     </span>
                     <span>₦{totals.taxAmount}</span>
-                  </div>
+                  </div> */}
                   <Separator />
                   <div className="flex justify-between font-bold text-lg text-red-600">
                     <span>TOTAL:</span>

@@ -342,9 +342,11 @@ export function EditInvoice({ invoiceId, onClose }: EditInvoiceProps) {
             {/* Header */}
             <div className="flex justify-between items-start mb-8">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">FSS</span>
-                </div>
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets/877fbded3c1141a18415be7a6b510b08/a1b8d17c054ef5d488ceefa5dd92f6dac50b4fdb1ceb3d816f63c57dcff44ae5?placeholderIfAbsent=true"
+                  alt="Company Logo"
+                  className="object-contain h-12 w-auto"
+                />
                 <div>
                   <h1 className="text-lg font-bold text-gray-800">FOOD STUFF</h1>
                   <h2 className="text-lg font-bold text-gray-800">STORE</h2>

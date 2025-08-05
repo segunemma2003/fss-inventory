@@ -86,12 +86,26 @@ export function InvoiceManagement() {
   });
 
   // Handle download PDF
-  const handleDownloadPDF = async (invoiceId: string) => {
+  const handleDownloadPDF = async (invoiceId: string, invoiceNumber?: string) => {
     try {
-      await getRequest(
-        `/orders/invoices/download/${invoiceId}/`
+      const response = await getRequest(
+        `/orders/invoices/download/${invoiceId}/`,
+        {
+          responseType: 'blob',
+        }
       );
-      // Handle PDF download logic here
+      
+      // Create blob URL and trigger download
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = invoiceNumber ? `${invoiceNumber}.pdf` : `invoice-${invoiceId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
       toast({
         title: "Success",
         description: "PDF download started",
@@ -203,7 +217,7 @@ export function InvoiceManagement() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => handleDownloadPDF(invoice.id)}
+              onClick={() => handleDownloadPDF(invoice.id, invoice.invoice_number)}
               className="h-8 w-8 p-0"
             >
               <Download className="h-4 w-4" />

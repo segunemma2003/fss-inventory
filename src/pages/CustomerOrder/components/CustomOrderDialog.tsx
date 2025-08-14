@@ -69,7 +69,7 @@ export const CustomOrderDialog = ({ id }: { id: string }) => {
           <SquareArrowOutUpRight className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl">
+      <DialogContent className="sm:max-w-5xl">
         <div className="mb-3">
           <h3 className="text-3xl font-semibold text-red-600">Order List</h3>
         </div>

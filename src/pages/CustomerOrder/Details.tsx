@@ -64,8 +64,6 @@ export const OrderDialog = ({ id }: { id: string }) => {
     queryFn: async () => await getRequest(`orders/${id}/`),
   });
 
-  console.log(data?.data);
-
   const columns: ColumnDef<CustomerResponseData["items"][0]>[] = [
     { accessorKey: "product_name", header: "Product Name" },
     {

@@ -54,7 +54,7 @@ type FormValue = {
   description: string;
   price: string;
   duration: string;
-  duration_days: number;
+  duration_days?: number;
 };
 
 type ProductPlanForm = {
@@ -90,7 +90,7 @@ function CreateSavingsPlan(props: Props) {
     ProductPlanForm
   >({
     mutationFn: async (values) => {
-      return await patchRequest(`/plans/${values.planId}/products/`, {
+      return await postRequest(`/plans/${values.planId}/products/`, {
         plan_products: values.plan_products,
       });
     },
@@ -178,8 +178,9 @@ function CreateSavingsPlan(props: Props) {
           <SheetDescription>
             <div className="mt-5">
               <h5 className="font-urbanist font-medium">
-                Customer Information
-              </h5>
+-                Customer Information
++                Plan Information
+               </h5>
 
               <ForgeForm onSubmit={createOrder} className="mt-3 mb-10">
                 <div className="grid grid-cols-2 gap-3 mb-3">
@@ -224,11 +225,14 @@ function CreateSavingsPlan(props: Props) {
                     placeholder="Duration Days"
                     // label="Business Type"
                     component={TextInput}
+                    type="number"
                     startAdornment={
                       <Calendar className="h-5 w-5 mr-2 text-gray-400" />
                     }
                   />
                 </div>
+
+                
 
                 <Forger
                   name="description"

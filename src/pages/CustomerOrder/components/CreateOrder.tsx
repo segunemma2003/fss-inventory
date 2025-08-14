@@ -4,7 +4,6 @@ import { TextSelect } from "@/components/layouts/FormInputs/TextSelect";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -15,7 +14,13 @@ import {
 import { useToastHandlers } from "@/hooks/useToaster";
 import { getRequest, postRequest } from "@/lib/axiosInstance";
 import { Forger, useForge } from "@/lib/forge";
-import { ApiList, ApiResponse, ApiResponseError, ProductData } from "@/types";
+import {
+  ApiList,
+  ApiResponse,
+  ApiResponseError,
+  ProductData,
+  ApiListResponse,
+} from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef, RowData } from "@tanstack/react-table";
 import {
@@ -29,8 +34,9 @@ import {
   Trash2,
   User,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AxiosResponse } from "axios";
+import { BusinessResponseData } from "@/pages/Business";
 
 interface Props {}
 type FormValue = {
@@ -60,8 +66,8 @@ function CreateOrder(props: Props) {
   const {} = props;
   const handler = useToastHandlers();
   const queryClient = useQueryClient();
-  const closeRef = React.useRef<HTMLButtonElement>(null);
-  const { ForgeForm } = useForge<FormValue>({
+  const [isOpen, setIsOpen] = useState(false);
+  const { ForgeForm, reset } = useForge<FormValue>({
     defaultValues: {
       customer_name: "",
       customer_address: "",
@@ -70,14 +76,14 @@ function CreateOrder(props: Props) {
       payment_source: "",
       business: null,
       status: "pending",
-      notes: ""
-    }
+      notes: "",
+    },
   });
   const [orders, setOrders] = useState<Order[]>([]);
-  
+
   // Fetch products from API
   const { data: productsData } = useQuery<
-    AxiosResponse<ApiList<{ data: ProductData[]}>>,
+    AxiosResponse<ApiList<{ data: ProductData[] }>>,
     ApiResponseError
   >({
     queryKey: ["products"],
@@ -86,7 +92,16 @@ function CreateOrder(props: Props) {
     },
   });
 
-  const { mutate: createOrder } = useMutation<
+  const { data: businesses, isLoading: isBusinessesLoading } = useQuery<
+    ApiListResponse<BusinessResponseData[]>,
+    ApiResponseError
+  >({
+    queryKey: ["businesses"],
+    queryFn: async () => await getRequest("business/"),
+    refetchOnWindowFocus: false,
+  });
+
+  const { mutate: createOrder, isPending } = useMutation<
     ApiResponse,
     ApiResponseError,
     FormValue
@@ -101,14 +116,16 @@ function CreateOrder(props: Props) {
         queryClient.invalidateQueries({ queryKey: ["customerOrders"] });
         // Reset the form and close the sheet
         setOrders([]);
+        reset();
         // Close the sheet
-        closeRef.current?.click();
+        setIsOpen(false);
       }
     },
     onError(error) {
       handler.error("Order Creation", error);
     },
   });
+  
 
   const columns: ColumnDef<Order>[] = [
     {
@@ -151,7 +168,7 @@ function CreateOrder(props: Props) {
   ];
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button className="rounded-full">
           <Package className="h-5 w-5 mr-2" />
@@ -160,7 +177,9 @@ function CreateOrder(props: Props) {
       </SheetTrigger>
       <SheetContent className="!max-w-xl dark:bg-gray-900 overflow-auto dark:text-gray-100">
         <SheetHeader>
-          <SheetTitle className="dark:text-gray-100">Create New Order</SheetTitle>
+          <SheetTitle className="dark:text-gray-100">
+            Create New Order
+          </SheetTitle>
           <SheetDescription>
             <div className="mt-5">
               <h5 className="font-urbanist font-medium text-gray-900 dark:text-gray-100">
@@ -175,12 +194,12 @@ function CreateOrder(props: Props) {
                     label="Customer Name"
                     component={TextInput}
                     required
-                    rules={{ 
+                    rules={{
                       required: "Customer name is required",
                       minLength: {
                         value: 2,
-                        message: "Name must be at least 2 characters"
-                      }
+                        message: "Name must be at least 2 characters",
+                      },
                     }}
                     startAdornment={
                       <User className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
@@ -192,8 +211,8 @@ function CreateOrder(props: Props) {
                     label="Customer Address"
                     component={TextInput}
                     required
-                    rules={{ 
-                      required: "Customer address is required" 
+                    rules={{
+                      required: "Customer address is required",
                     }}
                     startAdornment={
                       <MapPin className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
@@ -209,12 +228,12 @@ function CreateOrder(props: Props) {
                     component={TextInput}
                     type="tel"
                     required
-                    rules={{ 
+                    rules={{
                       required: "Phone number is required",
                       pattern: {
                         value: /^[0-9+\-\s()]*$/,
-                        message: "Please enter a valid phone number"
-                      }
+                        message: "Please enter a valid phone number",
+                      },
                     }}
                     startAdornment={
                       <Phone className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
@@ -226,15 +245,15 @@ function CreateOrder(props: Props) {
                     label="Payment Method"
                     component={TextSelect}
                     required
-                    rules={{ 
-                      required: "Payment method is required" 
+                    rules={{
+                      required: "Payment method is required",
                     }}
                     options={[
                       { label: "Cash", value: "cash" },
                       { label: "Card", value: "card" },
                       { label: "Bank Transfer", value: "bank_transfer" },
                       { label: "Mobile Money", value: "mobile_money" },
-                      { label: "Business Wallet", value: "business_wallet" }
+                      { label: "Business Wallet", value: "business_wallet" },
                     ]}
                   />
                 </div>
@@ -246,22 +265,30 @@ function CreateOrder(props: Props) {
                     label="Payment Source"
                     component={TextSelect}
                     required
-                    rules={{ 
-                      required: "Payment source is required" 
+                    rules={{
+                      required: "Payment source is required",
                     }}
                     options={[
                       { label: "Direct Payment", value: "direct" },
-                      { label: "Business Wallet", value: "business_wallet" }
+                      { label: "Business Wallet", value: "business_wallet" },
                     ]}
                   />
                   <Forger
                     name="business"
-                    placeholder="Business"
+                    placeholder="Select Business"
                     label="Business"
-                    component={TextInput}
+                    component={TextSelect}
                     startAdornment={
                       <Building className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500" />
                     }
+                    options={[
+                      // { label: "No Business", value: "none" },
+                      ...(businesses?.data?.results?.data?.map((business) => ({
+                        label: business.name,
+                        value: business.id,
+                      })) ?? []),
+                    ]}
+                    loading={isBusinessesLoading}
                   />
                 </div>
 
@@ -286,7 +313,9 @@ function CreateOrder(props: Props) {
                   />
                 </div> */}
 
-                <h5 className="mt-5 font-urbanist font-medium text-gray-900 dark:text-gray-100">Order List</h5>
+                <h5 className="mt-5 font-urbanist font-medium text-gray-900 dark:text-gray-100">
+                  Order List
+                </h5>
 
                 <DataTable
                   data={orders}
@@ -306,7 +335,7 @@ function CreateOrder(props: Props) {
                           })
                         );
                       },
-                      products: productsData?.data?.results?.data || []
+                      products: productsData?.data?.results?.data || [],
                     },
                   }}
                   columns={columns as ColumnDef<unknown>[]}
@@ -353,10 +382,11 @@ function CreateOrder(props: Props) {
                 </div>
 
                 <SheetFooter className="mt-20 items-end p-0">
-                  <Button 
-                    type={"submit"} 
+                  <Button
+                    type={"submit"}
                     className="w-fit"
                     disabled={orders.length === 0}
+                    isLoading={isPending}
                   >
                     Create Order
                     <ArrowRight className="h-5 w-5 ml-2" />
@@ -367,7 +397,6 @@ function CreateOrder(props: Props) {
           </SheetDescription>
         </SheetHeader>
       </SheetContent>
-      <SheetClose ref={closeRef} className="hidden" />
     </Sheet>
   );
 }
@@ -391,14 +420,14 @@ const defaultColumn: Partial<ColumnDef<Order>> = {
     }, [initialValue]);
 
     // Use appropriate input type based on column ID
-    const inputType = id === 'quantity' || id === 'price' ? 'number' : 'text';
-    const inputStep = id === 'price' ? '0.01' : '1';
-    const inputMin = '0';
+    const inputType = id === "quantity" || id === "price" ? "number" : "text";
+    const inputStep = id === "price" ? "0.01" : "1";
+    const inputMin = "0";
 
     // If this is the product column, render a select input with product options
-    if (id === 'product') {
+    if (id === "product") {
       const products = table.options.meta?.products || [];
-      
+
       return (
         <select
           value={value as string}

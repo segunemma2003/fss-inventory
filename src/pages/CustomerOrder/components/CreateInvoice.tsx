@@ -233,12 +233,12 @@ export const CreateInvoice = React.memo<CreateInvoiceProps>(
                   alt="Company Logo"
                   className="object-contain h-12 w-auto"
                 />
-                <div>
+                {/* <div>
                   <h1 className="text-lg font-bold text-gray-800">
                     FOOD STUFF
                   </h1>
                   <h2 className="text-lg font-bold text-gray-800">STORE</h2>
-                </div>
+                </div> */}
               </div>
 
               <div className="text-right">

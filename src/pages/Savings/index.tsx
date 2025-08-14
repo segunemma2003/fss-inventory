@@ -20,6 +20,9 @@ interface Plan {
   duration: string;
   duration_display: string;
   total_products: number;
+  total_items?: number;
+  total_value?: string;
+  interval?: number;
   is_active: boolean;
   created_at: Date;
 }
@@ -35,7 +38,12 @@ function Savings() {
     ApiResponseError
   >({
     queryKey: ["plans", search.query],
-    queryFn: async () => await getRequest("plans/"),
+    queryFn: async () =>
+      await getRequest(
+        search.query?.trim()
+          ? `plans/?search=${encodeURIComponent(search.query.trim())}`
+          : "plans/"
+      ),
     refetchOnWindowFocus: false,
   });
 
@@ -46,12 +54,24 @@ function Savings() {
       header: "Duration",
     },
     {
+      accessorKey: "interval",
+      header: "Interval",
+    },
+    {
       accessorKey: "is_active",
       header: "Active",
     },
     {
       accessorKey: "total_products",
       header: "Total Product",
+    },
+    {
+      accessorKey: "total_items",
+      header: "Total Items",
+    },
+    {
+      accessorKey: "total_value",
+      header: "Total Value",
     },
     {
       accessorKey: "price",

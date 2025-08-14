@@ -42,7 +42,7 @@ export const CategoryDialog = () => {
   const [open, setOpen] = useState(false);
   const { success, error } = useToastHandlers();
   const queryClient = useQueryClient();
-  const { ForgeForm, setValue, control } = useForge<FormValue>({
+  const { ForgeForm, setValue, control, reset } = useForge<FormValue>({
     defaultValues: {
       name: "",
       description: "",
@@ -192,11 +192,15 @@ export const CategoryDialog = () => {
 
   const mutation = useMutation<ApiResponse, ApiResponseError, FormValue>({
     mutationFn: async (data) => {
-      const payload = {
+      const payload: any = {
         name: data.name,
         description: data.description,
-        image: data.image || ""
       };
+      
+      // Only include image field if it has a valid value
+      if (data.image && data.image.trim() !== "") {
+        payload.image = data.image;
+      }
       
       const response = await postRequest("products/categories/", payload);
       return response.data;
@@ -205,6 +209,7 @@ export const CategoryDialog = () => {
       success("Success", "Category created successfully");
       setOpen(false);
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      reset()
     },
     onError: (err) => {
       error("Error", err);

@@ -132,7 +132,8 @@ const Role = () => {
             text="Are you sure you want to deleted this item, this operation can
                 not be undone."
             title="Are you sure?"
-            icon={<AiOutlineExclamationCircle size={20} />}
+            // icon={<AiOutlineExclamationCircle size={20} />}
+            queryKey={["roles"]}
             url={`auth/roles/${row.original.id}/`}
           />
         </div>

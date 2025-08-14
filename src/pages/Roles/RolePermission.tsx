@@ -188,6 +188,7 @@ export const RolePermission = forwardRef(
     const handleSubmit = () => {
       onSubmit(getValues());
     };
+    console.log(getValues());
 
     return (
       <>
@@ -341,7 +342,7 @@ const RadioInput = ({
                     return;
                   }
                   onChange(`${name}-actions`, [
-                    ...getValues(`${name}-action`),
+                    ...getValues(`${name}-actions`),
                     `${item.id}_${name}`,
                   ]);
                 }}

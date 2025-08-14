@@ -115,6 +115,7 @@ function Business(props: Props) {
               text="Are you sure, you want to delete this business?"
               url={`/business/${row.original.id}/`}
               title={``}
+              queryKey={["businesses"]}
               trigger={
                 <Button
                   size={"icon"}

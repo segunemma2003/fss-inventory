@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useToastHandlers } from "@/hooks/useToaster";
 import { deleteRequest } from "@/lib/axiosInstance";
 import { ApiResponse, ApiResponseError } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FiTrash } from "react-icons/fi";
 import {
   Dialog,
@@ -27,6 +27,7 @@ type ConfirmAlertProps = {
   onSuccess?: () => void;
   logout?: boolean;
   icon?: any;
+  queryKey?: string[]
 };
 export const ConfirmAlert = ({
   icon = FiTrash,
@@ -38,9 +39,11 @@ export const ConfirmAlert = ({
   onSuccess,
   trigger,
   url = "",
+  queryKey
 }: ConfirmAlertProps) => {
-  const [open, setOpen] = useState(false);
   const setReset = useSetReset();
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
   const toastHandlers = useToastHandlers();
 
   const mutation = useMutation<ApiResponse<any>, ApiResponseError, undefined>({
@@ -63,6 +66,10 @@ export const ConfirmAlert = ({
           result.data.message ?? "Successfully deleted"
         );
       }
+
+      queryKey?.forEach((key) => {
+        queryClient.invalidateQueries({ queryKey: [key] });
+      });
       
       // Close dialog and trigger success callback
       setOpen(false);

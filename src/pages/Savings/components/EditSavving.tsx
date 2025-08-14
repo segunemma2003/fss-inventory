@@ -1,6 +1,7 @@
 import { ConfirmAlert } from "@/components/layouts/ConfirmAlert";
 import { DataTable } from "@/components/layouts/DataTable";
 import { TextInput } from "@/components/layouts/FormInputs/TextInput";
+import { TextSelect } from "@/components/layouts/FormInputs/TextSelect";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -19,15 +20,13 @@ import { useMutation } from "@tanstack/react-query";
 import { ColumnDef, RowData } from "@tanstack/react-table";
 import {
   ArrowRight,
-  Building,
   Edit,
-  IdCard,
-  MapPin,
-  Phone,
   Plus,
   RotateCcw,
   Trash,
   User,
+  Clock,
+  Calendar,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -47,7 +46,7 @@ type FormValue = {
   description: string;
   price: string;
   duration: string;
-  duration_days: number;
+  duration_days?: number;
 };
 
 type ProductPlanForm = {
@@ -92,7 +91,7 @@ function EditSavingsPlan(props: Props) {
     ProductPlanForm
   >({
     mutationFn: async (values) => {
-      return await patchRequest(`/plans/${values.planId}/products/`, {
+      return await postRequest(`/plans/${values.planId}/products/`, {
         plan_products: values.plan_products,
       });
     },
@@ -112,7 +111,7 @@ function EditSavingsPlan(props: Props) {
   FormValue
 >({
   mutationFn: async (values) => {
-    return await postRequest(`/plans/${id}/`, { ...values });
+    return await patchRequest(`/plans/${id}/`, { ...values });
   },
   onSuccess(data) {
     if (typeof data.data.message === "string") {
@@ -152,7 +151,7 @@ function EditSavingsPlan(props: Props) {
         return (
           <ConfirmAlert
             text="Are you sure, you want to delete this product from plan?"
-            url={`/plans/${row.original.id}/`}
+            url={`/plans/${id}/products/${row.original.id}/`}
             title={``}
             trigger={
               <Button size={"icon"} variant={"destructive"} className="">
@@ -178,13 +177,13 @@ function EditSavingsPlan(props: Props) {
           <SheetDescription>
             <div className="mt-5">
               <h5 className="font-urbanist font-medium">
-                Customer Information
+                Plan Information
               </h5>
 
               <ForgeForm onSubmit={createOrder} className="mt-3 mb-10">
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <Forger
-                    name="saving_name"
+                    name="name"
                     placeholder="Savings Name"
                     component={TextInput}
                     startAdornment={
@@ -192,57 +191,53 @@ function EditSavingsPlan(props: Props) {
                     }
                   />
                   <Forger
-                    name="customer_address"
-                    placeholder="Customer Address"
-                    // label="Business "
+                    name="price"
+                    placeholder="Price"
                     component={TextInput}
+                    type="number"
                     startAdornment={
-                      <MapPin className="h-5 w-5 mr-2 text-gray-400" />
+                      <Calendar className="h-5 w-5 mr-2 text-gray-400" />
                     }
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <Forger
-                    name="customer_phone"
-                    placeholder="Customer Phone"
-                    // label="Business Name"
-                    component={TextInput}
+                    name="duration"
+                    placeholder="Duration"
+                    component={TextSelect}
+                    options={[
+                      { label: "Daily", value: "daily" },
+                      { label: "Weekly", value: "weekly" },
+                      { label: "Monthly", value: "monthly" },
+                      { label: "Quarterly", value: "quarterly" },
+                      { label: "Yearly", value: "yearly" },
+                    ]}
                     startAdornment={
-                      <Phone className="h-5 w-5 mr-2 text-gray-400" />
+                      <Clock className="h-5 w-5 mr-2 text-gray-400" />
                     }
                   />
                   <Forger
-                    name="payment_method"
-                    placeholder="Payment Method"
-                    // label="Business Type"
+                    name="duration_days"
+                    placeholder="Duration Days"
                     component={TextInput}
+                    type="number"
                     startAdornment={
-                      <IdCard className="h-5 w-5 mr-2 text-gray-400" />
+                      <Calendar className="h-5 w-5 mr-2 text-gray-400" />
                     }
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 mb-3">
-                  <Forger
-                    name="payment_source"
-                    placeholder="Payment Source"
-                    // label="Business Name"
-                    component={TextInput}
-                    startAdornment={
-                      <User className="h-5 w-5 mr-2 text-gray-400" />
-                    }
-                  />
-                  <Forger
-                    name="business"
-                    placeholder="Business"
-                    // label="Business Type"
-                    component={TextInput}
-                    startAdornment={
-                      <Building className="h-5 w-5 mr-2 text-gray-400" />
-                    }
-                  />
-                </div>
+                
+
+                <Forger
+                  name="description"
+                  placeholder="Description"
+                  component={TextInput}
+                  startAdornment={
+                    <User className="h-5 w-5 mr-2 text-gray-400" />
+                  }
+                />
 
                 <h5 className="mt-5 font-urbanist font-medium">Order List</h5>
 

@@ -81,7 +81,7 @@ export const AddNewMember = forwardRef<
     onSuccess: (data) => {
       toastHandlers.success("Team Members", data?.data?.message);
       reset();
-      queryClient.invalidateQueries({ queryKey: ["teamMembers"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       setOpen(false);
     },
   });

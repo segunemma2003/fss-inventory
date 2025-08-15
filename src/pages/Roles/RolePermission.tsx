@@ -174,13 +174,16 @@ type RolePermission<T = unknown> = {
 //   .required();
 
 export const RolePermission = forwardRef(
-  ({
-    title,
-    showBtn,
-    defaultValues,
-    onSubmit,
-    loading,
-  }: RolePermission<any>) => {
+  (
+    {
+      title,
+      showBtn,
+      defaultValues,
+      onSubmit,
+      loading,
+    }: RolePermission<any>,
+    _ref
+  ) => {
     const { ForgeForm, watch, setValue, getValues } = useForge({
       defaultValues,
     });

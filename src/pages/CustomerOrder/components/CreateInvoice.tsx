@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { DataTable } from "@/components/layouts/DataTable";
 import { useToast } from "@/components/ui/use-toast";
-import { postRequest } from "@/lib/axiosInstance";
+import { postRequest, getRequest } from "@/lib/axiosInstance";
 import { Forger, useForge } from "@/lib/forge";
 import { TextInput } from "@/components/layouts/FormInputs/TextInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -101,12 +101,38 @@ export const CreateInvoice = React.memo<CreateInvoiceProps>(
       mutationFn: async (data) => {
         return await postRequest("/orders/invoices/", data);
       },
-      onSuccess: () => {
+      onSuccess: async (res) => {
         toast({
           title: "Success",
           description: "Invoice created successfully",
         });
         queryClient.invalidateQueries({ queryKey: ["invoices"] });
+
+        // Auto-download the generated invoice PDF
+        try {
+          const invoiceId = res?.data?.data?.id || res?.data?.data?.invoice_number; // fallback if id isn't returned
+          if (invoiceId) {
+            const downloadRes = await getRequest(
+              `/orders/invoices/download/${invoiceId}/`,
+              { responseType: "blob" }
+            );
+            const blob = new Blob([downloadRes.data], { type: "application/pdf" });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            const fileName = res?.data?.data?.invoice_number
+              ? `${res.data.data.invoice_number}.pdf`
+              : `invoice-${invoiceId}.pdf`;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+          }
+        } catch (e) {
+          // Silent fail for download, user already has success toast
+        }
+
         if (onClose) onClose();
       },
       onError: () => {

@@ -42,24 +42,24 @@ export const DashboardPage = () => {
   const metrics = [
     {
       title: "Total Stock Quantity",
-      value: analyticsQuery.data?.data?.total_stock_quantity?.toString?.() ?? '0',
+      value: (Math.abs(Number(analyticsQuery.data?.data?.total_stock_quantity ?? 0))).toString(),
       change: "15",
       isPositive: true,
     },
     {
       title: "Total Stock Value",
-      value: formatCurrency(parseInt(analyticsQuery.data?.data?.total_stock_value ?? "0"), "en-NG", "NGN"),
+      value: formatCurrency(Math.abs(parseInt(analyticsQuery.data?.data?.total_stock_value ?? "0")), "en-NG", "NGN"),
       change: "15",
       isPositive: true,
     },
     {
       title: "Profit Margin",
-      value: formatCurrency(parseInt(analyticsQuery.data?.data?.total_profit_generated ?? "0"), "en-NG", "NGN"),
+      value: formatCurrency(Math.abs(parseInt(analyticsQuery.data?.data?.total_profit_generated ?? "0")), "en-NG", "NGN"),
       change: "4",
     },
     {
       title: "Total Product Sold",
-      value: analyticsQuery.data?.data?.total_products?.toString?.() ?? '0',
+      value: (Math.abs(Number(analyticsQuery.data?.data?.total_products ?? 0))).toString(),
       change: "17",
       isPositive: true,
     },
@@ -106,18 +106,18 @@ export const DashboardPage = () => {
 
 export const DashboardHeader = () => {
   const user = useUser();
-  const navigate = useNavigate()
 
   return (
     <div className="flex items-center justify-between">
       <h3 className="text-primary text-2xl font-urbanist font-bold">
         {getTimeGreetings()}, {user?.full_name} ( FoodStuffs Store ){" "}
       </h3>
+      {/* Removed Add New Product button as requested */}
       <div className="flex items-center gap-3 ">
-        <Button onClick={() => navigate('/dashboard/add-product')} variant={"outline"} className="rounded-full">
+        {/* <Button onClick={() => navigate('/dashboard/add-product')} variant={"outline"} className="rounded-full">
           <Box className="w-5 h-5 mr-3" />
           Add New Product
-        </Button>
+        </Button> */}
         {/* <Button variant={"default"} className="rounded-full">
           <FaRegEdit className="w-5 h-5 mr-3" />
           View My Task

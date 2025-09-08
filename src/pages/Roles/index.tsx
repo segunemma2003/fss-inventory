@@ -22,7 +22,6 @@ import { Button } from "@/components/ui/button";
 import { TfiReload } from "react-icons/tfi";
 import { ConfirmAlert } from "@/components/layouts/ConfirmAlert";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
 import Container from "@/components/layouts/Container";
 
 type Role = {

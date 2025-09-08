@@ -4,7 +4,7 @@ import TextSearch from "@/components/layouts/FormInputs/TextInput";
 import { Button } from "@/components/ui/button";
 import { getRequest } from "@/lib/axiosInstance";
 import { ApiListResponse, ApiResponseError } from "@/types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash2, Plus, MessageCircleQuestion } from "lucide-react";
 import { useState } from "react";
@@ -26,8 +26,6 @@ const FAQ = () => {
     query: "",
     fields: ["question", "answer"],
   });
-
-  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery<
     ApiListResponse<FAQType[]>,

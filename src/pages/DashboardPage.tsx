@@ -1,18 +1,15 @@
 import Container from "@/components/layouts/Container";
 import { DataTable } from "@/components/layouts/DataTable";
 import { MapList } from "@/components/layouts/MapList";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatCurrency, getTimeGreetings } from "@/lib/utils";
 import { useUser } from "@/store/authSlice";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { AxiosResponse } from "axios";
-import { Box } from "lucide-react";
 import { ProductAnalytics, ProductList } from "./ProductInventory";
 import { ApiListResponse, ApiResponseError } from "@/types";
 import { getRequest } from "@/lib/axiosInstance";
-import { useNavigate } from "react-router";
 // import { FaRegEdit } from "react-icons/fa";
 
 type ProductData = {

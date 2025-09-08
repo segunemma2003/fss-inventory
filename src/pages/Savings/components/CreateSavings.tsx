@@ -13,7 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useToastHandlers } from "@/hooks/useToaster";
-import { getRequest, patchRequest, postRequest } from "@/lib/axiosInstance";
+import { getRequest, postRequest } from "@/lib/axiosInstance";
 import { Forger, useForge } from "@/lib/forge";
 import { ProductList } from "@/pages/ProductInventory";
 import { ApiListResponse, ApiResponse, ApiResponseError } from "@/types";
